@@ -3,12 +3,12 @@ import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
 import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase } from "lucide-react";
+import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle } from "lucide-react";
 
 const skillCategories = [
   {
     label: "Frontend",
-    emoji: "📱",
+    icon: Monitor,
     skills: [
       { name: "Swift", level: "Expert" },
       { name: "SwiftUI", level: "Expert" },
@@ -18,7 +18,7 @@ const skillCategories = [
   },
   {
     label: "Backend",
-    emoji: "⚙️",
+    icon: Server,
     skills: [
       { name: "Firebase", level: "Expert" },
       { name: "REST APIs", level: "Expert" },
@@ -28,7 +28,7 @@ const skillCategories = [
   },
   {
     label: "Design Tools",
-    emoji: "🎨",
+    icon: Palette,
     skills: [
       { name: "Figma", level: "Intermediate" },
       { name: "Sketch", level: "Expert" },
@@ -37,7 +37,7 @@ const skillCategories = [
   },
   {
     label: "Soft Skills",
-    emoji: "🧩",
+    icon: Puzzle,
     skills: [
       { name: "MVVM Architecture", level: "Expert" },
       { name: "Agile / Scrum", level: "Expert" },
@@ -219,7 +219,7 @@ const Index = () => {
               <AnimatedSection key={cat.label} delay={catIdx * 120}>
                 <div className="pixel-card h-full">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-lg">{cat.emoji}</span>
+                    <cat.icon size={18} className="text-accent shrink-0" />
                     <h3 className="pixel-font text-[9px] md:text-[10px] text-accent tracking-wider">
                       {cat.label.toUpperCase()}
                     </h3>
