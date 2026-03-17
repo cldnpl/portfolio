@@ -374,14 +374,14 @@ const Index = () => {
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { name: "DyslexiaApp", lang: "Swift · SwiftUI", emoji: "📖", desc: "iOS accessibility app for dyslexia support" },
-              { name: "accTourismGood", lang: "Swift · MapKit", emoji: "♿", desc: "Accessible tourism iOS experience" },
-              { name: "tourismHackathon", lang: "Swift · UIKit", emoji: "🏆", desc: "Hackathon-winning tourism iOS app" },
-              { name: "The-Site-Accessible-Route-Navigator", lang: "Swift · CoreLocation", emoji: "🗺️", desc: "Accessible route navigation for iOS" },
-              { name: "BuyMeAPie", lang: "Swift · CoreData", emoji: "🥧", desc: "Native iOS shopping list app" },
-              { name: "Kram", lang: "Swift · SwiftUI", emoji: "🧮", desc: "Math learning startup app" },
-            ].map((project, i) => (
+            {([
+              { name: "DyslexiaApp", lang: "Swift · SwiftUI", icon: BookOpen, desc: "iOS accessibility app for dyslexia support" },
+              { name: "accTourismGood", lang: "Swift · MapKit", icon: Accessibility, desc: "Accessible tourism iOS experience" },
+              { name: "tourismHackathon", lang: "Swift · UIKit", icon: Trophy, desc: "Hackathon-winning tourism iOS app" },
+              { name: "The-Site-Accessible-Route-Navigator", lang: "Swift · CoreLocation", icon: Map, desc: "Accessible route navigation for iOS" },
+              { name: "BuyMeAPie", lang: "Swift · CoreData", icon: ShoppingCart, desc: "Native iOS shopping list app" },
+              { name: "Kram", lang: "Swift · SwiftUI", icon: Calculator, desc: "Math learning startup app" },
+            ] as { name: string; lang: string; icon: LucideIcon; desc: string }[]).map((project, i) => (
               <AnimatedSection key={project.name} delay={i * 100}>
                 <a
                   href={`https://github.com/cldnpl/${project.name}`}
@@ -390,10 +390,10 @@ const Index = () => {
                   className="pixel-card flex items-start gap-4 group cursor-pointer hover:border-primary transition-colors"
                 >
                   <div
-                    className="text-xl mt-1"
+                    className="mt-1"
                     style={{ animation: "float 3s ease-in-out infinite", animationDelay: `${i * 0.3}s` }}
                   >
-                    {project.emoji}
+                    <project.icon size={18} className="text-accent shrink-0" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
