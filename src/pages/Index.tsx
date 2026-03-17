@@ -1,7 +1,7 @@
 import PixelNav from "@/components/PixelNav";
 import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
-import SkillBar from "@/components/SkillBar";
+import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
 
