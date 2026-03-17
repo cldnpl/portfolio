@@ -58,8 +58,9 @@ const Index = () => {
 
           <AnimatedSection delay={600}>
             <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
-              Apple Developer Academy student blending psychology, design, and code
-              to craft meaningful digital experiences.
+              iOS Developer & Apple Developer Academy student. I build native apps
+              with Swift and SwiftUI, with a focus on accessibility, user experience,
+              and clean architecture. Also experienced with Firebase, backend logic, and cross-platform tools.
             </p>
           </AnimatedSection>
 
