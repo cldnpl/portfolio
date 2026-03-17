@@ -61,11 +61,19 @@ const Index = () => {
           </AnimatedSection>
 
           <AnimatedSection delay={600}>
-            <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
-              iOS Developer & Apple Developer Academy student. I build native apps
-              with Swift and SwiftUI, with a focus on accessibility, user experience,
-              and clean architecture. Also experienced with Firebase, backend logic, and cross-platform tools.
-            </p>
+            <div className="max-w-xl mx-auto space-y-3">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed text-center">
+                iOS Developer & Apple Developer Academy student, building native apps with
+                <span className="text-primary"> Swift</span> and <span className="text-primary">SwiftUI</span>.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {["MVVM Architecture", "Agile Methodology", "Accessibility", "UX-Driven", "Firebase / Backend"].map((tag) => (
+                  <span key={tag} className="pixel-font text-[7px] md:text-[8px] px-3 py-1 border border-primary/40 text-primary/80 bg-primary/5">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           </AnimatedSection>
 
           <AnimatedSection delay={800}>
