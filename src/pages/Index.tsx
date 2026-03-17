@@ -219,7 +219,7 @@ const Index = () => {
               <AnimatedSection key={cat.label} delay={catIdx * 120}>
                 <div className="pixel-card h-full">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-lg">{cat.emoji}</span>
+                    <cat.icon size={18} className="text-accent shrink-0" />
                     <h3 className="pixel-font text-[9px] md:text-[10px] text-accent tracking-wider">
                       {cat.label.toUpperCase()}
                     </h3>
