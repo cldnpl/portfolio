@@ -189,3 +189,9 @@
 @keyframes bar-fill {
   from { width: 0; }
 }
+
+@keyframes skillPop {
+  0% { opacity: 0; transform: scale(0.6) translateY(10px); }
+  60% { opacity: 1; transform: scale(1.08) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
