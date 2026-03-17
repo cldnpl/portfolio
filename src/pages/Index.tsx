@@ -30,9 +30,9 @@ const skillCategories = [
     label: "Design Tools",
     emoji: "🎨",
     skills: [
-      { name: "Figma", level: "Expert" },
-      { name: "Sketch", level: "Intermediate" },
-      { name: "Procreate", level: "Intermediate" },
+      { name: "Figma", level: "Intermediate" },
+      { name: "Sketch", level: "Expert" },
+      { name: "Procreate", level: "Expert" },
     ],
   },
   {
