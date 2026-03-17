@@ -7,47 +7,60 @@ interface SkillBadgeProps {
 }
 
 const SkillBadge = ({ name, index, variant = "primary" }: SkillBadgeProps) => {
+  const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
 
   const isPrimary = variant === "primary";
 
   return (
-    <span
+    <div
       className={`
-        pixel-font text-[8px] md:text-[9px] px-4 py-2.5
-        border-2 cursor-pointer select-none
+        relative group cursor-pointer select-none
+        pixel-font text-[9px] md:text-[11px] lg:text-[12px]
+        px-5 py-4 md:px-6 md:py-5
+        border-2 text-center
         transition-all duration-300 ease-out
-        inline-block
         ${isPrimary
-          ? "border-primary/40 text-primary bg-primary/5 hover:bg-primary/20 hover:border-primary hover:shadow-[0_0_15px_hsl(var(--primary)/0.4)] hover:scale-110"
-          : "border-accent/40 text-accent bg-accent/5 hover:bg-accent/20 hover:border-accent hover:shadow-[0_0_15px_hsl(var(--accent)/0.4)] hover:scale-110"
+          ? "border-primary/30 text-primary bg-primary/5"
+          : "border-accent/30 text-accent bg-accent/5"
         }
-        ${clicked
+        ${hovered
           ? isPrimary
-            ? "animate-[glitch_0.3s_ease-out] bg-primary/25 border-primary"
-            : "animate-[glitch_0.3s_ease-out] bg-accent/25 border-accent"
+            ? "border-primary bg-primary/15 shadow-[0_0_25px_hsl(var(--primary)/0.35),inset_0_0_20px_hsl(var(--primary)/0.1)] -translate-y-1"
+            : "border-accent bg-accent/15 shadow-[0_0_25px_hsl(var(--accent)/0.35),inset_0_0_20px_hsl(var(--accent)/0.1)] -translate-y-1"
           : ""
         }
+        ${clicked ? "animate-[glitch_0.3s_ease-out]" : ""}
       `}
       style={{
-        animationDelay: `${index * 80}ms`,
-        animationFillMode: "both",
-        animation: `skillPop 0.4s ${index * 80}ms ease-out both`,
+        animation: `skillPop 0.5s ${index * 100}ms ease-out both`,
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={() => {
         setClicked(true);
         setTimeout(() => setClicked(false), 400);
       }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget;
-        el.style.transform = `scale(1.1) rotate(${Math.random() > 0.5 ? 2 : -2}deg)`;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1) rotate(0deg)";
-      }}
     >
-      {name}
-    </span>
+      {/* Pixel corner decorations */}
+      <div className={`absolute top-0 left-0 w-1.5 h-1.5 ${isPrimary ? "bg-primary/60" : "bg-accent/60"} transition-all duration-300 ${hovered ? "scale-150" : ""}`} />
+      <div className={`absolute top-0 right-0 w-1.5 h-1.5 ${isPrimary ? "bg-primary/60" : "bg-accent/60"} transition-all duration-300 ${hovered ? "scale-150" : ""}`} />
+      <div className={`absolute bottom-0 left-0 w-1.5 h-1.5 ${isPrimary ? "bg-primary/60" : "bg-accent/60"} transition-all duration-300 ${hovered ? "scale-150" : ""}`} />
+      <div className={`absolute bottom-0 right-0 w-1.5 h-1.5 ${isPrimary ? "bg-primary/60" : "bg-accent/60"} transition-all duration-300 ${hovered ? "scale-150" : ""}`} />
+
+      {/* Scanline on hover */}
+      {hovered && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{
+            background: `repeating-linear-gradient(0deg, transparent, transparent 2px, ${isPrimary ? "hsl(var(--primary))" : "hsl(var(--accent))"} 2px, transparent 4px)`,
+            animation: "scanMove 2s linear infinite",
+          }}
+        />
+      )}
+
+      <span className="relative z-10">{name}</span>
+    </div>
   );
 };
 
