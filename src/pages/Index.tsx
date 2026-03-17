@@ -112,6 +112,16 @@ const Index = () => {
           <AnimatedSection delay={200}>
             <div className="pixel-card space-y-4">
               <div className="flex items-start gap-3">
+                <Code2 size={18} className="text-accent mt-1 shrink-0" />
+                <div>
+                  <p className="pixel-font text-[9px] text-accent mb-1">iOS DEVELOPER</p>
+                  <p className="text-sm text-muted-foreground">
+                    Building native iOS apps with Swift, SwiftUI, UIKit, CoreData, MapKit, and more.
+                    Experienced with Firebase for backend services, server-side Swift logic, and REST APIs.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
                 <Trophy size={18} className="text-accent mt-1 shrink-0" />
                 <div>
                   <p className="pixel-font text-[9px] text-accent mb-1">HACKATHON WINNER</p>
