@@ -6,21 +6,38 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
 
 const iosSkills = [
-  { name: "Swift / SwiftUI", level: 95 },
-  { name: "iOS Development", level: 90 },
-  { name: "UIKit / AppKit", level: 80 },
-  { name: "Accessibility (a11y)", level: 85 },
-  { name: "CoreData / CloudKit", level: 75 },
-  { name: "MapKit / CoreLocation", level: 75 },
-  { name: "ARKit / VisionKit / AVKit", level: 70 },
-  { name: "Xcode / Instruments", level: 85 },
+  { name: "Swift" },
+  { name: "SwiftUI" },
+  { name: "UIKit" },
+  { name: "AppKit" },
+  { name: "CoreData" },
+  { name: "CloudKit" },
+  { name: "MapKit" },
+  { name: "CoreLocation" },
+  { name: "ARKit" },
+  { name: "VisionKit" },
+  { name: "AVKit" },
+  { name: "StoreKit" },
+  { name: "WidgetKit" },
+  { name: "SpriteKit" },
+  { name: "CoreML" },
+  { name: "Combine" },
+  { name: "Swift Concurrency" },
+  { name: "Accessibility (a11y)" },
+  { name: "Xcode" },
+  { name: "Instruments" },
+  { name: "TestFlight" },
+  { name: "XCTest" },
 ];
 
 const otherSkills = [
-  { name: "Firebase / Backend", level: 80 },
-  { name: "Python", level: 65 },
-  { name: "HTML / CSS", level: 70 },
-  { name: "Figma / Sketch / Procreate", level: 80 },
+  { name: "Firebase" },
+  { name: "REST APIs" },
+  { name: "Python" },
+  { name: "HTML / CSS" },
+  { name: "Figma" },
+  { name: "Sketch" },
+  { name: "Procreate" },
 ];
 
 const languages = [
