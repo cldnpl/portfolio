@@ -5,29 +5,31 @@ import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
 
-const iosSkills = [
-  { name: "Swift" },
-  { name: "SwiftUI" },
-  { name: "UIKit" },
-  { name: "AppKit" },
-  { name: "CoreData" },
-  { name: "CloudKit" },
-  { name: "MapKit" },
-  { name: "CoreLocation" },
-  { name: "ARKit" },
-  { name: "VisionKit" },
-  { name: "AVKit" },
-  { name: "StoreKit" },
-  { name: "WidgetKit" },
-  { name: "SpriteKit" },
-  { name: "CoreML" },
-  { name: "Combine" },
-  { name: "Swift Concurrency" },
-  { name: "Accessibility (a11y)" },
-  { name: "Xcode" },
-  { name: "Instruments" },
-  { name: "TestFlight" },
-  { name: "XCTest" },
+const iosCategories = [
+  {
+    label: "UI & App Frameworks",
+    skills: ["Swift", "SwiftUI", "UIKit", "AppKit"],
+  },
+  {
+    label: "Data & Cloud",
+    skills: ["CoreData", "CloudKit", "Combine", "Swift Concurrency"],
+  },
+  {
+    label: "Maps & Location",
+    skills: ["MapKit", "CoreLocation"],
+  },
+  {
+    label: "Media & Vision",
+    skills: ["ARKit", "VisionKit", "AVKit", "SpriteKit", "CoreML"],
+  },
+  {
+    label: "Commerce & Widgets",
+    skills: ["StoreKit", "WidgetKit"],
+  },
+  {
+    label: "Quality & Tools",
+    skills: ["Accessibility (a11y)", "Xcode", "Instruments", "TestFlight", "XCTest"],
+  },
 ];
 
 const otherSkills = [
