@@ -8,7 +8,7 @@ import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Bri
 const skillCategories = [
   {
     label: "Frontend",
-    emoji: "📱",
+    icon: Monitor,
     skills: [
       { name: "Swift", level: "Expert" },
       { name: "SwiftUI", level: "Expert" },
@@ -18,7 +18,7 @@ const skillCategories = [
   },
   {
     label: "Backend",
-    emoji: "⚙️",
+    icon: Server,
     skills: [
       { name: "Firebase", level: "Expert" },
       { name: "REST APIs", level: "Expert" },
@@ -28,7 +28,7 @@ const skillCategories = [
   },
   {
     label: "Design Tools",
-    emoji: "🎨",
+    icon: Palette,
     skills: [
       { name: "Figma", level: "Intermediate" },
       { name: "Sketch", level: "Expert" },
@@ -37,7 +37,7 @@ const skillCategories = [
   },
   {
     label: "Soft Skills",
-    emoji: "🧩",
+    icon: Puzzle,
     skills: [
       { name: "MVVM Architecture", level: "Expert" },
       { name: "Agile / Scrum", level: "Expert" },
