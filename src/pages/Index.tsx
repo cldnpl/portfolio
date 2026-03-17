@@ -31,10 +31,13 @@ const iosSkills = [
 ];
 
 const otherSkills = [
-  { name: "Firebase / Backend", level: 80 },
-  { name: "Python", level: 65 },
-  { name: "HTML / CSS", level: 70 },
-  { name: "Figma / Sketch / Procreate", level: 80 },
+  { name: "Firebase" },
+  { name: "REST APIs" },
+  { name: "Python" },
+  { name: "HTML / CSS" },
+  { name: "Figma" },
+  { name: "Sketch" },
+  { name: "Procreate" },
 ];
 
 const languages = [
