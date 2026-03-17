@@ -2,24 +2,38 @@ import { useState } from "react";
 
 interface SkillBadgeProps {
   name: string;
+  level?: "Expert" | "Intermediate" | "Learning";
   index: number;
   variant?: "primary" | "accent";
 }
 
-const SkillBadge = ({ name, index, variant = "primary" }: SkillBadgeProps) => {
+const levelColors: Record<string, string> = {
+  Expert: "text-primary",
+  Intermediate: "text-accent",
+  Learning: "text-muted-foreground",
+};
+
+const levelDots: Record<string, number> = {
+  Expert: 3,
+  Intermediate: 2,
+  Learning: 1,
+};
+
+const SkillBadge = ({ name, level, index, variant = "primary" }: SkillBadgeProps) => {
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
 
   const isPrimary = variant === "primary";
+  const dots = level ? levelDots[level] : 0;
 
   return (
     <div
       className={`
         relative group cursor-pointer select-none
-        pixel-font text-[9px] md:text-[11px] lg:text-[12px]
-        px-5 py-5 md:px-6 md:py-6
+        pixel-font text-[8px] md:text-[10px] lg:text-[11px]
+        px-4 py-4 md:px-5 md:py-5
         border-2 
-        flex items-center justify-center text-center
+        flex flex-col items-center justify-center text-center gap-2
         transition-all duration-200 ease-out
         ${isPrimary
           ? "border-primary/30 text-primary bg-primary/5"
@@ -34,8 +48,8 @@ const SkillBadge = ({ name, index, variant = "primary" }: SkillBadgeProps) => {
         ${clicked ? "animate-[glitch_0.3s_ease-out]" : ""}
       `}
       style={{
-        animation: `skillPop 0.5s ${index * 100}ms ease-out both`,
-        minHeight: "70px",
+        animation: `skillPop 0.5s ${index * 80}ms ease-out both`,
+        minHeight: "64px",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -51,6 +65,21 @@ const SkillBadge = ({ name, index, variant = "primary" }: SkillBadgeProps) => {
       <div className={`absolute bottom-0 right-0 w-1.5 h-1.5 ${isPrimary ? "bg-primary/60" : "bg-accent/60"} transition-all duration-300 ${hovered ? "scale-150 opacity-100" : "opacity-60"}`} />
 
       <span className="relative z-10 leading-relaxed">{name}</span>
+      
+      {level && (
+        <div className="flex items-center gap-1">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 transition-colors ${
+                i < dots
+                  ? isPrimary ? "bg-primary" : "bg-accent"
+                  : "bg-muted-foreground/30"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

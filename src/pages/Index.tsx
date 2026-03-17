@@ -3,43 +3,92 @@ import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
 import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
+import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase } from "lucide-react";
 
-const iosCategories = [
+const skillCategories = [
   {
-    label: "UI & App Frameworks",
-    skills: ["Swift", "SwiftUI", "UIKit", "AppKit"],
+    label: "iOS & Frontend",
+    skills: [
+      { name: "Swift", level: "Expert" },
+      { name: "SwiftUI", level: "Expert" },
+      { name: "UIKit", level: "Expert" },
+      { name: "AppKit", level: "Intermediate" },
+      { name: "Combine", level: "Expert" },
+      { name: "Swift Concurrency", level: "Expert" },
+    ],
   },
   {
-    label: "Data & Cloud",
-    skills: ["CoreData", "CloudKit", "Combine", "Swift Concurrency"],
+    label: "Apple Frameworks",
+    skills: [
+      { name: "CoreData", level: "Expert" },
+      { name: "CloudKit", level: "Intermediate" },
+      { name: "MapKit", level: "Expert" },
+      { name: "CoreLocation", level: "Expert" },
+      { name: "ARKit", level: "Intermediate" },
+      { name: "VisionKit", level: "Intermediate" },
+      { name: "AVKit", level: "Intermediate" },
+      { name: "SpriteKit", level: "Learning" },
+      { name: "CoreML", level: "Learning" },
+      { name: "StoreKit", level: "Intermediate" },
+      { name: "WidgetKit", level: "Intermediate" },
+    ],
   },
   {
-    label: "Maps & Location",
-    skills: ["MapKit", "CoreLocation"],
+    label: "Backend & APIs",
+    skills: [
+      { name: "Firebase", level: "Expert" },
+      { name: "REST APIs", level: "Expert" },
+      { name: "Python", level: "Intermediate" },
+      { name: "HTML / CSS", level: "Intermediate" },
+    ],
   },
   {
-    label: "Media & Vision",
-    skills: ["ARKit", "VisionKit", "AVKit", "SpriteKit", "CoreML"],
+    label: "Design Tools",
+    skills: [
+      { name: "Figma", level: "Expert" },
+      { name: "Sketch", level: "Intermediate" },
+      { name: "Procreate", level: "Intermediate" },
+    ],
   },
   {
-    label: "Commerce & Widgets",
-    skills: ["StoreKit", "WidgetKit"],
-  },
-  {
-    label: "Quality & Tools",
-    skills: ["Accessibility (a11y)", "Xcode", "Instruments", "TestFlight", "XCTest"],
+    label: "Quality & DevOps",
+    skills: [
+      { name: "Xcode", level: "Expert" },
+      { name: "Instruments", level: "Expert" },
+      { name: "TestFlight", level: "Expert" },
+      { name: "XCTest", level: "Intermediate" },
+      { name: "Accessibility", level: "Expert" },
+      { name: "MVVM", level: "Expert" },
+      { name: "Agile / Scrum", level: "Expert" },
+    ],
   },
 ];
 
-const otherSkills = [
-  { name: "Firebase" },
-  { name: "REST APIs" },
-  { name: "Python" },
-  { name: "HTML / CSS" },
-  { name: "Figma" },
-  { name: "Sketch" },
-  { name: "Procreate" },
+const experiences = [
+  {
+    title: "iOS Developer",
+    company: "Upwork",
+    type: "Freelance",
+    period: "Feb 2024 — Present",
+    desc: "Building native iOS apps for international clients with Swift & SwiftUI.",
+    emoji: "💼",
+  },
+  {
+    title: "iOS Developer",
+    company: "Venturelab",
+    type: "Contract",
+    period: "Sep 2025 — Jan 2026",
+    desc: "Developed iOS features with SwiftUI for a Naples-based startup.",
+    emoji: "🚀",
+  },
+  {
+    title: "AI Trainer",
+    company: "Mercor",
+    type: "Part-time",
+    period: "Dec 2025",
+    desc: "Specialized red teaming for AI model training and safety.",
+    emoji: "🤖",
+  },
 ];
 
 const languages = [
