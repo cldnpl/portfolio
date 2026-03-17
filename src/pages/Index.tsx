@@ -6,12 +6,17 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
 
 const skills = [
-  { name: "Swift / SwiftUI", level: 85 },
-  { name: "Python", level: 70 },
-  { name: "HTML / CSS", level: 75 },
-  { name: "Figma", level: 80 },
-  { name: "Procreate", level: 90 },
-  { name: "XCode / Sketch", level: 75 },
+  { name: "Swift / SwiftUI", level: 95 },
+  { name: "iOS Development", level: 90 },
+  { name: "UIKit / AppKit", level: 80 },
+  { name: "CoreData / CloudKit", level: 75 },
+  { name: "MapKit / CoreLocation", level: 75 },
+  { name: "Accessibility (a11y)", level: 85 },
+  { name: "Firebase / Backend", level: 70 },
+  { name: "Python", level: 65 },
+  { name: "HTML / CSS", level: 70 },
+  { name: "Figma / Procreate", level: 80 },
+  { name: "Xcode / Instruments", level: 85 },
 ];
 
 const languages = [
@@ -47,14 +52,15 @@ const Index = () => {
 
           <AnimatedSection delay={400}>
             <p className="pixel-font text-[9px] md:text-[11px] text-primary tracking-widest uppercase">
-              Developer · Designer · Polyglot
+              iOS Developer · Swift & SwiftUI
             </p>
           </AnimatedSection>
 
           <AnimatedSection delay={600}>
             <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
-              Apple Developer Academy student blending psychology, design, and code
-              to craft meaningful digital experiences.
+              iOS Developer & Apple Developer Academy student. I build native apps
+              with Swift and SwiftUI, with a focus on accessibility, user experience,
+              and clean architecture. Also experienced with Firebase, backend logic, and cross-platform tools.
             </p>
           </AnimatedSection>
 
@@ -106,6 +112,16 @@ const Index = () => {
           <AnimatedSection delay={200}>
             <div className="pixel-card space-y-4">
               <div className="flex items-start gap-3">
+                <Code2 size={18} className="text-accent mt-1 shrink-0" />
+                <div>
+                  <p className="pixel-font text-[9px] text-accent mb-1">iOS DEVELOPER</p>
+                  <p className="text-sm text-muted-foreground">
+                    Building native iOS apps with Swift, SwiftUI, UIKit, CoreData, MapKit, and more.
+                    Experienced with Firebase for backend services, server-side Swift logic, and REST APIs.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
                 <Trophy size={18} className="text-accent mt-1 shrink-0" />
                 <div>
                   <p className="pixel-font text-[9px] text-accent mb-1">HACKATHON WINNER</p>
@@ -130,7 +146,7 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
-              {"// SKILL_TREE"}
+              {"// iOS_SKILL_TREE"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
@@ -232,19 +248,19 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
-              {"// MY_PROJECTS"}
+              {"// iOS_PROJECTS"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
+              { name: "DyslexiaApp", lang: "Swift · SwiftUI", emoji: "📖", desc: "iOS accessibility app for dyslexia support" },
+              { name: "accTourismGood", lang: "Swift · MapKit", emoji: "♿", desc: "Accessible tourism iOS experience" },
+              { name: "tourismHackathon", lang: "Swift · UIKit", emoji: "🏆", desc: "Hackathon-winning tourism iOS app" },
+              { name: "The-Site-Accessible-Route-Navigator", lang: "Swift · CoreLocation", emoji: "🗺️", desc: "Accessible route navigation for iOS" },
+              { name: "BuyMeAPie", lang: "Swift · CoreData", emoji: "🥧", desc: "Native iOS shopping list app" },
               { name: "SentinelMindLandingPage", lang: "TypeScript", emoji: "🛡️", desc: "Landing page for SentinelMind" },
-              { name: "DyslexiaApp", lang: "Swift", emoji: "📖", desc: "Accessibility app for dyslexia support" },
-              { name: "accTourismGood", lang: "Swift", emoji: "♿", desc: "Accessible tourism experience" },
-              { name: "tourismHackathon", lang: "Swift", emoji: "🏆", desc: "Tourism hackathon project" },
-              { name: "The-Site-Accessible-Route-Navigator", lang: "Swift", emoji: "🗺️", desc: "Accessible route navigation" },
-              { name: "BuyMeAPie", lang: "Swift", emoji: "🥧", desc: "Shopping list app" },
             ].map((project, i) => (
               <AnimatedSection key={project.name} delay={i * 100}>
                 <a
