@@ -42,7 +42,7 @@ const skillCategories = [
       { name: "MVVM Architecture", level: "Expert" },
       { name: "Agile / Scrum", level: "Expert" },
       { name: "Accessibility", level: "Expert" },
-      { name: "UX-Driven Design", level: "Intermediate" },
+      { name: "UX-Driven Design", level: "Expert" },
     ],
   },
 ];
