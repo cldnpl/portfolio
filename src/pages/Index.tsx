@@ -54,7 +54,7 @@ const experiences = [
     type: "Freelance",
     period: "Feb 2024 — Present",
     desc: "Building native iOS apps for international clients with Swift & SwiftUI.",
-    emoji: "💼",
+    icon: Globe,
   },
   {
     title: "iOS Developer",
@@ -62,7 +62,7 @@ const experiences = [
     type: "Contract",
     period: "Sep 2025 — Jan 2026",
     desc: "Developed iOS features with SwiftUI for a Naples-based startup.",
-    emoji: "🚀",
+    icon: Rocket,
   },
   {
     title: "AI Trainer",
@@ -70,7 +70,7 @@ const experiences = [
     type: "Part-time",
     period: "Dec 2025",
     desc: "Specialized red teaming for AI model training and safety.",
-    emoji: "🤖",
+    icon: Bot,
   },
 ];
 
