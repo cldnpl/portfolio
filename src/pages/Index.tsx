@@ -12,14 +12,15 @@ const iosSkills = [
   { name: "Accessibility (a11y)", level: 85 },
   { name: "CoreData / CloudKit", level: 75 },
   { name: "MapKit / CoreLocation", level: 75 },
+  { name: "ARKit / VisionKit / AVKit", level: 70 },
   { name: "Xcode / Instruments", level: 85 },
 ];
 
 const otherSkills = [
-  { name: "Firebase / Backend", level: 70 },
+  { name: "Firebase / Backend", level: 80 },
   { name: "Python", level: 65 },
   { name: "HTML / CSS", level: 70 },
-  { name: "Figma / Procreate", level: 80 },
+  { name: "Figma / Sketch / Procreate", level: 80 },
 ];
 
 const languages = [
