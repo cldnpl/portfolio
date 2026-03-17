@@ -5,18 +5,21 @@ import SkillBar from "@/components/SkillBar";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
 
-const skills = [
+const iosSkills = [
   { name: "Swift / SwiftUI", level: 95 },
   { name: "iOS Development", level: 90 },
   { name: "UIKit / AppKit", level: 80 },
+  { name: "Accessibility (a11y)", level: 85 },
   { name: "CoreData / CloudKit", level: 75 },
   { name: "MapKit / CoreLocation", level: 75 },
-  { name: "Accessibility (a11y)", level: 85 },
+  { name: "Xcode / Instruments", level: 85 },
+];
+
+const otherSkills = [
   { name: "Firebase / Backend", level: 70 },
   { name: "Python", level: 65 },
   { name: "HTML / CSS", level: 70 },
   { name: "Figma / Procreate", level: 80 },
-  { name: "Xcode / Instruments", level: 85 },
 ];
 
 const languages = [
@@ -152,7 +155,22 @@ const Index = () => {
           </AnimatedSection>
 
           <div className="grid gap-5">
-            {skills.map((skill, i) => (
+            {iosSkills.map((skill, i) => (
+              <AnimatedSection key={skill.name} delay={i * 100}>
+                <SkillBar name={skill.name} level={skill.level} delay={i * 150} />
+              </AnimatedSection>
+            ))}
+          </div>
+
+          <AnimatedSection delay={200}>
+            <h2 className="pixel-font text-sm md:text-base text-primary mb-2 mt-16">
+              {"// OTHER_SKILLS"}
+            </h2>
+            <div className="pixel-divider mb-8" />
+          </AnimatedSection>
+
+          <div className="grid gap-5">
+            {otherSkills.map((skill, i) => (
               <AnimatedSection key={skill.name} delay={i * 100}>
                 <SkillBar name={skill.name} level={skill.level} delay={i * 150} />
               </AnimatedSection>
@@ -329,7 +347,7 @@ const Index = () => {
                   className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Github size={16} className="text-primary" />
-                  github.com/cldnpl
+                  GitHub
                 </a>
                 <a
                   href="https://www.linkedin.com/in/claudia-napolitano-1660b533a/"
