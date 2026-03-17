@@ -3,43 +3,92 @@ import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
 import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
+import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase } from "lucide-react";
 
-const iosCategories = [
+const skillCategories = [
   {
-    label: "UI & App Frameworks",
-    skills: ["Swift", "SwiftUI", "UIKit", "AppKit"],
+    label: "iOS & Frontend",
+    skills: [
+      { name: "Swift", level: "Expert" },
+      { name: "SwiftUI", level: "Expert" },
+      { name: "UIKit", level: "Expert" },
+      { name: "AppKit", level: "Intermediate" },
+      { name: "Combine", level: "Expert" },
+      { name: "Swift Concurrency", level: "Expert" },
+    ],
   },
   {
-    label: "Data & Cloud",
-    skills: ["CoreData", "CloudKit", "Combine", "Swift Concurrency"],
+    label: "Apple Frameworks",
+    skills: [
+      { name: "CoreData", level: "Expert" },
+      { name: "CloudKit", level: "Intermediate" },
+      { name: "MapKit", level: "Expert" },
+      { name: "CoreLocation", level: "Expert" },
+      { name: "ARKit", level: "Intermediate" },
+      { name: "VisionKit", level: "Intermediate" },
+      { name: "AVKit", level: "Intermediate" },
+      { name: "SpriteKit", level: "Learning" },
+      { name: "CoreML", level: "Learning" },
+      { name: "StoreKit", level: "Intermediate" },
+      { name: "WidgetKit", level: "Intermediate" },
+    ],
   },
   {
-    label: "Maps & Location",
-    skills: ["MapKit", "CoreLocation"],
+    label: "Backend & APIs",
+    skills: [
+      { name: "Firebase", level: "Expert" },
+      { name: "REST APIs", level: "Expert" },
+      { name: "Python", level: "Intermediate" },
+      { name: "HTML / CSS", level: "Intermediate" },
+    ],
   },
   {
-    label: "Media & Vision",
-    skills: ["ARKit", "VisionKit", "AVKit", "SpriteKit", "CoreML"],
+    label: "Design Tools",
+    skills: [
+      { name: "Figma", level: "Expert" },
+      { name: "Sketch", level: "Intermediate" },
+      { name: "Procreate", level: "Intermediate" },
+    ],
   },
   {
-    label: "Commerce & Widgets",
-    skills: ["StoreKit", "WidgetKit"],
-  },
-  {
-    label: "Quality & Tools",
-    skills: ["Accessibility (a11y)", "Xcode", "Instruments", "TestFlight", "XCTest"],
+    label: "Quality & DevOps",
+    skills: [
+      { name: "Xcode", level: "Expert" },
+      { name: "Instruments", level: "Expert" },
+      { name: "TestFlight", level: "Expert" },
+      { name: "XCTest", level: "Intermediate" },
+      { name: "Accessibility", level: "Expert" },
+      { name: "MVVM", level: "Expert" },
+      { name: "Agile / Scrum", level: "Expert" },
+    ],
   },
 ];
 
-const otherSkills = [
-  { name: "Firebase" },
-  { name: "REST APIs" },
-  { name: "Python" },
-  { name: "HTML / CSS" },
-  { name: "Figma" },
-  { name: "Sketch" },
-  { name: "Procreate" },
+const experiences = [
+  {
+    title: "iOS Developer",
+    company: "Upwork",
+    type: "Freelance",
+    period: "Feb 2024 — Present",
+    desc: "Building native iOS apps for international clients with Swift & SwiftUI.",
+    emoji: "💼",
+  },
+  {
+    title: "iOS Developer",
+    company: "Venturelab",
+    type: "Contract",
+    period: "Sep 2025 — Jan 2026",
+    desc: "Developed iOS features with SwiftUI for a Naples-based startup.",
+    emoji: "🚀",
+  },
+  {
+    title: "AI Trainer",
+    company: "Mercor",
+    type: "Part-time",
+    period: "Dec 2025",
+    desc: "Specialized red teaming for AI model training and safety.",
+    emoji: "🤖",
+  },
 ];
 
 const languages = [
@@ -177,44 +226,97 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
-              {"// iOS_SKILL_TREE"}
+              {"// SKILL_TREE"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
+          {/* Proficiency legend */}
+          <AnimatedSection delay={100}>
+            <div className="flex gap-6 mb-8 pixel-font text-[7px] text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                </div>
+                Expert
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
+                </div>
+                Intermediate
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
+                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
+                </div>
+                Learning
+              </div>
+            </div>
+          </AnimatedSection>
+
           <div className="space-y-6">
-            {iosCategories.map((cat, catIdx) => (
+            {skillCategories.map((cat, catIdx) => (
               <AnimatedSection key={cat.label} delay={catIdx * 100}>
                 <p className="pixel-font text-[8px] md:text-[9px] text-accent/70 mb-3 tracking-wider">
                   {`> ${cat.label.toUpperCase()}`}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                   {cat.skills.map((skill, i) => (
-                    <SkillBadge key={skill} name={skill} index={i} variant="primary" />
+                    <SkillBadge key={skill.name} name={skill.name} level={skill.level as "Expert" | "Intermediate" | "Learning"} index={i} variant="primary" />
                   ))}
                 </div>
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
 
-          <AnimatedSection delay={200}>
-            <h2 className="pixel-font text-sm md:text-base text-primary mb-2 mt-16">
-              {"// OTHER_SKILLS"}
+      {/* EXPERIENCE */}
+      <section id="experience" className="relative z-10 py-20 px-4">
+        <div className="max-w-3xl mx-auto">
+          <AnimatedSection>
+            <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
+              {"// EXPERIENCE"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
-          <AnimatedSection delay={300}>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {otherSkills.map((skill, i) => (
-                <SkillBadge key={skill.name} name={skill.name} index={i} variant="accent" />
-              ))}
-            </div>
-          </AnimatedSection>
+          <div className="space-y-4">
+            {experiences.map((exp, i) => (
+              <AnimatedSection key={exp.company} delay={i * 150}>
+                <div className="pixel-card flex items-start gap-4">
+                  <div
+                    className="text-xl mt-1"
+                    style={{ animation: "float 3s ease-in-out infinite", animationDelay: `${i * 0.5}s` }}
+                  >
+                    {exp.emoji}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <h3 className="pixel-font text-[9px] md:text-[10px] text-foreground">{exp.title}</h3>
+                      <span className="pixel-font text-[7px] px-2 py-0.5 border border-primary/40 text-primary/80 bg-primary/5">
+                        {exp.type}
+                      </span>
+                    </div>
+                    <p className="text-xs text-primary flex items-center gap-1">
+                      <Briefcase size={12} /> {exp.company}
+                    </p>
+                    <p className="pixel-font text-[7px] text-muted-foreground mt-1">{exp.period}</p>
+                    <p className="text-xs text-muted-foreground mt-2">{exp.desc}</p>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </section>
-
-      {/* EDUCATION */}
       <section id="education" className="relative z-10 py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
