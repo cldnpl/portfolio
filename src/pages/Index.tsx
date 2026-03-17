@@ -163,13 +163,18 @@ const Index = () => {
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
-          <div className="grid gap-5">
-            {iosSkills.map((skill, i) => (
-              <AnimatedSection key={skill.name} delay={i * 100}>
-                <SkillBar name={skill.name} level={skill.level} delay={i * 150} />
-              </AnimatedSection>
-            ))}
-          </div>
+          <AnimatedSection delay={100}>
+            <div className="flex flex-wrap gap-2">
+              {iosSkills.map((skill) => (
+                <span
+                  key={skill.name}
+                  className="pixel-font text-[7px] md:text-[8px] px-3 py-2 border-2 border-primary/40 text-primary bg-primary/10 hover:bg-primary/20 hover:border-primary/70 transition-colors cursor-default"
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </AnimatedSection>
 
           <AnimatedSection delay={200}>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2 mt-16">
@@ -178,13 +183,18 @@ const Index = () => {
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
-          <div className="grid gap-5">
-            {otherSkills.map((skill, i) => (
-              <AnimatedSection key={skill.name} delay={i * 100}>
-                <SkillBar name={skill.name} level={skill.level} delay={i * 150} />
-              </AnimatedSection>
-            ))}
-          </div>
+          <AnimatedSection delay={300}>
+            <div className="flex flex-wrap gap-2">
+              {otherSkills.map((skill) => (
+                <span
+                  key={skill.name}
+                  className="pixel-font text-[7px] md:text-[8px] px-3 py-2 border-2 border-accent/40 text-accent bg-accent/10 hover:bg-accent/20 hover:border-accent/70 transition-colors cursor-default"
+                >
+                  {skill.name}
+                </span>
+              ))}
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
