@@ -347,7 +347,7 @@ const Index = () => {
                   className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Github size={16} className="text-primary" />
-                  github.com/cldnpl
+                  GitHub
                 </a>
                 <a
                   href="https://www.linkedin.com/in/claudia-napolitano-1660b533a/"
