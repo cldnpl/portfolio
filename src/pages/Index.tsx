@@ -248,19 +248,19 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
-              {"// MY_PROJECTS"}
+              {"// iOS_PROJECTS"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
+              { name: "DyslexiaApp", lang: "Swift · SwiftUI", emoji: "📖", desc: "iOS accessibility app for dyslexia support" },
+              { name: "accTourismGood", lang: "Swift · MapKit", emoji: "♿", desc: "Accessible tourism iOS experience" },
+              { name: "tourismHackathon", lang: "Swift · UIKit", emoji: "🏆", desc: "Hackathon-winning tourism iOS app" },
+              { name: "The-Site-Accessible-Route-Navigator", lang: "Swift · CoreLocation", emoji: "🗺️", desc: "Accessible route navigation for iOS" },
+              { name: "BuyMeAPie", lang: "Swift · CoreData", emoji: "🥧", desc: "Native iOS shopping list app" },
               { name: "SentinelMindLandingPage", lang: "TypeScript", emoji: "🛡️", desc: "Landing page for SentinelMind" },
-              { name: "DyslexiaApp", lang: "Swift", emoji: "📖", desc: "Accessibility app for dyslexia support" },
-              { name: "accTourismGood", lang: "Swift", emoji: "♿", desc: "Accessible tourism experience" },
-              { name: "tourismHackathon", lang: "Swift", emoji: "🏆", desc: "Tourism hackathon project" },
-              { name: "The-Site-Accessible-Route-Navigator", lang: "Swift", emoji: "🗺️", desc: "Accessible route navigation" },
-              { name: "BuyMeAPie", lang: "Swift", emoji: "🥧", desc: "Shopping list app" },
             ].map((project, i) => (
               <AnimatedSection key={project.name} delay={i * 100}>
                 <a
