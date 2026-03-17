@@ -287,7 +287,7 @@ const Index = () => {
               { name: "tourismHackathon", lang: "Swift · UIKit", emoji: "🏆", desc: "Hackathon-winning tourism iOS app" },
               { name: "The-Site-Accessible-Route-Navigator", lang: "Swift · CoreLocation", emoji: "🗺️", desc: "Accessible route navigation for iOS" },
               { name: "BuyMeAPie", lang: "Swift · CoreData", emoji: "🥧", desc: "Native iOS shopping list app" },
-              { name: "SentinelMindLandingPage", lang: "TypeScript", emoji: "🛡️", desc: "Landing page for SentinelMind" },
+              { name: "Kram", lang: "Swift · SwiftUI", emoji: "🧮", desc: "Math learning startup app" },
             ].map((project, i) => (
               <AnimatedSection key={project.name} delay={i * 100}>
                 <a
