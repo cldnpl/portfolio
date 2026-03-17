@@ -180,13 +180,20 @@ const Index = () => {
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
-          <AnimatedSection delay={100}>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {iosSkills.map((skill, i) => (
-                <SkillBadge key={skill.name} name={skill.name} index={i} variant="primary" />
-              ))}
-            </div>
-          </AnimatedSection>
+          <div className="space-y-6">
+            {iosCategories.map((cat, catIdx) => (
+              <AnimatedSection key={cat.label} delay={catIdx * 100}>
+                <p className="pixel-font text-[8px] md:text-[9px] text-accent/70 mb-3 tracking-wider">
+                  {`> ${cat.label.toUpperCase()}`}
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                  {cat.skills.map((skill, i) => (
+                    <SkillBadge key={skill} name={skill} index={i} variant="primary" />
+                  ))}
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
 
           <AnimatedSection delay={200}>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2 mt-16">
