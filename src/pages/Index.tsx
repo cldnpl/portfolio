@@ -377,7 +377,7 @@ const Index = () => {
             {([
               { name: "DyslexiaApp", lang: "Swift · SwiftUI", icon: BookOpen, desc: "iOS accessibility app for dyslexia support" },
               { name: "accTourismGood", lang: "Swift · MapKit", icon: Accessibility, desc: "Accessible tourism iOS experience" },
-              { name: "tourismHackathon", lang: "Swift · UIKit", icon: Trophy, desc: "Hackathon-winning tourism iOS app" },
+              { name: "tourismHackathon", lang: "Swift · UIKit", icon: Trophy, desc: "Tourism iOS app built at a hackathon" },
               { name: "The-Site-Accessible-Route-Navigator", lang: "Swift · CoreLocation", icon: Map, desc: "Accessible route navigation for iOS" },
               { name: "BuyMeAPie", lang: "Swift · CoreData", icon: ShoppingCart, desc: "Native iOS shopping list app" },
               { name: "Kram", lang: "Swift · SwiftUI", icon: Calculator, desc: "Math learning startup app" },
