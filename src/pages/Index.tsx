@@ -3,7 +3,7 @@ import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
 import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle, Globe, Rocket, Bot, Apple, Smartphone, Brain, GraduationCap } from "lucide-react";
+import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle, Globe, Rocket, Bot, Apple, Smartphone, Brain, GraduationCap, BookOpen, Accessibility, Map, ShoppingCart, Calculator, type LucideIcon } from "lucide-react";
 
 const skillCategories = [
   {
