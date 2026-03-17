@@ -155,7 +155,22 @@ const Index = () => {
           </AnimatedSection>
 
           <div className="grid gap-5">
-            {skills.map((skill, i) => (
+            {iosSkills.map((skill, i) => (
+              <AnimatedSection key={skill.name} delay={i * 100}>
+                <SkillBar name={skill.name} level={skill.level} delay={i * 150} />
+              </AnimatedSection>
+            ))}
+          </div>
+
+          <AnimatedSection delay={200}>
+            <h2 className="pixel-font text-sm md:text-base text-primary mb-2 mt-16">
+              {"// OTHER_SKILLS"}
+            </h2>
+            <div className="pixel-divider mb-8" />
+          </AnimatedSection>
+
+          <div className="grid gap-5">
+            {otherSkills.map((skill, i) => (
               <AnimatedSection key={skill.name} delay={i * 100}>
                 <SkillBar name={skill.name} level={skill.level} delay={i * 150} />
               </AnimatedSection>
