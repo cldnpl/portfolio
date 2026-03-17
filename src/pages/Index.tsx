@@ -3,7 +3,7 @@ import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
 import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle } from "lucide-react";
+import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle, Globe, Rocket, Bot } from "lucide-react";
 
 const skillCategories = [
   {
@@ -54,7 +54,7 @@ const experiences = [
     type: "Freelance",
     period: "Feb 2024 — Present",
     desc: "Building native iOS apps for international clients with Swift & SwiftUI.",
-    emoji: "💼",
+    icon: Globe,
   },
   {
     title: "iOS Developer",
@@ -62,7 +62,7 @@ const experiences = [
     type: "Contract",
     period: "Sep 2025 — Jan 2026",
     desc: "Developed iOS features with SwiftUI for a Naples-based startup.",
-    emoji: "🚀",
+    icon: Rocket,
   },
   {
     title: "AI Trainer",
@@ -70,7 +70,7 @@ const experiences = [
     type: "Part-time",
     period: "Dec 2025",
     desc: "Specialized red teaming for AI model training and safety.",
-    emoji: "🤖",
+    icon: Bot,
   },
 ];
 
@@ -263,12 +263,7 @@ const Index = () => {
             {experiences.map((exp, i) => (
               <AnimatedSection key={exp.company} delay={i * 150}>
                 <div className="pixel-card flex items-start gap-4">
-                  <div
-                    className="text-xl mt-1"
-                    style={{ animation: "float 3s ease-in-out infinite", animationDelay: `${i * 0.5}s` }}
-                  >
-                    {exp.emoji}
-                  </div>
+                  <exp.icon size={18} className="text-accent mt-1 shrink-0" />
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <h3 className="pixel-font text-[9px] md:text-[10px] text-foreground">{exp.title}</h3>
