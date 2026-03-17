@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const sections = ["About", "Skills", "Education", "Languages", "Projects", "Contact"];
+const sections = ["About", "Skills", "Experience", "Education", "Languages", "Projects", "Contact"];
 
 const PixelNav = () => {
   const [active, setActive] = useState("About");
