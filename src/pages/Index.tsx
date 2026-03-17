@@ -5,18 +5,21 @@ import SkillBar from "@/components/SkillBar";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2 } from "lucide-react";
 
-const skills = [
+const iosSkills = [
   { name: "Swift / SwiftUI", level: 95 },
   { name: "iOS Development", level: 90 },
   { name: "UIKit / AppKit", level: 80 },
+  { name: "Accessibility (a11y)", level: 85 },
   { name: "CoreData / CloudKit", level: 75 },
   { name: "MapKit / CoreLocation", level: 75 },
-  { name: "Accessibility (a11y)", level: 85 },
+  { name: "Xcode / Instruments", level: 85 },
+];
+
+const otherSkills = [
   { name: "Firebase / Backend", level: 70 },
   { name: "Python", level: 65 },
   { name: "HTML / CSS", level: 70 },
   { name: "Figma / Procreate", level: 80 },
-  { name: "Xcode / Instruments", level: 85 },
 ];
 
 const languages = [
