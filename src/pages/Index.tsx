@@ -226,44 +226,97 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
-              {"// iOS_SKILL_TREE"}
+              {"// SKILL_TREE"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
+          {/* Proficiency legend */}
+          <AnimatedSection delay={100}>
+            <div className="flex gap-6 mb-8 pixel-font text-[7px] text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                </div>
+                Expert
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
+                </div>
+                Intermediate
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
+                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
+                </div>
+                Learning
+              </div>
+            </div>
+          </AnimatedSection>
+
           <div className="space-y-6">
-            {iosCategories.map((cat, catIdx) => (
+            {skillCategories.map((cat, catIdx) => (
               <AnimatedSection key={cat.label} delay={catIdx * 100}>
                 <p className="pixel-font text-[8px] md:text-[9px] text-accent/70 mb-3 tracking-wider">
                   {`> ${cat.label.toUpperCase()}`}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                   {cat.skills.map((skill, i) => (
-                    <SkillBadge key={skill} name={skill} index={i} variant="primary" />
+                    <SkillBadge key={skill.name} name={skill.name} level={skill.level as "Expert" | "Intermediate" | "Learning"} index={i} variant="primary" />
                   ))}
                 </div>
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
 
-          <AnimatedSection delay={200}>
-            <h2 className="pixel-font text-sm md:text-base text-primary mb-2 mt-16">
-              {"// OTHER_SKILLS"}
+      {/* EXPERIENCE */}
+      <section id="experience" className="relative z-10 py-20 px-4">
+        <div className="max-w-3xl mx-auto">
+          <AnimatedSection>
+            <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
+              {"// EXPERIENCE"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
-          <AnimatedSection delay={300}>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {otherSkills.map((skill, i) => (
-                <SkillBadge key={skill.name} name={skill.name} index={i} variant="accent" />
-              ))}
-            </div>
-          </AnimatedSection>
+          <div className="space-y-4">
+            {experiences.map((exp, i) => (
+              <AnimatedSection key={exp.company} delay={i * 150}>
+                <div className="pixel-card flex items-start gap-4">
+                  <div
+                    className="text-xl mt-1"
+                    style={{ animation: "float 3s ease-in-out infinite", animationDelay: `${i * 0.5}s` }}
+                  >
+                    {exp.emoji}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <h3 className="pixel-font text-[9px] md:text-[10px] text-foreground">{exp.title}</h3>
+                      <span className="pixel-font text-[7px] px-2 py-0.5 border border-primary/40 text-primary/80 bg-primary/5">
+                        {exp.type}
+                      </span>
+                    </div>
+                    <p className="text-xs text-primary flex items-center gap-1">
+                      <Briefcase size={12} /> {exp.company}
+                    </p>
+                    <p className="pixel-font text-[7px] text-muted-foreground mt-1">{exp.period}</p>
+                    <p className="text-xs text-muted-foreground mt-2">{exp.desc}</p>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </section>
-
-      {/* EDUCATION */}
       <section id="education" className="relative z-10 py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
