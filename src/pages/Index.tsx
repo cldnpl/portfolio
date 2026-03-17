@@ -380,7 +380,7 @@ const Index = () => {
               className="pixel-font text-[8px] text-muted-foreground mt-12"
               style={{ animation: "blink 2s infinite" }}
             >
-              PRESS START TO COLLABORATE_
+              GOT AN IDEA? LET'S BUILD IT TOGETHER_
             </p>
           </AnimatedSection>
         </div>

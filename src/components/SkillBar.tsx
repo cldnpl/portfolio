@@ -23,7 +23,6 @@ const SkillBar = ({ name, level, delay = 0 }: SkillBarProps) => {
     <div ref={ref} className="space-y-1">
       <div className="flex justify-between items-center">
         <span className="pixel-font text-[8px] md:text-[10px] text-foreground">{name}</span>
-        <span className="pixel-font text-[7px] text-muted-foreground">{level}%</span>
       </div>
       <div className="h-4 border-2 border-primary/50 bg-muted">
         <div
