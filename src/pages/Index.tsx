@@ -3,7 +3,7 @@ import PixelAvatar from "@/components/PixelAvatar";
 import PixelParticles from "@/components/PixelParticles";
 import SkillBadge from "@/components/SkillBadge";
 import AnimatedSection from "@/components/AnimatedSection";
-import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle, Globe, Rocket, Bot } from "lucide-react";
+import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Briefcase, Monitor, Server, Palette, Puzzle, Globe, Rocket, Bot, Apple, Smartphone, Brain, GraduationCap } from "lucide-react";
 
 const skillCategories = [
   {
@@ -298,31 +298,30 @@ const Index = () => {
                 title: "Apple Developer Academy",
                 sub: "2025 / 2026",
                 desc: "Full program — Naples",
+                icon: Apple,
               },
               {
                 title: "Apple Foundation Academy",
                 sub: "Nov — Dec 2024",
                 desc: "Foundation program — Naples",
+                icon: Smartphone,
               },
               {
                 title: "B.Sc. Psychological Sciences",
                 sub: "University of Naples Federico II",
                 desc: "Expected graduation: 2026",
+                icon: Brain,
               },
               {
                 title: "Scientific High School Diploma",
                 sub: "2023 — Italy",
                 desc: "",
+                icon: GraduationCap,
               },
             ].map((edu, i) => (
               <AnimatedSection key={edu.title} delay={i * 150}>
                 <div className="pixel-card flex items-start gap-4">
-                  <div
-                    className="pixel-font text-lg mt-1"
-                    style={{ animation: "float 3s ease-in-out infinite", animationDelay: `${i * 0.5}s` }}
-                  >
-                    {i === 0 ? "🍎" : i === 1 ? "📱" : i === 2 ? "🧠" : "🎓"}
-                  </div>
+                  <edu.icon size={18} className="text-accent mt-1 shrink-0" />
                   <div>
                     <h3 className="pixel-font text-[9px] md:text-[10px] text-foreground mb-1">{edu.title}</h3>
                     {edu.sub && <p className="text-xs text-primary">{edu.sub}</p>}
