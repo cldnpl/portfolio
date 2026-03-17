@@ -263,12 +263,7 @@ const Index = () => {
             {experiences.map((exp, i) => (
               <AnimatedSection key={exp.company} delay={i * 150}>
                 <div className="pixel-card flex items-start gap-4">
-                  <div
-                    className="text-xl mt-1"
-                    style={{ animation: "float 3s ease-in-out infinite", animationDelay: `${i * 0.5}s` }}
-                  >
-                    {exp.emoji}
-                  </div>
+                  <exp.icon size={18} className="text-accent mt-1 shrink-0" />
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <h3 className="pixel-font text-[9px] md:text-[10px] text-foreground">{exp.title}</h3>
