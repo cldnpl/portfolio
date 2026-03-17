@@ -7,43 +7,28 @@ import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Bri
 
 const skillCategories = [
   {
-    label: "iOS & Frontend",
+    label: "Frontend",
+    emoji: "📱",
     skills: [
       { name: "Swift", level: "Expert" },
       { name: "SwiftUI", level: "Expert" },
       { name: "UIKit", level: "Expert" },
-      { name: "AppKit", level: "Intermediate" },
-      { name: "Combine", level: "Expert" },
-      { name: "Swift Concurrency", level: "Expert" },
-    ],
-  },
-  {
-    label: "Apple Frameworks",
-    skills: [
-      { name: "CoreData", level: "Expert" },
-      { name: "CloudKit", level: "Intermediate" },
-      { name: "MapKit", level: "Expert" },
-      { name: "CoreLocation", level: "Expert" },
-      { name: "ARKit", level: "Intermediate" },
-      { name: "VisionKit", level: "Intermediate" },
-      { name: "AVKit", level: "Intermediate" },
-      { name: "SpriteKit", level: "Learning" },
-      { name: "CoreML", level: "Learning" },
-      { name: "StoreKit", level: "Intermediate" },
-      { name: "WidgetKit", level: "Intermediate" },
-    ],
-  },
-  {
-    label: "Backend & APIs",
-    skills: [
-      { name: "Firebase", level: "Expert" },
-      { name: "REST APIs", level: "Expert" },
-      { name: "Python", level: "Intermediate" },
       { name: "HTML / CSS", level: "Intermediate" },
     ],
   },
   {
+    label: "Backend",
+    emoji: "⚙️",
+    skills: [
+      { name: "Firebase", level: "Expert" },
+      { name: "REST APIs", level: "Expert" },
+      { name: "Python", level: "Intermediate" },
+      { name: "CoreData", level: "Expert" },
+    ],
+  },
+  {
     label: "Design Tools",
+    emoji: "🎨",
     skills: [
       { name: "Figma", level: "Expert" },
       { name: "Sketch", level: "Intermediate" },
@@ -51,15 +36,13 @@ const skillCategories = [
     ],
   },
   {
-    label: "Quality & DevOps",
+    label: "Soft Skills",
+    emoji: "🧩",
     skills: [
-      { name: "Xcode", level: "Expert" },
-      { name: "Instruments", level: "Expert" },
-      { name: "TestFlight", level: "Expert" },
-      { name: "XCTest", level: "Intermediate" },
-      { name: "Accessibility", level: "Expert" },
-      { name: "MVVM", level: "Expert" },
+      { name: "MVVM Architecture", level: "Expert" },
       { name: "Agile / Scrum", level: "Expert" },
+      { name: "Accessibility", level: "Expert" },
+      { name: "UX-Driven Design", level: "Intermediate" },
     ],
   },
 ];
@@ -231,46 +214,34 @@ const Index = () => {
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
 
-          {/* Proficiency legend */}
-          <AnimatedSection delay={100}>
-            <div className="flex gap-6 mb-8 pixel-font text-[7px] text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-0.5">
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                </div>
-                Expert
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex gap-0.5">
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
-                </div>
-                Intermediate
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex gap-0.5">
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
-                  <div className="w-1.5 h-1.5 bg-muted-foreground/30" />
-                </div>
-                Learning
-              </div>
-            </div>
-          </AnimatedSection>
-
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {skillCategories.map((cat, catIdx) => (
-              <AnimatedSection key={cat.label} delay={catIdx * 100}>
-                <p className="pixel-font text-[8px] md:text-[9px] text-accent/70 mb-3 tracking-wider">
-                  {`> ${cat.label.toUpperCase()}`}
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                  {cat.skills.map((skill, i) => (
-                    <SkillBadge key={skill.name} name={skill.name} level={skill.level as "Expert" | "Intermediate" | "Learning"} index={i} variant="primary" />
-                  ))}
+              <AnimatedSection key={cat.label} delay={catIdx * 120}>
+                <div className="pixel-card h-full">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-lg">{cat.emoji}</span>
+                    <h3 className="pixel-font text-[9px] md:text-[10px] text-accent tracking-wider">
+                      {cat.label.toUpperCase()}
+                    </h3>
+                  </div>
+                  <div className="space-y-3">
+                    {cat.skills.map((skill) => (
+                      <div key={skill.name} className="flex items-center justify-between group">
+                        <span className="text-sm text-foreground group-hover:text-primary transition-colors">
+                          {skill.name}
+                        </span>
+                        <span className={`pixel-font text-[7px] px-2 py-0.5 border ${
+                          skill.level === "Expert"
+                            ? "border-primary/50 text-primary bg-primary/10"
+                            : skill.level === "Intermediate"
+                            ? "border-accent/50 text-accent bg-accent/10"
+                            : "border-muted-foreground/30 text-muted-foreground bg-muted/50"
+                        }`}>
+                          {skill.level}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </AnimatedSection>
             ))}
