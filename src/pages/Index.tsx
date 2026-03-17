@@ -164,7 +164,7 @@ const Index = () => {
           </AnimatedSection>
 
           <AnimatedSection delay={100}>
-            <div className="flex flex-wrap gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {iosSkills.map((skill, i) => (
                 <SkillBadge key={skill.name} name={skill.name} index={i} variant="primary" />
               ))}
@@ -179,7 +179,7 @@ const Index = () => {
           </AnimatedSection>
 
           <AnimatedSection delay={300}>
-            <div className="flex flex-wrap gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {otherSkills.map((skill, i) => (
                 <SkillBadge key={skill.name} name={skill.name} index={i} variant="accent" />
               ))}
