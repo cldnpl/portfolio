@@ -7,43 +7,28 @@ import { Github, Mail, Phone, MapPin, Trophy, Linkedin, ExternalLink, Code2, Bri
 
 const skillCategories = [
   {
-    label: "iOS & Frontend",
+    label: "Frontend",
+    emoji: "📱",
     skills: [
       { name: "Swift", level: "Expert" },
       { name: "SwiftUI", level: "Expert" },
       { name: "UIKit", level: "Expert" },
-      { name: "AppKit", level: "Intermediate" },
-      { name: "Combine", level: "Expert" },
-      { name: "Swift Concurrency", level: "Expert" },
-    ],
-  },
-  {
-    label: "Apple Frameworks",
-    skills: [
-      { name: "CoreData", level: "Expert" },
-      { name: "CloudKit", level: "Intermediate" },
-      { name: "MapKit", level: "Expert" },
-      { name: "CoreLocation", level: "Expert" },
-      { name: "ARKit", level: "Intermediate" },
-      { name: "VisionKit", level: "Intermediate" },
-      { name: "AVKit", level: "Intermediate" },
-      { name: "SpriteKit", level: "Learning" },
-      { name: "CoreML", level: "Learning" },
-      { name: "StoreKit", level: "Intermediate" },
-      { name: "WidgetKit", level: "Intermediate" },
-    ],
-  },
-  {
-    label: "Backend & APIs",
-    skills: [
-      { name: "Firebase", level: "Expert" },
-      { name: "REST APIs", level: "Expert" },
-      { name: "Python", level: "Intermediate" },
       { name: "HTML / CSS", level: "Intermediate" },
     ],
   },
   {
+    label: "Backend",
+    emoji: "⚙️",
+    skills: [
+      { name: "Firebase", level: "Expert" },
+      { name: "REST APIs", level: "Expert" },
+      { name: "Python", level: "Intermediate" },
+      { name: "CoreData", level: "Expert" },
+    ],
+  },
+  {
     label: "Design Tools",
+    emoji: "🎨",
     skills: [
       { name: "Figma", level: "Expert" },
       { name: "Sketch", level: "Intermediate" },
@@ -51,15 +36,13 @@ const skillCategories = [
     ],
   },
   {
-    label: "Quality & DevOps",
+    label: "Soft Skills",
+    emoji: "🧩",
     skills: [
-      { name: "Xcode", level: "Expert" },
-      { name: "Instruments", level: "Expert" },
-      { name: "TestFlight", level: "Expert" },
-      { name: "XCTest", level: "Intermediate" },
-      { name: "Accessibility", level: "Expert" },
-      { name: "MVVM", level: "Expert" },
+      { name: "MVVM Architecture", level: "Expert" },
       { name: "Agile / Scrum", level: "Expert" },
+      { name: "Accessibility", level: "Expert" },
+      { name: "UX-Driven Design", level: "Intermediate" },
     ],
   },
 ];
