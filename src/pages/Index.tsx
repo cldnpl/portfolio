@@ -146,7 +146,7 @@ const Index = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <h2 className="pixel-font text-sm md:text-base text-primary mb-2">
-              {"// SKILL_TREE"}
+              {"// iOS_SKILL_TREE"}
             </h2>
             <div className="pixel-divider mb-8" />
           </AnimatedSection>
