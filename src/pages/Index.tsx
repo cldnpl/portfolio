@@ -52,7 +52,7 @@ const Index = () => {
 
           <AnimatedSection delay={400}>
             <p className="pixel-font text-[9px] md:text-[11px] text-primary tracking-widest uppercase">
-              Developer · Designer · Polyglot
+              iOS Developer · Swift & SwiftUI
             </p>
           </AnimatedSection>
 
