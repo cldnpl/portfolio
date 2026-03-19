@@ -13,7 +13,7 @@ const skillCategories = [
       { name: "Swift", level: "Expert" },
       { name: "SwiftUI", level: "Expert" },
       { name: "UIKit", level: "Expert" },
-      { name: "HTML / CSS", level: "Intermediate" },
+      { name: "Objective-C", level: "Intermediate" },
     ],
   },
   {
