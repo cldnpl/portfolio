@@ -1,0 +1,504 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'Champignon';
+  src: url('/fonts/Champignon.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Elegant';
+  src: url('/fonts/Elegant.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/fonts/Minecraft.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Oceanside Typewriter';
+  src: url('/fonts/Oceanside Typewriter.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tox Typewriter';
+  src: url('/fonts/Tox Typewriter.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 225 24% 7%;
+    --foreground: 38 28% 94%;
+
+    --card: 225 20% 10%;
+    --card-foreground: 38 28% 94%;
+
+    --popover: 225 20% 10%;
+    --popover-foreground: 38 28% 94%;
+
+    --primary: 172 68% 52%;
+    --primary-foreground: 225 24% 7%;
+
+    --secondary: 348 72% 62%;
+    --secondary-foreground: 38 28% 94%;
+
+    --muted: 225 16% 16%;
+    --muted-foreground: 41 12% 65%;
+
+    --accent: 44 90% 60%;
+    --accent-foreground: 225 24% 7%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 16% 22%;
+    --input: 220 16% 22%;
+    --ring: 172 68% 52%;
+
+    --radius: 0px;
+
+    --pixel-shadow: 4px 4px 0px hsl(172 70% 28%);
+    --pixel-shadow-accent: 4px 4px 0px hsl(348 64% 42%);
+    --pixel-glow: 0 0 20px hsl(172 68% 52% / 0.35), 0 0 40px hsl(44 90% 60% / 0.18);
+
+    --sidebar-background: 270 30% 10%;
+    --sidebar-foreground: 270 100% 97%;
+    --sidebar-primary: 270 80% 65%;
+    --sidebar-primary-foreground: 270 100% 97%;
+    --sidebar-accent: 270 20% 18%;
+    --sidebar-accent-foreground: 270 100% 97%;
+    --sidebar-border: 270 40% 25%;
+    --sidebar-ring: 270 80% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    image-rendering: auto;
+  }
+
+  body {
+    @apply text-foreground;
+    font-family: 'Space Mono', monospace;
+    background: #000000;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body,
+  #root {
+    min-height: 100vh;
+  }
+
+  button,
+  canvas,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .pixel-font {
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  .pixel-border {
+    border: 4px solid hsl(var(--primary));
+    box-shadow: var(--pixel-shadow);
+  }
+
+  .pixel-border-accent {
+    border: 4px solid hsl(var(--accent));
+    box-shadow: var(--pixel-shadow-accent);
+  }
+
+  .pixel-glow {
+    box-shadow: var(--pixel-glow);
+  }
+
+  .pixel-btn {
+    @apply pixel-font px-6 py-3 text-xs uppercase tracking-wider;
+    border: 4px solid hsl(var(--primary));
+    box-shadow: 4px 4px 0px hsl(270 80% 40%);
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    transition: all 0.1s;
+  }
+
+  .pixel-btn:hover {
+    box-shadow: 2px 2px 0px hsl(270 80% 40%);
+    transform: translate(2px, 2px);
+  }
+
+  .pixel-btn:active {
+    box-shadow: 0px 0px 0px hsl(270 80% 40%);
+    transform: translate(4px, 4px);
+  }
+
+  .scanlines {
+    position: relative;
+  }
+
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(270 80% 65% / 0.03) 2px,
+      hsl(270 80% 65% / 0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  .pixel-card {
+    @apply p-6;
+    border: 4px solid hsl(var(--border));
+    background: hsl(var(--card));
+    box-shadow: var(--pixel-shadow);
+    transition: all 0.2s;
+  }
+
+  .pixel-card:hover {
+    border-color: hsl(var(--primary));
+    box-shadow: var(--pixel-glow);
+  }
+
+  .pixel-tag {
+    @apply pixel-font text-[8px] px-3 py-1 uppercase;
+    border: 2px solid hsl(var(--primary));
+    color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.1);
+  }
+
+  .pixel-divider {
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      hsl(var(--primary)),
+      hsl(var(--primary)) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes pixel-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pixel-slide-in {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bar-fill {
+  from { width: 0; }
+}
+
+.portfolio-landing {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #ffffff;
+  background: transparent;
+}
+
+.portfolio-landing > :not(.animated-background) {
+  position: relative;
+  z-index: 1;
+}
+
+.animated-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000000;
+}
+
+.animated-background-media {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.background-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(0, 0, 0, 0.34), transparent 54%),
+    linear-gradient(rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.68));
+}
+
+.portfolio-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.1rem 1.5rem;
+  background: rgba(58, 23, 112, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.portfolio-mark {
+  color: #ffffff;
+  font-family: 'Elegant', 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.1vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.portfolio-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.1rem, 2.7vw, 3rem);
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: clamp(0.9rem, 3.4vw, 3.2rem);
+}
+
+.portfolio-links a {
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Minecraft', monospace;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.portfolio-links a:hover {
+  opacity: 0.72;
+}
+
+.hero-section {
+  position: relative;
+  min-height: 76svh;
+  display: grid;
+  place-items: center;
+  padding: 7rem 1rem 0;
+  isolation: isolate;
+}
+
+.hero-section::before {
+  content: none;
+}
+
+.hero-section::after {
+  content: none;
+}
+
+.hero-content {
+  width: min(100%, 1120px);
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+}
+
+.hero-model {
+  width: min(96vw, 1120px);
+  height: clamp(20rem, 60vw, 40rem);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.hero-model:active {
+  cursor: grabbing;
+}
+
+.hero-model canvas,
+.iphone-model canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.iphone-scroll-section {
+  min-height: 230svh;
+  position: relative;
+  margin-top: -6svh;
+  background: transparent;
+}
+
+.quote-reveal-section {
+  position: relative;
+  min-height: 138svh;
+  background: transparent;
+}
+
+.quote-reveal-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 8svh 1rem 7svh;
+}
+
+.quote-reveal-copy {
+  width: min(88vw, 920px);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Tox Typewriter', monospace;
+  letter-spacing: 0;
+  opacity: 0;
+  transform: translate3d(100vw, 0, 0);
+  will-change: opacity, transform;
+}
+
+.quote-reveal-text {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.6vw, 3.2rem);
+  line-height: 1.12;
+}
+
+.quote-reveal-author {
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  line-height: 1;
+}
+
+.iphone-sticky-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.iphone-sticky-stage::before {
+  content: none;
+}
+
+.iphone-model {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 820px);
+  height: min(82svh, 720px);
+}
+
+.portfolio-anchor {
+  height: 1px;
+}
+
+@media (max-width: 640px) {
+  .portfolio-nav {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+
+  .portfolio-links {
+    justify-content: flex-end;
+    gap: 0.7rem 1rem;
+    max-width: 72vw;
+    margin-right: 0;
+  }
+
+  .portfolio-links a {
+    font-family: 'Minecraft', monospace;
+    font-size: 0.83rem;
+  }
+
+  .hero-section {
+    min-height: 70svh;
+    padding: 6.5rem 0.75rem 0;
+  }
+
+  .quote-reveal-section {
+    min-height: 124svh;
+  }
+
+  .quote-reveal-sticky {
+    padding: 7svh 0.75rem 6svh;
+  }
+
+  .quote-reveal-copy {
+    width: min(92vw, 920px);
+  }
+
+  .quote-reveal-text {
+    font-size: clamp(1.45rem, 6.4vw, 2.2rem);
+  }
+
+  .quote-reveal-author {
+    font-size: 1rem;
+  }
+
+  .hero-model {
+    width: 100vw;
+    height: 62svh;
+  }
+
+  .iphone-scroll-section {
+    min-height: 220svh;
+    margin-top: -5svh;
+  }
+
+  .iphone-model {
+    width: 112vw;
+    height: 78svh;
+  }
+}
