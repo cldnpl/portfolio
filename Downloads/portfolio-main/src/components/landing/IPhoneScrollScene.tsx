@@ -20,59 +20,6 @@ const frameObject = (object: THREE.Object3D) => {
   object.position.copy(center.multiplyScalar(-scale));
 };
 
-const phoneMaterials = {
-  back: new THREE.MeshPhysicalMaterial({
-    color: 0xd8cfaa,
-    metalness: 0.14,
-    roughness: 0.48,
-    clearcoat: 0.38,
-    clearcoatRoughness: 0.34,
-    envMapIntensity: 1.1,
-  }),
-  frame: new THREE.MeshStandardMaterial({
-    color: 0x14161b,
-    metalness: 0.88,
-    roughness: 0.14,
-    envMapIntensity: 2.2,
-  }),
-  screenGlass: new THREE.MeshPhysicalMaterial({
-    color: 0x05070a,
-    metalness: 0,
-    roughness: 0.02,
-    clearcoat: 1,
-    clearcoatRoughness: 0.02,
-    reflectivity: 1,
-    envMapIntensity: 3.4,
-  }),
-  lensGlass: new THREE.MeshPhysicalMaterial({
-    color: 0x080d16,
-    metalness: 0,
-    roughness: 0.015,
-    transmission: 0.28,
-    thickness: 0.35,
-    ior: 1.5,
-    clearcoat: 1,
-    clearcoatRoughness: 0.01,
-    transparent: true,
-    opacity: 0.82,
-    envMapIntensity: 3.2,
-  }),
-  cameraRing: new THREE.MeshStandardMaterial({
-    color: 0xd0c8a6,
-    metalness: 0.82,
-    roughness: 0.14,
-    envMapIntensity: 2.4,
-  }),
-  whiteDetail: new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    metalness: 0.34,
-    roughness: 0.1,
-    emissive: 0x1f1b12,
-    emissiveIntensity: 0.2,
-    envMapIntensity: 2.1,
-  }),
-};
-
 const objectPath = (object: THREE.Object3D) => {
   const names: string[] = [];
   let current: THREE.Object3D | null = object;
@@ -85,11 +32,11 @@ const objectPath = (object: THREE.Object3D) => {
   return names.reverse().join(" ").toLowerCase();
 };
 
-const materialForMesh = (mesh: THREE.Mesh) => {
+const shouldUseGlassMaterial = (mesh: THREE.Mesh) => {
   const name = objectPath(mesh);
 
-  if (name.includes("screen") || name.includes("island") || name.includes("sound")) {
-    return phoneMaterials.screenGlass;
+  if (name.includes("screen") || name.includes("island")) {
+    return "screen";
   }
 
   if (
@@ -101,22 +48,10 @@ const materialForMesh = (mesh: THREE.Mesh) => {
     name.includes("flash glass") ||
     name.includes("flash_glass")
   ) {
-    return phoneMaterials.lensGlass;
+    return "lens";
   }
 
-  if (name.includes("back camera") || name.includes("back_camera") || name.includes("cylinder")) {
-    return phoneMaterials.cameraRing;
-  }
-
-  if (name.includes("apple") || name.includes("flash mtl") || name.includes("flash_mtl") || name.includes("scroo")) {
-    return phoneMaterials.whiteDetail;
-  }
-
-  if (name.includes("back")) {
-    return phoneMaterials.back;
-  }
-
-  return phoneMaterials.frame;
+  return null;
 };
 
 const IPhoneScrollScene = () => {
@@ -127,6 +62,10 @@ const IPhoneScrollScene = () => {
     const section = sectionRef.current;
     const container = containerRef.current;
     if (!section || !container) return;
+
+    let screenGlassMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let lensGlassMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let edgeMaterial: THREE.LineBasicMaterial | null = null;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
@@ -143,24 +82,24 @@ const IPhoneScrollScene = () => {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 0.8;
     container.appendChild(renderer.domElement);
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = environment;
 
-    scene.add(new THREE.HemisphereLight(0xffffff, 0xe5e7eb, 3.1));
+    scene.add(new THREE.HemisphereLight(0xf6f1e8, 0xc8bfb3, 1.45));
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 4.2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.75);
     keyLight.position.set(0, 2.6, 5);
     scene.add(keyLight);
 
-    const sideLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    const sideLight = new THREE.DirectionalLight(0xf7efe1, 0.72);
     sideLight.position.set(-4, 2.2, 3);
     scene.add(sideLight);
 
-    const backLight = new THREE.DirectionalLight(0xffffff, 2.6);
+    const backLight = new THREE.DirectionalLight(0xffffff, 0.88);
     backLight.position.set(2, 2.5, -5);
     scene.add(backLight);
 
@@ -173,21 +112,54 @@ const IPhoneScrollScene = () => {
     const loader = new ColladaLoader();
     loader.load(MODEL_URL, (collada) => {
       const model = collada.scene;
-      const edgeMaterial = new THREE.LineBasicMaterial({
-        color: 0xf0e5b8,
+      screenGlassMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x10131a,
+        metalness: 0,
+        roughness: 0.06,
+        clearcoat: 1,
+        clearcoatRoughness: 0.04,
+        transmission: 0.1,
+        thickness: 0.18,
+        ior: 1.5,
         transparent: true,
-        opacity: 0.22,
+        opacity: 0.9,
+        envMapIntensity: 2.1,
+      });
+      lensGlassMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x1a1f28,
+        metalness: 0,
+        roughness: 0.02,
+        clearcoat: 1,
+        clearcoatRoughness: 0.02,
+        transmission: 0.42,
+        thickness: 0.45,
+        ior: 1.5,
+        transparent: true,
+        opacity: 0.88,
+        envMapIntensity: 1.9,
+      });
+      edgeMaterial = new THREE.LineBasicMaterial({
+        color: 0xe5dfd4,
+        transparent: true,
+        opacity: 0.12,
       });
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.frustumCulled = false;
-          child.material = materialForMesh(child);
+          const glassType = shouldUseGlassMaterial(child);
+          if (glassType === "screen") {
+            child.material = screenGlassMaterial;
+          } else if (glassType === "lens") {
+            child.material = lensGlassMaterial;
+          }
           if (child.geometry) {
             const edges = new THREE.EdgesGeometry(child.geometry, 35);
             const outline = new THREE.LineSegments(edges, edgeMaterial);
             child.add(outline);
           }
-          child.material.side = THREE.DoubleSide;
+          if (glassType) {
+            child.material.side = THREE.DoubleSide;
+          }
           child.material.needsUpdate = true;
         }
       });
@@ -219,8 +191,8 @@ const IPhoneScrollScene = () => {
 
     const animate = () => {
       const progress = easeInOutCubic(getScrollProgress());
-      const rotateProgress = easeInOutCubic(clamp01(progress / 0.62));
-      const approachProgress = easeInOutCubic(clamp01((progress - 0.62) / 0.38));
+      const rotateProgress = easeInOutCubic(clamp01((progress + 0.14) / 0.62));
+      const approachProgress = easeInOutCubic(clamp01((progress - 0.52) / 0.48));
       const elapsed = (performance.now() - startedAt) / 1000;
       const idle = Math.sin(elapsed * 1.1) * 0.025;
 
@@ -242,6 +214,9 @@ const IPhoneScrollScene = () => {
       resizeObserver.disconnect();
       environment.dispose();
       pmremGenerator.dispose();
+      screenGlassMaterial?.dispose();
+      lensGlassMaterial?.dispose();
+      edgeMaterial?.dispose();
       renderer.dispose();
       container.removeChild(renderer.domElement);
     };
