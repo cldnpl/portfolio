@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node server.js",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist/server",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "NODE_ENV=production node server.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
