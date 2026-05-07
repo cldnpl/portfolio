@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -20,10 +21,58 @@ const frameObject = (object: THREE.Object3D) => {
   object.position.copy(center.multiplyScalar(-scale));
 };
 
+const createLinearBrushedNormalMap = () => {
+  const size = 256;
+  const data = new Uint8Array(size * size * 3);
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const grain =
+        Math.sin(x * 0.42) * 5 +
+        Math.sin(x * 1.7 + y * 0.025) * 2 +
+        (Math.random() - 0.5) * 3;
+      const index = (y * size + x) * 3;
+      data[index] = 128 + grain;
+      data[index + 1] = 128 + Math.sin(y * 0.08) * 1.5;
+      data[index + 2] = 255;
+    }
+  }
+
+  const texture = new THREE.DataTexture(data, size, size, THREE.RGBFormat);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(5, 1);
+  texture.needsUpdate = true;
+  return texture;
+};
+
+const createGlassMicroNormalMap = () => {
+  const size = 256;
+  const data = new Uint8Array(size * size * 3);
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const smudge = Math.sin((x + y) * 0.045) * 2 + Math.sin(x * 0.13) * 1.5 + (Math.random() - 0.5) * 3;
+      const scratch = Math.sin(x * 2.4 + y * 0.018) * 1.2;
+      const index = (y * size + x) * 3;
+      data[index] = 128 + smudge + scratch;
+      data[index + 1] = 128 + smudge * 0.45;
+      data[index + 2] = 255;
+    }
+  }
+
+  const texture = new THREE.DataTexture(data, size, size, THREE.RGBFormat);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2.4, 2.4);
+  texture.needsUpdate = true;
+  return texture;
+};
+
 const buttonConfigs = [
-  { id: "projects", label: "my projects" },
-  { id: "about", label: "about me" },
-  { id: "contact", label: "contact me" },
+  { id: "projects", label: "my projects", path: "/projects" },
+  { id: "about", label: "about me", path: "/about" },
+  { id: "contact", label: "contact me", path: "/contact" },
 ] as const;
 
 type ButtonId = (typeof buttonConfigs)[number]["id"];
@@ -34,6 +83,15 @@ type ButtonBounds = {
   y: number;
   width: number;
   height: number;
+};
+
+type ButtonVisualState = Record<ButtonId, { current: number; target: number }>;
+
+type RevealState = {
+  active: boolean;
+  progress: number;
+  x: number;
+  y: number;
 };
 
 const createScreenUi = () => {
@@ -57,6 +115,17 @@ const createScreenUi = () => {
     width: 1156 * scale,
     height: 232 * scale,
   }));
+  const buttonVisualState = buttonConfigs.reduce((state, config) => {
+    state[config.id] = { current: 0, target: 0 };
+    return state;
+  }, {} as ButtonVisualState);
+  const revealState: RevealState = {
+    active: false,
+    progress: 0,
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  };
+  let selectedButtonId: ButtonId | null = null;
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -121,48 +190,82 @@ const createScreenUi = () => {
     ctx.fillRect(batteryX + 55 * scale, batteryY + 9 * scale, 5 * scale, 10 * scale);
   };
 
-  const drawButton = (bounds: ButtonBounds, activeId: ButtonId | null) => {
+  const drawButton = (bounds: ButtonBounds) => {
     const config = buttonConfigs.find((button) => button.id === bounds.id);
     if (!config) return;
 
-    const active = bounds.id === activeId;
-    const grow = active ? 38 * scale : 0;
+    const progress = buttonVisualState[bounds.id].current;
+    const selected = bounds.id === selectedButtonId;
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const grow = 24 * scale * eased;
+    const lift = 9 * scale * eased;
     const x = bounds.x - grow / 2;
-    const y = bounds.y - grow / 2;
+    const y = bounds.y - grow / 2 - lift;
     const width = bounds.width + grow;
     const height = bounds.height + grow;
-    const radius = 58 * scale;
+    const radius = (58 + 10 * eased) * scale;
 
     ctx.save();
-    ctx.shadowColor = active ? "rgba(63, 20, 136, 0.34)" : "rgba(63, 20, 136, 0.18)";
-    ctx.shadowBlur = active ? 42 * scale : 20 * scale;
-    ctx.shadowOffsetY = active ? 20 * scale : 10 * scale;
-    ctx.fillStyle = active ? "#6f35de" : "#6330c7";
+    ctx.shadowColor = `rgba(63, 20, 136, ${0.18 + 0.16 * eased})`;
+    ctx.shadowBlur = (20 + 22 * eased) * scale;
+    ctx.shadowOffsetY = (10 + 10 * eased) * scale;
+    const buttonGradient = ctx.createLinearGradient(x, y, x + width, y + height);
+    const startColor = selected ? "#7440dc" : "#6330c7";
+    const endColor = selected ? "#5122b8" : "#5f2bc2";
+    buttonGradient.addColorStop(0, progress > 0.01 ? "#8a57ee" : startColor);
+    buttonGradient.addColorStop(1, progress > 0.01 ? "#642bd2" : endColor);
+    ctx.fillStyle = buttonGradient;
     ctx.beginPath();
     ctx.roundRect(x, y, width, height, radius);
     ctx.fill();
     ctx.restore();
 
     const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-    gradient.addColorStop(0, "rgba(255,255,255,0.16)");
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    gradient.addColorStop(0, `rgba(255,255,255,${0.16 + 0.12 * eased})`);
+    gradient.addColorStop(1, "rgba(255,255,255,0.02)");
     ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.roundRect(x + 4 * scale, y + 4 * scale, width - 8 * scale, height - 8 * scale, radius - 4 * scale);
     ctx.fill();
 
+    if (eased > 0.01) {
+      ctx.save();
+      ctx.strokeStyle = `rgba(255,255,255,${0.28 + 0.34 * eased})`;
+      ctx.lineWidth = (4 + 3 * eased) * scale;
+      ctx.shadowColor = "rgba(255,255,255,0.58)";
+      ctx.shadowBlur = 28 * scale * eased;
+      ctx.beginPath();
+      ctx.roundRect(x + 8 * scale, y + 8 * scale, width - 16 * scale, height - 16 * scale, radius - 8 * scale);
+      ctx.stroke();
+      ctx.restore();
+    }
+
     ctx.fillStyle = "#ffffff";
-    ctx.font = `800 ${active ? 84 * scale : 80 * scale}px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif`;
+    ctx.font = `800 ${(80 + 3 * eased) * scale}px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(config.label, x + width / 2, y + height / 2 + 3 * scale);
   };
 
-  const draw = (activeId: ButtonId | null) => {
+  const drawCircularReveal = () => {
+    if (!revealState.active && revealState.progress <= 0) return;
+
+    const eased = 1 - Math.pow(1 - revealState.progress, 3);
+    const maxRadius = Math.hypot(canvas.width, canvas.height);
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, 0.82 * (1 - revealState.progress * 0.72));
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(revealState.x, revealState.y, maxRadius * eased, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
+    ctx.translate(canvas.width, canvas.height);
+    ctx.rotate(Math.PI);
 
     if (backgroundReady) {
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
@@ -192,22 +295,69 @@ const createScreenUi = () => {
     ctx.fill();
 
     drawStatusBar();
-    buttonBounds.forEach((bounds) => drawButton(bounds, activeId));
+    buttonBounds.forEach((bounds) => drawButton(bounds));
+    drawCircularReveal();
     ctx.restore();
     texture.needsUpdate = true;
   };
 
-  draw(null);
+  const setInteraction = (hoveredId: ButtonId | null, nextSelectedId: ButtonId | null) => {
+    selectedButtonId = nextSelectedId;
+    buttonConfigs.forEach(({ id }) => {
+      buttonVisualState[id].target = id === hoveredId ? 1 : id === selectedButtonId ? 0.58 : 0;
+    });
+  };
+
+  const startReveal = (buttonId: ButtonId) => {
+    const bounds = buttonBounds.find((button) => button.id === buttonId);
+    if (!bounds) return;
+
+    revealState.active = true;
+    revealState.progress = 0;
+    revealState.x = bounds.x + bounds.width / 2;
+    revealState.y = bounds.y + bounds.height / 2;
+  };
+
+  const update = () => {
+    let changed = false;
+    buttonConfigs.forEach(({ id }) => {
+      const state = buttonVisualState[id];
+      const delta = state.target - state.current;
+      if (Math.abs(delta) > 0.001) {
+        state.current += delta * 0.2;
+        changed = true;
+      } else if (state.current !== state.target) {
+        state.current = state.target;
+        changed = true;
+      }
+    });
+    if (revealState.active) {
+      revealState.progress = Math.min(1, revealState.progress + 0.035);
+      changed = true;
+      if (revealState.progress >= 1) {
+        revealState.active = false;
+      }
+    } else if (revealState.progress > 0) {
+      revealState.progress = Math.max(0, revealState.progress - 0.08);
+      changed = true;
+    }
+    if (changed) draw();
+  };
+
+  draw();
   backgroundImage.onload = () => {
     backgroundReady = true;
-    draw(null);
+    draw();
   };
 
   return {
     buttonBounds,
     canvas,
     draw,
+    setInteraction,
+    startReveal,
     texture,
+    update,
   };
 };
 
@@ -223,29 +373,26 @@ const objectPath = (object: THREE.Object3D) => {
   return names.reverse().join(" ").toLowerCase();
 };
 
-const shouldUseGlassMaterial = (mesh: THREE.Mesh) => {
+const getPhoneMaterialRole = (mesh: THREE.Mesh) => {
   const name = objectPath(mesh);
 
-  if (name.includes("screen") || name.includes("island")) {
-    return "screen";
-  }
-
-  if (
-    name.includes("camera glass") ||
-    name.includes("camera_glass") ||
-    name.includes("front camra") ||
-    name.includes("front_camra") ||
-    name.includes("sphere") ||
-    name.includes("flash glass") ||
-    name.includes("flash_glass")
-  ) {
-    return "lens";
-  }
+  if (name.includes("screen")) return "screen";
+  if (name.includes("island")) return "island";
+  if (name.includes("camera glass")) return "removeCameraArtifact";
+  if (name.includes("back camera")) return "cameraBase";
+  if (name.includes("back")) return "backGlass";
+  if (name.includes("phone case") || name.includes("scroo") || name.includes("sound box")) return "frame";
+  if (name.includes("cylinder")) return "replaceLensGeometry";
+  if (name.includes("front camra")) return "lidar";
+  if (name.includes("lens dark face")) return "replaceLensGeometry";
+  if (name.includes("flash glass") || name.includes("flash mtl")) return "flash";
+  if (name.includes("apple logo")) return "appleLogo";
 
   return null;
 };
 
 const IPhoneScrollScene = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -255,13 +402,30 @@ const IPhoneScrollScene = () => {
     if (!section || !container) return;
 
     let lensGlassMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let lensBackingMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let lensCoverMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let frameMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let backGlassMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let cameraBaseMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let lensRingMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let flashMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let lidarMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let appleLogoMaterial: THREE.MeshPhysicalMaterial | null = null;
+    let brushedAluminumNormalMap: THREE.DataTexture | null = null;
+    let glassMicroNormalMap: THREE.DataTexture | null = null;
     let edgeMaterial: THREE.LineBasicMaterial | null = null;
     let screenMaterial: THREE.MeshBasicMaterial | null = null;
     let screenBlackMaterial: THREE.MeshBasicMaterial | null = null;
     let screenMesh: THREE.Mesh | null = null;
     let screenUi: ReturnType<typeof createScreenUi> | null = null;
+    const replacementLensGeometries: THREE.BufferGeometry[] = [];
+    const lensBackingGeometries: THREE.BufferGeometry[] = [];
+    const lensCoverGeometries: THREE.BufferGeometry[] = [];
     let hoveredButtonId: ButtonId | null = null;
     let selectedButtonId: ButtonId | null = null;
+    let routeRevealElement: HTMLDivElement | null = null;
+    let routeRevealTimer = 0;
+    let routeRevealCleanupTimer = 0;
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
 
@@ -280,7 +444,7 @@ const IPhoneScrollScene = () => {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.7;
+    renderer.toneMappingExposure = 1.2;
     container.appendChild(renderer.domElement);
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -288,20 +452,18 @@ const IPhoneScrollScene = () => {
     scene.environment = environment;
     scene.background = null;
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.75);
-    keyLight.intensity = 0.08;
-    keyLight.position.set(0, 2.6, 5);
+    const keyLight = new THREE.RectAreaLight(0xfff4e5, 1.45, 4.8, 4.8);
+    keyLight.position.set(-3.2, 3.2, 4.2);
+    keyLight.lookAt(0, 0, 0);
     scene.add(keyLight);
 
-    const sideLight = new THREE.DirectionalLight(0xf7efe1, 0.72);
-    sideLight.intensity = 0.05;
-    sideLight.position.set(-4, 2.2, 3);
-    scene.add(sideLight);
+    const fillLight = new THREE.DirectionalLight(0xddeaff, 0.42);
+    fillLight.position.set(3.4, -2.3, 2.5);
+    scene.add(fillLight);
 
-    const backLight = new THREE.DirectionalLight(0xffffff, 0.88);
-    backLight.intensity = 0.08;
-    backLight.position.set(2, 2.5, -5);
-    scene.add(backLight);
+    const lensCatchLight = new THREE.PointLight(0xffffff, 0.85, 8);
+    lensCatchLight.position.set(-1.35, 2.15, 2.3);
+    scene.add(lensCatchLight);
 
     const phoneRoot = new THREE.Group();
     phoneRoot.rotation.set(-0.05, Math.PI, 0.08);
@@ -313,6 +475,8 @@ const IPhoneScrollScene = () => {
     loader.load(MODEL_URL, (gltf) => {
       const model = gltf.scene;
       screenUi = createScreenUi();
+      brushedAluminumNormalMap = createLinearBrushedNormalMap();
+      glassMicroNormalMap = createGlassMicroNormalMap();
       screenMaterial = new THREE.MeshBasicMaterial({
         map: screenUi.texture,
         color: 0xffffff,
@@ -324,54 +488,192 @@ const IPhoneScrollScene = () => {
         toneMapped: false,
         side: THREE.DoubleSide,
       });
-      lensGlassMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x1a1f28,
+      frameMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xd4c97a,
+        metalness: 1,
+        roughness: 0.15,
+        anisotropy: 0.6,
+        anisotropyRotation: 0,
+        specularIntensity: 0.8,
+        normalMap: brushedAluminumNormalMap,
+        normalScale: new THREE.Vector2(0.08, 0.018),
+        envMapIntensity: 3,
+      });
+      backGlassMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xf5f0c8,
         metalness: 0,
-        roughness: 0.02,
+        roughness: 0.08,
+        specularIntensity: 0.9,
+        ior: 1.52,
+        transmission: 0,
+        clearcoat: 1,
+        clearcoatRoughness: 0.04,
+        normalMap: glassMicroNormalMap,
+        normalScale: new THREE.Vector2(0.055, 0.055),
+        envMapIntensity: 2.4,
+      });
+      cameraBaseMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xd4c97a,
+        metalness: 1,
+        roughness: 0.12,
+        anisotropy: 0.55,
+        anisotropyRotation: 0,
+        specularIntensity: 0.8,
+        normalMap: brushedAluminumNormalMap,
+        normalScale: new THREE.Vector2(0.06, 0.014),
+        envMapIntensity: 3,
+      });
+      lensGlassMaterial = new THREE.MeshPhysicalMaterial({
+        name: "iPhone_Lens_Glass",
+        color: 0x050508,
+        specularColor: new THREE.Color(0x7b84ff),
+        specularIntensity: 1,
+        metalness: 0,
+        roughness: 0,
+        clearcoat: 1,
+        clearcoatRoughness: 0,
+        transmission: 0.22,
+        thickness: 0.18,
+        ior: 1.72,
+        opacity: 1,
+        transparent: false,
+        attenuationColor: new THREE.Color(0x020207),
+        attenuationDistance: 0.025,
+        emissive: new THREE.Color(0x0a0a1a),
+        emissiveIntensity: 0.015,
+        envMapIntensity: 6,
+      });
+      lensBackingMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x010104,
+        metalness: 0,
+        roughness: 0.16,
+        clearcoat: 0.55,
+        clearcoatRoughness: 0.02,
+        emissive: new THREE.Color(0x050513),
+        emissiveIntensity: 0.018,
+        envMapIntensity: 1.2,
+      });
+      lensCoverMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x060712,
+        specularColor: new THREE.Color(0xffffff),
+        specularIntensity: 1,
+        metalness: 0,
+        roughness: 0,
+        clearcoat: 1,
+        clearcoatRoughness: 0,
+        transmission: 0.72,
+        thickness: 0.035,
+        ior: 1.52,
+        transparent: true,
+        opacity: 0.18,
+        envMapIntensity: 7,
+      });
+      lensRingMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x1a1a1a,
+        metalness: 1,
+        roughness: 0.04,
+        anisotropy: 0.3,
+        anisotropyRotation: 0,
         clearcoat: 1,
         clearcoatRoughness: 0.02,
-        transmission: 0.42,
-        thickness: 0.45,
-        ior: 1.5,
-        transparent: true,
-        opacity: 0.88,
-        envMapIntensity: 1.9,
+        envMapIntensity: 5,
+      });
+      flashMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xf0eee8,
+        metalness: 0,
+        roughness: 0.4,
+        transmission: 0.3,
+        thickness: 0.12,
+        ior: 1.46,
+        clearcoat: 0.5,
+        clearcoatRoughness: 0.22,
+        envMapIntensity: 1.7,
+      });
+      lidarMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x1c1c1c,
+        metalness: 0.3,
+        roughness: 0.2,
+        clearcoat: 0.45,
+        clearcoatRoughness: 0.08,
+        envMapIntensity: 2.2,
+      });
+      appleLogoMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xf5f0c8,
+        metalness: 0,
+        roughness: 0.055,
+        specularIntensity: 0.9,
+        ior: 1.52,
+        clearcoat: 1,
+        clearcoatRoughness: 0.025,
+        normalMap: glassMicroNormalMap,
+        normalScale: new THREE.Vector2(0.085, 0.085),
+        envMapIntensity: 2.85,
       });
       edgeMaterial = new THREE.LineBasicMaterial({
-        color: 0x000000,
+        color: 0xfff8dd,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.28,
       });
       const applyStudioEnvironment = (material: THREE.Material) => {
         if ("envMap" in material) {
           material.envMap = environment;
         }
-        if ("envMapIntensity" in material) {
-          material.envMapIntensity = 2.35;
-        }
         material.needsUpdate = true;
       };
+      if (lensCoverMaterial) {
+        applyStudioEnvironment(lensCoverMaterial);
+      }
+      if (lensBackingMaterial) {
+        applyStudioEnvironment(lensBackingMaterial);
+      }
+      const removedCameraArtifacts: THREE.Object3D[] = [];
+      const lensReplacementTargets: Array<{ position: THREE.Vector3; radius: number }> = [];
+      model.updateMatrixWorld(true);
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.frustumCulled = false;
-          const glassType = shouldUseGlassMaterial(child);
-          const name = objectPath(child);
-          if (name.includes("screen")) {
+          const materialRole = getPhoneMaterialRole(child);
+          if (materialRole === "removeCameraArtifact" || materialRole === "replaceLensGeometry") {
+            if (materialRole === "replaceLensGeometry") {
+              const box = new THREE.Box3().setFromObject(child);
+              const size = box.getSize(new THREE.Vector3());
+              const radius = Math.max(size.x, size.y) * (objectPath(child).includes("cylinder") ? 0.28 : 0.62);
+              if (radius > 0.04) {
+                lensReplacementTargets.push({
+                  position: box.getCenter(new THREE.Vector3()),
+                  radius,
+                });
+              }
+            }
+            removedCameraArtifacts.push(child);
+            return;
+          }
+          if (materialRole === "screen") {
             screenMesh = child;
             if (screenMaterial) {
               child.material = screenMaterial;
             }
-          } else if (name.includes("island") && screenBlackMaterial) {
+          } else if (materialRole === "island" && screenBlackMaterial) {
             child.material = screenBlackMaterial;
-          } else if (glassType === "lens") {
-            child.material = lensGlassMaterial;
+          } else if (materialRole === "frame" && frameMaterial) {
+            child.material = frameMaterial;
+          } else if (materialRole === "backGlass" && backGlassMaterial) {
+            child.material = backGlassMaterial;
+          } else if (materialRole === "cameraBase" && cameraBaseMaterial) {
+            child.material = cameraBaseMaterial;
+          } else if (materialRole === "flash" && flashMaterial) {
+            child.material = flashMaterial;
+          } else if (materialRole === "lidar" && lidarMaterial) {
+            child.material = lidarMaterial;
+          } else if (materialRole === "appleLogo" && appleLogoMaterial) {
+            child.material = appleLogoMaterial;
           }
           if (child.geometry) {
             const edges = new THREE.EdgesGeometry(child.geometry, 35);
             const outline = new THREE.LineSegments(edges, edgeMaterial);
             child.add(outline);
           }
-          if (glassType === "lens") {
+          if (materialRole === "cameraBase" || materialRole === "flash" || materialRole === "lidar") {
             child.material.side = THREE.DoubleSide;
           }
           const materials = Array.isArray(child.material) ? child.material : [child.material];
@@ -380,6 +682,55 @@ const IPhoneScrollScene = () => {
           });
         }
       });
+      removedCameraArtifacts.forEach((artifact) => {
+        artifact.parent?.remove(artifact);
+      });
+      if (lensGlassMaterial && lensBackingMaterial && lensRingMaterial && lensCoverMaterial) {
+        const uniqueTargets = lensReplacementTargets.filter((target, index, targets) =>
+          targets.findIndex((candidate) => candidate.position.distanceTo(target.position) < 0.035) === index
+        );
+        uniqueTargets.slice(0, 3).forEach(({ position, radius }) => {
+          const localPosition = model.worldToLocal(position.clone());
+          const ringGeometry = new THREE.TorusGeometry(radius * 1.08, radius * 0.08, 18, 112);
+          replacementLensGeometries.push(ringGeometry);
+          const ring = new THREE.Mesh(ringGeometry, lensRingMaterial);
+          ring.name = "recreated lens black chrome ring";
+          ring.position.copy(localPosition);
+          ring.position.z -= 0.014;
+          ring.renderOrder = 5;
+          model.add(ring);
+
+          const backingGeometry = new THREE.CylinderGeometry(radius * 0.9, radius * 0.9, 0.004, 112);
+          lensBackingGeometries.push(backingGeometry);
+          const backing = new THREE.Mesh(backingGeometry, lensBackingMaterial);
+          backing.name = "recreated deep black lens backing";
+          backing.rotation.x = Math.PI / 2;
+          backing.position.copy(localPosition);
+          backing.position.z -= 0.028;
+          backing.renderOrder = 5;
+          model.add(backing);
+
+          const lensGeometry = new THREE.CylinderGeometry(radius * 0.86, radius * 0.86, 0.006, 112);
+          replacementLensGeometries.push(lensGeometry);
+          const lens = new THREE.Mesh(lensGeometry, lensGlassMaterial);
+          lens.name = "recreated iPhone optical lens";
+          lens.rotation.x = Math.PI / 2;
+          lens.position.copy(localPosition);
+          lens.position.z -= 0.025;
+          lens.renderOrder = 6;
+          model.add(lens);
+
+          const geometry = new THREE.CylinderGeometry(radius * 0.84, radius * 0.84, 0.002, 112);
+          lensCoverGeometries.push(geometry);
+          const cover = new THREE.Mesh(geometry, lensCoverMaterial);
+          cover.name = "lens protective cover";
+          cover.rotation.x = Math.PI / 2;
+          cover.position.copy(localPosition);
+          cover.position.z -= 0.031;
+          cover.renderOrder = 7;
+          model.add(cover);
+        });
+      }
       if (screenMesh) {
         screenMesh.renderOrder = 8;
       }
@@ -405,7 +756,7 @@ const IPhoneScrollScene = () => {
     const setHoveredButton = (nextId: ButtonId | null) => {
       if (hoveredButtonId === nextId) return;
       hoveredButtonId = nextId;
-      screenUi?.draw(hoveredButtonId ?? selectedButtonId);
+      screenUi?.setInteraction(hoveredButtonId, selectedButtonId);
       container.style.cursor = nextId ? "pointer" : "grab";
     };
 
@@ -419,7 +770,7 @@ const IPhoneScrollScene = () => {
       if (!hit?.uv) return null;
 
       const x = (1 - hit.uv.x) * screenUi.canvas.width;
-      const y = (1 - hit.uv.y) * screenUi.canvas.height;
+      const y = hit.uv.y * screenUi.canvas.height;
       return (
         screenUi.buttonBounds.find(
           (bounds) =>
@@ -442,9 +793,34 @@ const IPhoneScrollScene = () => {
     const handlePointerDown = (event: PointerEvent) => {
       const nextId = pickButton(event);
       if (nextId) {
+        const config = buttonConfigs.find((button) => button.id === nextId);
         selectedButtonId = nextId;
-        screenUi?.draw(selectedButtonId);
+        screenUi?.startReveal(nextId);
+        screenUi?.setInteraction(nextId, selectedButtonId);
         setHoveredButton(nextId);
+        if (config) {
+          window.clearTimeout(routeRevealTimer);
+          window.clearTimeout(routeRevealCleanupTimer);
+          routeRevealElement?.remove();
+
+          const reveal = document.createElement("div");
+          reveal.className = "portfolio-route-reveal";
+          reveal.style.setProperty("--reveal-x", `${event.clientX}px`);
+          reveal.style.setProperty("--reveal-y", `${event.clientY}px`);
+          document.body.appendChild(reveal);
+          routeRevealElement = reveal;
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => reveal.classList.add("is-active"));
+          });
+          routeRevealTimer = window.setTimeout(() => {
+            navigate(config.path);
+            routeRevealCleanupTimer = window.setTimeout(() => {
+              reveal.remove();
+              if (routeRevealElement === reveal) routeRevealElement = null;
+            }, 520);
+          }, 880);
+        }
       }
     };
 
@@ -473,6 +849,7 @@ const IPhoneScrollScene = () => {
       phoneRoot.position.y = THREE.MathUtils.lerp(0, -0.03, approachProgress) + idle;
       phoneRoot.scale.setScalar(THREE.MathUtils.lerp(0.72, 1.42, approachProgress));
 
+      screenUi?.update();
       renderer.render(scene, camera);
       frame = requestAnimationFrame(animate);
     };
@@ -481,10 +858,27 @@ const IPhoneScrollScene = () => {
 
     return () => {
       cancelAnimationFrame(frame);
+      window.clearTimeout(routeRevealTimer);
+      window.clearTimeout(routeRevealCleanupTimer);
+      routeRevealElement?.remove();
       resizeObserver.disconnect();
       environment.dispose();
       pmremGenerator.dispose();
+      frameMaterial?.dispose();
+      backGlassMaterial?.dispose();
+      cameraBaseMaterial?.dispose();
+      lensRingMaterial?.dispose();
+      flashMaterial?.dispose();
+      lidarMaterial?.dispose();
       lensGlassMaterial?.dispose();
+      lensBackingMaterial?.dispose();
+      lensCoverMaterial?.dispose();
+      replacementLensGeometries.forEach((geometry) => geometry.dispose());
+      lensBackingGeometries.forEach((geometry) => geometry.dispose());
+      lensCoverGeometries.forEach((geometry) => geometry.dispose());
+      appleLogoMaterial?.dispose();
+      brushedAluminumNormalMap?.dispose();
+      glassMicroNormalMap?.dispose();
       edgeMaterial?.dispose();
       screenMaterial?.map?.dispose();
       screenMaterial?.dispose();
@@ -495,7 +889,7 @@ const IPhoneScrollScene = () => {
       renderer.dispose();
       container.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <section ref={sectionRef} className="iphone-scroll-section" aria-label="iPhone 3D reveal">

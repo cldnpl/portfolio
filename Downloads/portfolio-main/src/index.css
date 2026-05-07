@@ -444,6 +444,125 @@
   height: 1px;
 }
 
+.portfolio-route-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: #ffffff;
+  clip-path: circle(0 at var(--reveal-x, 50vw) var(--reveal-y, 50vh));
+  -webkit-clip-path: circle(0 at var(--reveal-x, 50vw) var(--reveal-y, 50vh));
+  transition:
+    clip-path 920ms cubic-bezier(0.22, 1, 0.36, 1),
+    -webkit-clip-path 920ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: clip-path;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.portfolio-route-reveal.is-active {
+  clip-path: circle(150vmax at var(--reveal-x, 50vw) var(--reveal-y, 50vh));
+  -webkit-clip-path: circle(150vmax at var(--reveal-x, 50vw) var(--reveal-y, 50vh));
+}
+
+.portfolio-detail-page {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  color: #ffffff;
+  background: #03010b;
+}
+
+.portfolio-detail-page .animated-background {
+  z-index: 0;
+}
+
+.portfolio-detail-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 52% 46%, rgba(255, 255, 255, 0.08), transparent 28%),
+    linear-gradient(135deg, rgba(10, 2, 26, 0.28), rgba(0, 0, 0, 0.72));
+}
+
+.portfolio-detail-content {
+  position: relative;
+  z-index: 1;
+  width: min(88vw, 960px);
+  min-height: 100svh;
+  margin: 0 auto;
+  display: grid;
+  align-content: center;
+  gap: 1.1rem;
+  padding: 7rem 0 5rem;
+}
+
+.portfolio-detail-mark {
+  width: max-content;
+  color: #ffffff;
+  font-family: 'Elegant', 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.portfolio-detail-eyebrow {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-family: 'Minecraft', monospace;
+  font-size: clamp(0.82rem, 1.2vw, 1rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.portfolio-detail-content h1 {
+  margin: 0;
+  max-width: 11ch;
+  color: #ffffff;
+  font-family: 'Minecraft', monospace;
+  font-size: clamp(3rem, 8vw, 7.6rem);
+  line-height: 0.95;
+  text-shadow:
+    0 0 26px rgba(133, 76, 255, 0.34),
+    0 10px 0 rgba(30, 5, 70, 0.55);
+}
+
+.portfolio-detail-content p:not(.portfolio-detail-eyebrow) {
+  max-width: 42rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'Tox Typewriter', 'Space Mono', monospace;
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+  line-height: 1.5;
+}
+
+.portfolio-detail-link {
+  width: max-content;
+  margin-top: 1rem;
+  padding: 0.9rem 1.25rem;
+  color: #ffffff;
+  font-family: 'Minecraft', monospace;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(112, 69, 217, 0.95), rgba(83, 31, 184, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 1rem;
+  box-shadow: 0 18px 40px rgba(31, 4, 80, 0.42);
+  transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+}
+
+.portfolio-detail-link:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.16);
+  box-shadow:
+    0 20px 44px rgba(31, 4, 80, 0.48),
+    0 0 28px rgba(156, 116, 255, 0.34);
+}
+
 @media (max-width: 640px) {
   .portfolio-nav {
     padding: 1rem;
@@ -500,5 +619,14 @@
   .iphone-model {
     width: 112vw;
     height: 78svh;
+  }
+
+  .portfolio-detail-content {
+    width: min(90vw, 960px);
+    padding: 6rem 0 4rem;
+  }
+
+  .portfolio-detail-content h1 {
+    font-size: clamp(2.45rem, 14vw, 4.4rem);
   }
 }
