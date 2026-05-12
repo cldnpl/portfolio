@@ -15,11 +15,14 @@ const AnimatedBackground = () => {
           className="animated-background-media"
           src={BACKGROUND_GIF}
           alt=""
+          loading="lazy"
           onError={() => setMediaMode("poster")}
         />
       )}
 
-      {mediaMode === "poster" && <img className="animated-background-media" src={BACKGROUND_POSTER} alt="" />}
+      {mediaMode === "poster" && (
+        <img className="animated-background-media" src={BACKGROUND_POSTER} alt="" loading="lazy" />
+      )}
       <div className="background-dim" />
     </div>
   );

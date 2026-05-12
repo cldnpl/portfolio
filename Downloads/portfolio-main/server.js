@@ -4,10 +4,11 @@ import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { createServer as createViteServer } from "vite";
+import compression from "compression";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = __dirname;
-const distDir = path.join(root, "dist");
+const clientDistDir = path.join(root, "dist", "client");
 const port = Number(process.env.PORT || 8080);
 const host = process.env.HOST || "127.0.0.1";
 const isProd = process.env.NODE_ENV === "production";
@@ -85,6 +86,17 @@ const sendFile = async (res, filePath) => {
   res.setHeader("Content-Type", getContentType(filePath));
   res.setHeader("Cache-Control", filePath.includes("/assets/") ? "public, max-age=31536000, immutable" : "public, max-age=0, must-revalidate");
   res.end(data);
+};
+
+const pickPrecompressed = (req, filePath) => {
+  const acceptEncoding = String(req.headers["accept-encoding"] || "");
+  if (acceptEncoding.includes("br") && existsSync(`${filePath}.br`)) {
+    return { path: `${filePath}.br`, encoding: "br" };
+  }
+  if (acceptEncoding.includes("gzip") && existsSync(`${filePath}.gz`)) {
+    return { path: `${filePath}.gz`, encoding: "gzip" };
+  }
+  return { path: filePath, encoding: null };
 };
 
 const renderDocument = (template, appHtml) =>
@@ -165,14 +177,15 @@ if (!isProd) {
     console.log(`SSR dev server running at http://127.0.0.1:${port}/`);
   });
 } else {
-  const template = await readFile(path.join(distDir, "index.html"), "utf-8");
+  const template = await readFile(path.join(clientDistDir, "index.html"), "utf-8");
+  const compress = compression();
 
   const server = http.createServer(async (req, res) => {
     try {
       const origin = getOrigin(req);
       const url = new URL(req.url ?? "/", origin);
       const pathname = decodeURIComponent(url.pathname);
-      const filePath = path.join(distDir, pathname);
+      const filePath = path.join(clientDistDir, pathname);
 
       if (pathname === "/robots.txt") {
         sendText(res, buildRobots(origin), "text/plain; charset=utf-8");
@@ -185,12 +198,16 @@ if (!isProd) {
       }
 
       if (pathname !== "/" && path.extname(pathname) && existsSync(filePath)) {
-        await sendFile(res, filePath);
+        const picked = pickPrecompressed(req, filePath);
+        if (picked.encoding) res.setHeader("Content-Encoding", picked.encoding);
+        await sendFile(res, picked.path);
         return;
       }
 
       if (pathname.startsWith("/assets/") && existsSync(filePath)) {
-        await sendFile(res, filePath);
+        const picked = pickPrecompressed(req, filePath);
+        if (picked.encoding) res.setHeader("Content-Encoding", picked.encoding);
+        await sendFile(res, picked.path);
         return;
       }
 
@@ -201,9 +218,11 @@ if (!isProd) {
         buildSeoHead(origin, pathname)
       );
 
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/html; charset=utf-8");
-      res.end(html);
+      compress(req, res, () => {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.end(html);
+      });
     } catch (error) {
       console.error(error);
       res.statusCode = 500;

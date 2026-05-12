@@ -124,7 +124,7 @@ const NameModelHero = () => {
       baseZ: 0,
     };
 
-    const loader = new GLTFLoader();
+  const loader = new GLTFLoader();
     loader.load(MODEL_URL, (gltf) => {
       const model = gltf.scene;
       const shadowMeshes: Array<{ parent: THREE.Object3D; shadow: THREE.Mesh }> = [];

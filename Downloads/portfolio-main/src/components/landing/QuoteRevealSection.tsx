@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useLanguage } from "@/lib/language";
 
 const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
@@ -7,6 +8,7 @@ const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
 const QuoteRevealSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -66,9 +68,9 @@ const QuoteRevealSection = () => {
     <section ref={sectionRef} className="quote-reveal-section" aria-label="Bill Gates quote">
       <div className="quote-reveal-sticky">
         <div ref={copyRef} className="quote-reveal-copy">
-          <p className="quote-reveal-text">"Software is a great combination</p>
-          <p className="quote-reveal-text">between artistry and engineering"</p>
-          <p className="quote-reveal-author">-Bill Gates</p>
+          <p className="quote-reveal-text">{t.quoteLine1}</p>
+          <p className="quote-reveal-text">{t.quoteLine2}</p>
+          <p className="quote-reveal-author">{t.quoteAuthor}</p>
         </div>
       </div>
     </section>

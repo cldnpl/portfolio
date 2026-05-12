@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/lib/language";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -69,10 +70,12 @@ const createGlassMicroNormalMap = () => {
   return texture;
 };
 
+const CONTACT_EMAIL = "claudia.napolitano@gmail.com";
+
 const buttonConfigs = [
   { id: "projects", label: "my projects", path: "/projects" },
   { id: "about", label: "about me", path: "/about" },
-  { id: "contact", label: "contact me", path: "/contact" },
+  { id: "contact", label: "contact me", path: `mailto:${CONTACT_EMAIL}` },
 ] as const;
 
 type ButtonId = (typeof buttonConfigs)[number]["id"];
@@ -94,7 +97,27 @@ type RevealState = {
   y: number;
 };
 
-const createScreenUi = () => {
+const ensureMinecraftFontLoaded = (() => {
+  let promise: Promise<void> | null = null;
+  return () => {
+    if (promise) return promise;
+    if (typeof document === "undefined" || !("fonts" in document)) {
+      promise = Promise.resolve();
+      return promise;
+    }
+    promise = document.fonts
+      .load("800 80px Minecraft")
+      .then(() => undefined)
+      .catch(() => undefined);
+    return promise;
+  };
+})();
+
+const createScreenUi = (
+  onReady?: () => void,
+  initialLabels?: Partial<Record<ButtonId, string>>
+) => {
+  const debugScreen = new URLSearchParams(window.location.search).has("debugScreen");
   const canvas = document.createElement("canvas");
   canvas.width = 1536;
   canvas.height = 3328;
@@ -104,7 +127,10 @@ const createScreenUi = () => {
   }
   const scale = canvas.width / 1536;
   const backgroundImage = new Image();
-  backgroundImage.src = "/backgrounds/iphone-screen-background.jpg?v=black-wallpaper";
+  // Wallpaper for the phone screen.
+  // Must be placed at: public/backgrounds/iphone-screen-background.jpg
+  backgroundImage.src = "/backgrounds/iphone-screen-background.jpg";
+  backgroundImage.decoding = "async";
   backgroundImage.crossOrigin = "anonymous";
   let backgroundReady = false;
 
@@ -119,6 +145,12 @@ const createScreenUi = () => {
     state[config.id] = { current: 0, target: 0 };
     return state;
   }, {} as ButtonVisualState);
+  // Mutable label map so the labels can be swapped at runtime (language change)
+  // without recreating the whole 3D scene.
+  const buttonLabels = buttonConfigs.reduce((map, config) => {
+    map[config.id] = initialLabels?.[config.id] ?? config.label;
+    return map;
+  }, {} as Record<ButtonId, string>);
   const revealState: RevealState = {
     active: false,
     progress: 0,
@@ -129,6 +161,29 @@ const createScreenUi = () => {
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
+
+  // If the wallpaper loads later, redraw and update texture.
+  backgroundImage.onload = () => {
+    backgroundReady = true;
+    if (debugScreen) {
+      // eslint-disable-next-line no-console
+      console.log("[iPhoneScreen] wallpaper loaded", {
+        src: backgroundImage.src,
+        naturalWidth: backgroundImage.naturalWidth,
+        naturalHeight: backgroundImage.naturalHeight,
+      });
+    }
+    draw();
+    texture.needsUpdate = true;
+  };
+  backgroundImage.onerror = () => {
+    // Keep the black fallback background if the asset is missing/invalid.
+    backgroundReady = false;
+    if (debugScreen) {
+      // eslint-disable-next-line no-console
+      console.log("[iPhoneScreen] wallpaper failed to load", { src: backgroundImage.src });
+    }
+  };
 
   const drawStatusBar = () => {
     const statusY = 104 * scale;
@@ -144,7 +199,8 @@ const createScreenUi = () => {
     ctx.textBaseline = "middle";
     ctx.fillText("9:41", 110 * scale, statusY);
 
-    ctx.fillStyle = "#000000";
+  // Dynamic Island should stay deep black.
+  ctx.fillStyle = "#000000";
     ctx.beginPath();
     ctx.roundRect(pillX, pillY, pillWidth, pillHeight, 38 * scale);
     ctx.fill();
@@ -240,11 +296,11 @@ const createScreenUi = () => {
       ctx.restore();
     }
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = `800 ${(80 + 3 * eased) * scale}px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `800 ${(80 + 3 * eased) * scale}px Minecraft, "Press Start 2P", "Space Mono", monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(config.label, x + width / 2, y + height / 2 + 3 * scale);
+    ctx.fillText(buttonLabels[bounds.id] ?? config.label, x + width / 2, y + height / 2 + 3 * scale);
   };
 
   const drawCircularReveal = () => {
@@ -267,6 +323,10 @@ const createScreenUi = () => {
     ctx.translate(canvas.width, canvas.height);
     ctx.rotate(Math.PI);
 
+    // Ensure normal compositing.
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+
     if (backgroundReady) {
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
     } else {
@@ -274,27 +334,18 @@ const createScreenUi = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    const edgeWidth = 78 * scale;
-    const edgeFade = ctx.createLinearGradient(0, 0, edgeWidth, 0);
-    edgeFade.addColorStop(0, "rgba(0,0,0,0.98)");
-    edgeFade.addColorStop(0.45, "rgba(0,0,0,0.9)");
-    edgeFade.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = edgeFade;
-    ctx.fillRect(0, 0, edgeWidth, canvas.height);
+    // Debug: show the raw wallpaper without overlays (edge fade / island / etc.).
+    if (debugScreen) {
+      ctx.restore();
+      texture.needsUpdate = true;
+      return;
+    }
 
-    const rightEdgeFade = ctx.createLinearGradient(canvas.width - edgeWidth, 0, canvas.width, 0);
-    rightEdgeFade.addColorStop(0, "rgba(0,0,0,0)");
-    rightEdgeFade.addColorStop(0.55, "rgba(0,0,0,0.9)");
-    rightEdgeFade.addColorStop(1, "rgba(0,0,0,0.98)");
-    ctx.fillStyle = rightEdgeFade;
-    ctx.fillRect(canvas.width - edgeWidth, 0, edgeWidth, canvas.height);
+    // (Edge black bands removed — let the wallpaper run edge to edge.)
+    // The top status-bar strip is also removed: we want the wallpaper to extend
+    // edge-to-edge from the very top, with only the Dynamic Island pill
+    // floating on top of it (rendered as a 3D mesh, not painted here).
 
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.roundRect(canvas.width / 2 - 176 * scale, 48 * scale, 352 * scale, 96 * scale, 42 * scale);
-    ctx.fill();
-
-    drawStatusBar();
     buttonBounds.forEach((bounds) => drawButton(bounds));
     drawCircularReveal();
     ctx.restore();
@@ -345,9 +396,21 @@ const createScreenUi = () => {
   };
 
   draw();
-  backgroundImage.onload = () => {
-    backgroundReady = true;
+  ensureMinecraftFontLoaded().then(() => {
     draw();
+    onReady?.();
+  });
+
+  const setLabels = (next: Partial<Record<ButtonId, string>>) => {
+    let changed = false;
+    (Object.keys(next) as ButtonId[]).forEach((id) => {
+      const value = next[id];
+      if (typeof value === "string" && buttonLabels[id] !== value) {
+        buttonLabels[id] = value;
+        changed = true;
+      }
+    });
+    if (changed) draw();
   };
 
   return {
@@ -355,6 +418,7 @@ const createScreenUi = () => {
     canvas,
     draw,
     setInteraction,
+    setLabels,
     startReveal,
     texture,
     update,
@@ -376,25 +440,49 @@ const objectPath = (object: THREE.Object3D) => {
 const getPhoneMaterialRole = (mesh: THREE.Mesh) => {
   const name = objectPath(mesh);
 
-  if (name.includes("screen")) return "screen";
-  if (name.includes("island")) return "island";
+  // Check the more specific names first so things like "screen_dynamic_island"
+  // are tagged as "island" instead of falling through to the generic "screen".
+  if (name.includes("island") || name.includes("notch") || name.includes("dynamic")) return "island";
   if (name.includes("camera glass")) return "removeCameraArtifact";
   if (name.includes("back camera")) return "cameraBase";
+  if (name.includes("lens dark face")) return "replaceLensGeometry";
+  if (name.includes("flash glass") || name.includes("flash mtl")) return "flash";
+  if (name.includes("front camra")) return "lidar";
+  if (name.includes("apple logo")) return "appleLogo";
+  if (name.includes("screen")) return "screen";
   if (name.includes("back")) return "backGlass";
   if (name.includes("phone case") || name.includes("scroo") || name.includes("sound box")) return "frame";
   if (name.includes("cylinder")) return "replaceLensGeometry";
-  if (name.includes("front camra")) return "lidar";
-  if (name.includes("lens dark face")) return "replaceLensGeometry";
-  if (name.includes("flash glass") || name.includes("flash mtl")) return "flash";
-  if (name.includes("apple logo")) return "appleLogo";
 
   return null;
 };
 
 const IPhoneScrollScene = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const screenUiRef = useRef<ReturnType<typeof createScreenUi> | null>(null);
+  // Keep a ref of the latest labels so the 3D-scene effect (which only mounts
+  // once) can read them at setup time without re-running on every lang change.
+  const labelsRef = useRef({
+    projects: t.phoneProjects,
+    about: t.phoneAbout,
+    contact: t.phoneContact,
+  });
+  labelsRef.current = {
+    projects: t.phoneProjects,
+    about: t.phoneAbout,
+    contact: t.phoneContact,
+  };
+
+  useEffect(() => {
+    screenUiRef.current?.setLabels({
+      projects: t.phoneProjects,
+      about: t.phoneAbout,
+      contact: t.phoneContact,
+    });
+  }, [t.phoneProjects, t.phoneAbout, t.phoneContact]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -444,7 +532,7 @@ const IPhoneScrollScene = () => {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.35;
     container.appendChild(renderer.domElement);
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -452,18 +540,32 @@ const IPhoneScrollScene = () => {
     scene.environment = environment;
     scene.background = null;
 
-    const keyLight = new THREE.RectAreaLight(0xfff4e5, 1.45, 4.8, 4.8);
-    keyLight.position.set(-3.2, 3.2, 4.2);
+    // Big soft key light (top-left, warm white) — the dominant light source.
+    const keyLight = new THREE.RectAreaLight(0xfff4e5, 2.4, 5.2, 5.2);
+    keyLight.position.set(-3.2, 3.4, 4.2);
     keyLight.lookAt(0, 0, 0);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xddeaff, 0.42);
-    fillLight.position.set(3.4, -2.3, 2.5);
+    // Cool fill from the opposite side so the titanium reads as metal, not paint.
+    const fillLight = new THREE.DirectionalLight(0xcfd9ff, 0.55);
+    fillLight.position.set(3.4, -1.8, 2.5);
     scene.add(fillLight);
 
-    const lensCatchLight = new THREE.PointLight(0xffffff, 0.85, 8);
+    // Rim light from behind / above, gives the iPhone its silhouette glow.
+    const rimLight = new THREE.RectAreaLight(0xffffff, 2.2, 2.6, 4.4);
+    rimLight.position.set(1.4, 1.2, -3.8);
+    rimLight.lookAt(0, 0, 0);
+    scene.add(rimLight);
+
+    // Catch-light on the camera glass.
+    const lensCatchLight = new THREE.PointLight(0xffffff, 1.1, 8);
     lensCatchLight.position.set(-1.35, 2.15, 2.3);
     scene.add(lensCatchLight);
+
+    // Small highlight dedicated to the camera cluster so the glass reads clearly.
+    const cameraHighlight = new THREE.PointLight(0xbad0ff, 0.7, 2.2);
+    cameraHighlight.position.set(0.65, 1.15, 1.2);
+    scene.add(cameraHighlight);
 
     const phoneRoot = new THREE.Group();
     phoneRoot.rotation.set(-0.05, Math.PI, 0.08);
@@ -471,16 +573,27 @@ const IPhoneScrollScene = () => {
     phoneRoot.scale.setScalar(0.68);
     scene.add(phoneRoot);
 
-    const loader = new GLTFLoader();
+  const loader = new GLTFLoader();
     loader.load(MODEL_URL, (gltf) => {
       const model = gltf.scene;
-      screenUi = createScreenUi();
+      screenUi = createScreenUi(undefined, labelsRef.current);
+      screenUiRef.current = screenUi;
       brushedAluminumNormalMap = createLinearBrushedNormalMap();
       glassMicroNormalMap = createGlassMicroNormalMap();
-      screenMaterial = new THREE.MeshBasicMaterial({
-        map: screenUi.texture,
-        color: 0xffffff,
+      // Screen: emissive-based so the canvas pixels stay bright/saturated,
+      // while a clearcoat on top adds the subtle glass reflection of a real
+      // iPhone 15 Pro display.
+      screenMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x000000,
+        emissive: 0xffffff,
+        emissiveMap: screenUi.texture,
+        emissiveIntensity: 1.05,
         toneMapped: false,
+        metalness: 0,
+        roughness: 0.08,
+        clearcoat: 1,
+        clearcoatRoughness: 0.06,
+        envMapIntensity: 0.5,
         side: THREE.DoubleSide,
       });
       screenBlackMaterial = new THREE.MeshBasicMaterial({
@@ -488,60 +601,65 @@ const IPhoneScrollScene = () => {
         toneMapped: false,
         side: THREE.DoubleSide,
       });
+      // Natural Titanium frame — warm light grey, slightly anisotropic to read
+      // as brushed metal under the lights.
       frameMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xd4c97a,
+        color: 0xb9b2a5,
         metalness: 1,
-        roughness: 0.15,
-        anisotropy: 0.6,
+        roughness: 0.32,
+        anisotropy: 0.85,
         anisotropyRotation: 0,
-        specularIntensity: 0.8,
+        specularIntensity: 0.95,
         normalMap: brushedAluminumNormalMap,
-        normalScale: new THREE.Vector2(0.08, 0.018),
-        envMapIntensity: 3,
+        normalScale: new THREE.Vector2(0.12, 0.022),
+        envMapIntensity: 1.65,
       });
+      // Matte/frosted back glass with a Natural Titanium tint.
       backGlassMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xf5f0c8,
+        color: 0xc6bfb1,
         metalness: 0,
-        roughness: 0.08,
-        specularIntensity: 0.9,
-        ior: 1.52,
+        roughness: 0.45,
+        specularIntensity: 0.6,
+        ior: 1.5,
         transmission: 0,
-        clearcoat: 1,
-        clearcoatRoughness: 0.04,
+        clearcoat: 0.7,
+        clearcoatRoughness: 0.32,
         normalMap: glassMicroNormalMap,
-        normalScale: new THREE.Vector2(0.055, 0.055),
-        envMapIntensity: 2.4,
+        normalScale: new THREE.Vector2(0.035, 0.035),
+        envMapIntensity: 1.25,
       });
+      // The raised plateau that holds the cameras: same titanium as the frame.
       cameraBaseMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xd4c97a,
+        color: 0xb9b2a5,
         metalness: 1,
-        roughness: 0.12,
-        anisotropy: 0.55,
+        roughness: 0.34,
+        anisotropy: 0.7,
         anisotropyRotation: 0,
-        specularIntensity: 0.8,
+        specularIntensity: 0.95,
         normalMap: brushedAluminumNormalMap,
-        normalScale: new THREE.Vector2(0.06, 0.014),
-        envMapIntensity: 3,
+        normalScale: new THREE.Vector2(0.085, 0.018),
+        envMapIntensity: 1.6,
       });
+      // Lens glass — very dark, very glossy, with a soft blue inner attenuation
+      // that mimics the multi-element coating you see on real iPhone optics.
       lensGlassMaterial = new THREE.MeshPhysicalMaterial({
         name: "iPhone_Lens_Glass",
-        color: 0x050508,
-        specularColor: new THREE.Color(0x7b84ff),
-        specularIntensity: 1,
+        color: new THREE.Color(0x05070d),
         metalness: 0,
-        roughness: 0,
-        clearcoat: 1,
-        clearcoatRoughness: 0,
-        transmission: 0.22,
-        thickness: 0.18,
-        ior: 1.72,
-        opacity: 1,
+        roughness: 0.02,
+        ior: 1.74,
+        transmission: 0.18,
+        thickness: 0.12,
         transparent: false,
-        attenuationColor: new THREE.Color(0x020207),
-        attenuationDistance: 0.025,
-        emissive: new THREE.Color(0x0a0a1a),
-        emissiveIntensity: 0.015,
-        envMapIntensity: 6,
+        attenuationColor: new THREE.Color(0x0a1530),
+        attenuationDistance: 0.04,
+        clearcoat: 1,
+        clearcoatRoughness: 0.008,
+        specularIntensity: 1,
+        specularColor: new THREE.Color(0x9bb8ff),
+        envMapIntensity: 4.5,
+        emissive: new THREE.Color(0x060a16),
+        emissiveIntensity: 0.025,
       });
       lensBackingMaterial = new THREE.MeshPhysicalMaterial({
         color: 0x010104,
@@ -554,29 +672,32 @@ const IPhoneScrollScene = () => {
         envMapIntensity: 1.2,
       });
       lensCoverMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x060712,
+        color: 0x2a2f44,
         specularColor: new THREE.Color(0xffffff),
         specularIntensity: 1,
         metalness: 0,
-        roughness: 0,
+        roughness: 0.015,
         clearcoat: 1,
-        clearcoatRoughness: 0,
-        transmission: 0.72,
-        thickness: 0.035,
+        clearcoatRoughness: 0.01,
+        transmission: 0.98,
+        thickness: 0.018,
         ior: 1.52,
         transparent: true,
-        opacity: 0.18,
-        envMapIntensity: 7,
+        opacity: 0.12,
+        envMapIntensity: 13,
+        normalMap: glassMicroNormalMap,
+        normalScale: new THREE.Vector2(0.14, 0.14),
       });
+      // Polished dark chrome ring around each lens (very glossy, almost black).
       lensRingMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x1a1a1a,
+        color: 0x0c0c10,
         metalness: 1,
-        roughness: 0.04,
-        anisotropy: 0.3,
+        roughness: 0.06,
+        anisotropy: 0.25,
         anisotropyRotation: 0,
         clearcoat: 1,
-        clearcoatRoughness: 0.02,
-        envMapIntensity: 5,
+        clearcoatRoughness: 0.015,
+        envMapIntensity: 3.2,
       });
       flashMaterial = new THREE.MeshPhysicalMaterial({
         color: 0xf0eee8,
@@ -597,22 +718,23 @@ const IPhoneScrollScene = () => {
         clearcoatRoughness: 0.08,
         envMapIntensity: 2.2,
       });
+      // Apple logo: same titanium tone but more polished than the brushed
+      // frame, so it catches reflections like the real laser-etched inlay.
       appleLogoMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xf5f0c8,
-        metalness: 0,
-        roughness: 0.055,
-        specularIntensity: 0.9,
-        ior: 1.52,
+        color: 0xcec8bb,
+        metalness: 1,
+        roughness: 0.18,
+        specularIntensity: 1,
         clearcoat: 1,
-        clearcoatRoughness: 0.025,
-        normalMap: glassMicroNormalMap,
-        normalScale: new THREE.Vector2(0.085, 0.085),
-        envMapIntensity: 2.85,
+        clearcoatRoughness: 0.04,
+        envMapIntensity: 2.1,
       });
+      // Very subtle dark edge outline — just enough to read the panel breaks
+      // without making the phone look stylised/comic.
       edgeMaterial = new THREE.LineBasicMaterial({
-        color: 0xfff8dd,
+        color: 0x1a1a1a,
         transparent: true,
-        opacity: 0.28,
+        opacity: 0.06,
       });
       const applyStudioEnvironment = (material: THREE.Material) => {
         if ("envMap" in material) {
@@ -629,6 +751,24 @@ const IPhoneScrollScene = () => {
       const removedCameraArtifacts: THREE.Object3D[] = [];
       const lensReplacementTargets: Array<{ position: THREE.Vector3; radius: number }> = [];
       model.updateMatrixWorld(true);
+
+      // Pre-pass: among every mesh that matches the "screen" role, the largest
+      // is the actual display surface. Everything smaller (inner bezel rings,
+      // edge frames) gets pure black so the visible wallpaper area is clean.
+      let primaryScreen: THREE.Mesh | null = null;
+      let primaryScreenVolume = 0;
+      model.traverse((child) => {
+        if (!(child instanceof THREE.Mesh)) return;
+        if (getPhoneMaterialRole(child) !== "screen") return;
+        const box = new THREE.Box3().setFromObject(child);
+        const size = box.getSize(new THREE.Vector3());
+        const volume = size.x * size.y * size.z;
+        if (volume > primaryScreenVolume) {
+          primaryScreenVolume = volume;
+          primaryScreen = child;
+        }
+      });
+
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.frustumCulled = false;
@@ -649,12 +789,23 @@ const IPhoneScrollScene = () => {
             return;
           }
           if (materialRole === "screen") {
-            screenMesh = child;
-            if (screenMaterial) {
-              child.material = screenMaterial;
+            if (child === primaryScreen) {
+              // The actual OLED display surface — gets the wallpaper canvas.
+              screenMesh = child;
+              if (screenMaterial) {
+                child.material = screenMaterial;
+              }
+            } else if (screenBlackMaterial) {
+              // Inner bezel / frame around the display — pure black so it
+              // reads as the thin dark rim of a real iPhone, not as a band
+              // of wallpaper.
+              child.material = screenBlackMaterial;
             }
           } else if (materialRole === "island" && screenBlackMaterial) {
             child.material = screenBlackMaterial;
+            // Force the Dynamic Island to render on top of the screen so it can
+            // never show the wallpaper through it.
+            child.renderOrder = 10;
           } else if (materialRole === "frame" && frameMaterial) {
             child.material = frameMaterial;
           } else if (materialRole === "backGlass" && backGlassMaterial) {
@@ -667,6 +818,15 @@ const IPhoneScrollScene = () => {
             child.material = lidarMaterial;
           } else if (materialRole === "appleLogo" && appleLogoMaterial) {
             child.material = appleLogoMaterial;
+          } else if (materialRole === null) {
+            // Anything we didn't classify still belongs to the phone body
+            // (side bezels, antenna lines, hidden internal parts that show at
+            // grazing angles). Give them the titanium frame material so they
+            // blend into the chassis instead of either disappearing or
+            // bleeding the GLTF's authored purple/violet colours.
+            if (frameMaterial) {
+              child.material = frameMaterial;
+            }
           }
           if (child.geometry) {
             const edges = new THREE.EdgesGeometry(child.geometry, 35);
@@ -814,7 +974,11 @@ const IPhoneScrollScene = () => {
             requestAnimationFrame(() => reveal.classList.add("is-active"));
           });
           routeRevealTimer = window.setTimeout(() => {
-            navigate(config.path);
+            if (config.path.startsWith("mailto:")) {
+              window.location.href = config.path;
+            } else {
+              navigate(config.path);
+            }
             routeRevealCleanupTimer = window.setTimeout(() => {
               reveal.remove();
               if (routeRevealElement === reveal) routeRevealElement = null;
@@ -857,6 +1021,7 @@ const IPhoneScrollScene = () => {
     animate();
 
     return () => {
+      screenUiRef.current = null;
       cancelAnimationFrame(frame);
       window.clearTimeout(routeRevealTimer);
       window.clearTimeout(routeRevealCleanupTimer);
