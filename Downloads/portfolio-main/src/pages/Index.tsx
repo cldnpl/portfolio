@@ -15,6 +15,35 @@ const Index = () => {
   const { lang, setLang, t } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Native click handlers on the dropdown options. We bypass React's synthetic
+  // event system because, in this SSR-hydrated tree, the synthetic handler on
+  // the inner buttons was not firing for some users. addEventListener directly
+  // on the DOM nodes is the most reliable approach.
+  useEffect(() => {
+    if (!langOpen) return;
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    const buttons = Array.from(menu.querySelectorAll<HTMLButtonElement>("[data-lang]"));
+    const handlers = buttons.map((button) => {
+      const code = button.dataset.lang as Lang | undefined;
+      const handler = (event: Event) => {
+        event.stopPropagation();
+        if (code === "it" || code === "en") {
+          setLang(code);
+          setLangOpen(false);
+        }
+      };
+      button.addEventListener("click", handler);
+      return { button, handler };
+    });
+
+    return () => {
+      handlers.forEach(({ button, handler }) => button.removeEventListener("click", handler));
+    };
+  }, [langOpen, setLang]);
 
   useEffect(() => {
     if (!langOpen) return;
@@ -75,22 +104,17 @@ const Index = () => {
               </span>
             </button>
             {langOpen && (
-              <div className="portfolio-lang-menu" role="listbox">
+              <div className="portfolio-lang-menu" role="listbox" ref={menuRef}>
                 {LANG_OPTIONS.map((option) => (
                   <button
                     key={option.code}
                     type="button"
+                    data-lang={option.code}
                     className={`portfolio-lang-option${
                       option.code === lang ? " is-current" : ""
                     }`}
                     role="option"
                     aria-selected={option.code === lang}
-                    onPointerDown={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      setLang(option.code);
-                      setLangOpen(false);
-                    }}
                   >
                     <span className="portfolio-lang-option-code">{option.native}</span>
                     <span className="portfolio-lang-option-label">{option.label}</span>

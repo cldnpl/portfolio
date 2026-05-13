@@ -253,7 +253,16 @@
   background: transparent;
 }
 
-.portfolio-landing > :not(.animated-background) {
+/*
+ * Stack every direct child of the landing page above the animated background,
+ * EXCEPT the fixed nav — leaving it with its own `position: fixed` and
+ * `z-index: 40` so the language dropdown (z-index 50 inside the nav's stacking
+ * context) always sits above the hero's 3D canvas. Without the exclusion this
+ * rule would drop the nav to position: relative / z-index: 1 alongside the
+ * hero section, and the 3D canvas (later in DOM) would steal pointer events
+ * from the dropdown options.
+ */
+.portfolio-landing > :not(.animated-background):not(.portfolio-nav) {
   position: relative;
   z-index: 1;
 }
@@ -676,7 +685,8 @@
     0 0 28px rgba(156, 116, 255, 0.34);
 }
 
-.about-page {
+.about-page,
+.projects-page {
   min-height: 100svh;
   color: #070707;
   background:
@@ -940,13 +950,6 @@
 }
 
 .projects-page {
-  min-height: 100svh;
-  color: #070707;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.32)),
-    url('/about/about-background-landscape.jpg') center / cover fixed,
-    linear-gradient(180deg, #f6e8ff 0%, #ffffff 100%);
-  overflow-x: clip;
   padding-bottom: 6rem;
 }
 

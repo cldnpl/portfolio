@@ -88,6 +88,13 @@ type ButtonBounds = {
   height: number;
 };
 
+type RectBounds = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 type ButtonVisualState = Record<ButtonId, { current: number; target: number }>;
 
 type RevealState = {
@@ -141,6 +148,12 @@ const createScreenUi = (
     width: 1156 * scale,
     height: 232 * scale,
   }));
+  const dynamicIslandBounds: RectBounds = {
+    x: canvas.width / 2 - 190 * scale,
+    y: 48 * scale,
+    width: 380 * scale,
+    height: 116 * scale,
+  };
   const buttonVisualState = buttonConfigs.reduce((state, config) => {
     state[config.id] = { current: 0, target: 0 };
     return state;
@@ -166,7 +179,6 @@ const createScreenUi = (
   backgroundImage.onload = () => {
     backgroundReady = true;
     if (debugScreen) {
-      // eslint-disable-next-line no-console
       console.log("[iPhoneScreen] wallpaper loaded", {
         src: backgroundImage.src,
         naturalWidth: backgroundImage.naturalWidth,
@@ -180,70 +192,27 @@ const createScreenUi = (
     // Keep the black fallback background if the asset is missing/invalid.
     backgroundReady = false;
     if (debugScreen) {
-      // eslint-disable-next-line no-console
       console.log("[iPhoneScreen] wallpaper failed to load", { src: backgroundImage.src });
     }
   };
 
-  const drawStatusBar = () => {
-    const statusY = 104 * scale;
-    const iconColor = "#050505";
-    const pillWidth = 308 * scale;
-    const pillHeight = 82 * scale;
-    const pillX = canvas.width / 2 - pillWidth / 2;
-    const pillY = 56 * scale;
+  const isInDynamicIsland = (x: number, y: number) =>
+    x >= dynamicIslandBounds.x &&
+    x <= dynamicIslandBounds.x + dynamicIslandBounds.width &&
+    y >= dynamicIslandBounds.y &&
+    y <= dynamicIslandBounds.y + dynamicIslandBounds.height;
 
-    ctx.fillStyle = iconColor;
-    ctx.font = `700 ${58 * scale}px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif`;
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    ctx.fillText("9:41", 110 * scale, statusY);
+  const drawDynamicIsland = () => {
+    const { x, y, width, height } = dynamicIslandBounds;
 
-  // Dynamic Island should stay deep black.
-  ctx.fillStyle = "#000000";
+    ctx.save();
+    ctx.shadowColor = "rgba(255,255,255,0.16)";
+    ctx.shadowBlur = 4 * scale;
+    ctx.fillStyle = "#000000";
     ctx.beginPath();
-    ctx.roundRect(pillX, pillY, pillWidth, pillHeight, 38 * scale);
+    ctx.roundRect(x, y, width, height, height / 2);
     ctx.fill();
-
-    ctx.fillStyle = "rgba(255,255,255,0.06)";
-    ctx.beginPath();
-    ctx.arc(pillX + pillWidth - 46 * scale, pillY + pillHeight / 2, 17 * scale, 0, Math.PI * 2);
-    ctx.fill();
-
-    const barsX = canvas.width - 292 * scale;
-    const barsBottom = statusY + 18 * scale;
-    ctx.fillStyle = iconColor;
-    [18, 27, 36, 45].forEach((height, index) => {
-      ctx.beginPath();
-      ctx.roundRect(barsX + index * 20 * scale, barsBottom - height * scale, 12 * scale, height * scale, 5 * scale);
-      ctx.fill();
-    });
-
-    ctx.strokeStyle = iconColor;
-    ctx.lineWidth = 7 * scale;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.arc(canvas.width - 168 * scale, statusY + 9 * scale, 38 * scale, Math.PI * 1.18, Math.PI * 1.82);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(canvas.width - 168 * scale, statusY + 9 * scale, 24 * scale, Math.PI * 1.22, Math.PI * 1.78);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(canvas.width - 168 * scale, statusY + 9 * scale, 10 * scale, Math.PI * 1.3, Math.PI * 1.7);
-    ctx.stroke();
-
-    const batteryX = canvas.width - 98 * scale;
-    const batteryY = statusY - 18 * scale;
-    ctx.strokeStyle = iconColor;
-    ctx.lineWidth = 5 * scale;
-    ctx.beginPath();
-    ctx.roundRect(batteryX, batteryY, 52 * scale, 28 * scale, 8 * scale);
-    ctx.stroke();
-    ctx.fillStyle = iconColor;
-    ctx.beginPath();
-    ctx.roundRect(batteryX + 8 * scale, batteryY + 7 * scale, 34 * scale, 14 * scale, 5 * scale);
-    ctx.fill();
-    ctx.fillRect(batteryX + 55 * scale, batteryY + 9 * scale, 5 * scale, 10 * scale);
+    ctx.restore();
   };
 
   const drawButton = (bounds: ButtonBounds) => {
@@ -341,13 +310,14 @@ const createScreenUi = (
       return;
     }
 
-    // (Edge black bands removed — let the wallpaper run edge to edge.)
-    // The top status-bar strip is also removed: we want the wallpaper to extend
-    // edge-to-edge from the very top, with only the Dynamic Island pill
-    // floating on top of it (rendered as a 3D mesh, not painted here).
+    // Keep the wallpaper edge to edge, then paint the Dynamic Island into the
+    // display texture as well. This avoids any GLTF material/UV bleed turning
+    // the notch purple on top of the real mesh.
+    drawDynamicIsland();
 
     buttonBounds.forEach((bounds) => drawButton(bounds));
     drawCircularReveal();
+    drawDynamicIsland();
     ctx.restore();
     texture.needsUpdate = true;
   };
@@ -417,6 +387,7 @@ const createScreenUi = (
     buttonBounds,
     canvas,
     draw,
+    isInDynamicIsland,
     setInteraction,
     setLabels,
     startReveal,
@@ -506,6 +477,7 @@ const IPhoneScrollScene = () => {
     let screenBlackMaterial: THREE.MeshBasicMaterial | null = null;
     let screenMesh: THREE.Mesh | null = null;
     let screenUi: ReturnType<typeof createScreenUi> | null = null;
+    const islandMeshes: THREE.Mesh[] = [];
     const replacementLensGeometries: THREE.BufferGeometry[] = [];
     const lensBackingGeometries: THREE.BufferGeometry[] = [];
     const lensCoverGeometries: THREE.BufferGeometry[] = [];
@@ -795,17 +767,22 @@ const IPhoneScrollScene = () => {
               if (screenMaterial) {
                 child.material = screenMaterial;
               }
-            } else if (screenBlackMaterial) {
-              // Inner bezel / frame around the display — pure black so it
-              // reads as the thin dark rim of a real iPhone, not as a band
-              // of wallpaper.
-              child.material = screenBlackMaterial;
+            } else {
+              // Smaller screen-tagged meshes are the inner bezel/frame planes
+              // that produced the purple side-band artifacts and that would
+              // also visibly scale together with the on-canvas button
+              // animations (because they share UV space). Eliminate them
+              // entirely.
+              child.visible = false;
+              return;
             }
           } else if (materialRole === "island" && screenBlackMaterial) {
             child.material = screenBlackMaterial;
-            // Force the Dynamic Island to render on top of the screen so it can
-            // never show the wallpaper through it.
+            // Dynamic Island sits on top of the screen plane.
             child.renderOrder = 10;
+            // Track this mesh so its clicks are consumed by the raycaster and
+            // never bleed through to the buttons below.
+            islandMeshes.push(child);
           } else if (materialRole === "frame" && frameMaterial) {
             child.material = frameMaterial;
           } else if (materialRole === "backGlass" && backGlassMaterial) {
@@ -926,11 +903,16 @@ const IPhoneScrollScene = () => {
       pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
       raycaster.setFromCamera(pointer, camera);
+      const islandHit = islandMeshes.length > 0 ? raycaster.intersectObjects(islandMeshes, false)[0] : null;
       const hit = raycaster.intersectObject(screenMesh, false)[0];
       if (!hit?.uv) return null;
+      if (islandHit && islandHit.distance <= hit.distance + 0.01) return null;
 
       const x = (1 - hit.uv.x) * screenUi.canvas.width;
       const y = hit.uv.y * screenUi.canvas.height;
+      if (screenUi.isInDynamicIsland(x, y)) return null;
+
+      // Only accept hits that land inside an actual button rectangle.
       return (
         screenUi.buttonBounds.find(
           (bounds) =>
@@ -955,10 +937,17 @@ const IPhoneScrollScene = () => {
       if (nextId) {
         const config = buttonConfigs.find((button) => button.id === nextId);
         selectedButtonId = nextId;
-        screenUi?.startReveal(nextId);
         screenUi?.setInteraction(nextId, selectedButtonId);
         setHoveredButton(nextId);
         if (config) {
+          // For mailto links, skip the radial reveal animation entirely so the
+          // OS mail client opens straight away with no full-screen flash.
+          if (config.path.startsWith("mailto:")) {
+            window.location.href = config.path;
+            return;
+          }
+
+          screenUi?.startReveal(nextId);
           window.clearTimeout(routeRevealTimer);
           window.clearTimeout(routeRevealCleanupTimer);
           routeRevealElement?.remove();
@@ -974,11 +963,7 @@ const IPhoneScrollScene = () => {
             requestAnimationFrame(() => reveal.classList.add("is-active"));
           });
           routeRevealTimer = window.setTimeout(() => {
-            if (config.path.startsWith("mailto:")) {
-              window.location.href = config.path;
-            } else {
-              navigate(config.path);
-            }
+            navigate(config.path);
             routeRevealCleanupTimer = window.setTimeout(() => {
               reveal.remove();
               if (routeRevealElement === reveal) routeRevealElement = null;
