@@ -235,10 +235,10 @@ const createScreenUi = (
     ctx.shadowBlur = (20 + 22 * eased) * scale;
     ctx.shadowOffsetY = (10 + 10 * eased) * scale;
     const buttonGradient = ctx.createLinearGradient(x, y, x + width, y + height);
-    const startColor = selected ? "#7440dc" : "#6330c7";
-    const endColor = selected ? "#5122b8" : "#5f2bc2";
-    buttonGradient.addColorStop(0, progress > 0.01 ? "#8a57ee" : startColor);
-    buttonGradient.addColorStop(1, progress > 0.01 ? "#642bd2" : endColor);
+    const startColor = selected ? "#4a247f" : "#3a1770";
+    const endColor = selected ? "#32105f" : "#32105f";
+    buttonGradient.addColorStop(0, progress > 0.01 ? "#4f2888" : startColor);
+    buttonGradient.addColorStop(1, progress > 0.01 ? "#351163" : endColor);
     ctx.fillStyle = buttonGradient;
     ctx.beginPath();
     ctx.roundRect(x, y, width, height, radius);

@@ -2,6 +2,25 @@
 
 ## Project info
 
+## Deployment
+
+This portfolio is static after build. There is no backend API and the app data/content lives in the frontend source files and local assets under `public/`.
+
+Build the deployable site with:
+
+```sh
+npm run build
+```
+
+Deploy the folder:
+
+```sh
+dist/client
+```
+
+The `server.js` file is only an optional local/SSR preview server. You do not need to run it in production if your host can serve static files such as Netlify, Vercel static output, GitHub Pages, Cloudflare Pages, or any static web host.
+
+This repo also includes `.github/workflows/deploy-pages.yml`: every push to `main` automatically builds the static site and publishes `dist/client` to GitHub Pages. Visitors only open the site URL; they never run any command.
 
 ## How can I edit this code?
 
@@ -52,4 +71,3 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
-
