@@ -521,7 +521,7 @@
   width: min(88vw, 920px);
   text-align: center;
   color: rgba(255, 255, 255, 0.92);
-  font-family: 'Tox Typewriter', monospace;
+  font-family: 'Minecraft', monospace;
   letter-spacing: 0;
   opacity: 0;
   transform: translate3d(100vw, 0, 0);
