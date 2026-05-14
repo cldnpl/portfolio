@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
+import { publicAsset } from "@/lib/assets";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-const MODEL_URL = "/models/claudia-name.glb";
+const MODEL_URL = publicAsset("models/claudia-name.glb");
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);

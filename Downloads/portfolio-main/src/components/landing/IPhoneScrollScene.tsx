@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/lib/language";
+import { publicAsset } from "@/lib/assets";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-const MODEL_URL = "/models/modelloIphone15Sito.glb";
+const MODEL_URL = publicAsset("models/modelloIphone15Sito.glb");
 
 const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 const easeInOutCubic = (value: number) =>
@@ -136,7 +137,7 @@ const createScreenUi = (
   const backgroundImage = new Image();
   // Wallpaper for the phone screen.
   // Must be placed at: public/backgrounds/iphone-screen-background.jpg
-  backgroundImage.src = "/backgrounds/iphone-screen-background.jpg";
+  backgroundImage.src = publicAsset("backgrounds/iphone-screen-background.jpg");
   backgroundImage.decoding = "async";
   backgroundImage.crossOrigin = "anonymous";
   let backgroundReady = false;

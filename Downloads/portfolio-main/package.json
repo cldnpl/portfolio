@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "vite build --outDir dist/client && vite build --ssr src/entry-server.tsx --outDir dist/server && node scripts/prerender.js && node scripts/generate-sitemap.js",
+    "build:local": "vite build --mode file --outDir dist/local --emptyOutDir",
     "build:dev": "vite build --mode development",
     "analyze": "ANALYZE=true npm run build",
     "lint": "eslint .",

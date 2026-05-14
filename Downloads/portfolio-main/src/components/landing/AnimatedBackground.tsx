@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { publicAsset } from "@/lib/assets";
 
-const BACKGROUND_GIF = "/backgrounds/purple-animated-waves.gif";
-const BACKGROUND_POSTER = "/backgrounds/site-background.jpg";
+const BACKGROUND_GIF = publicAsset("backgrounds/purple-animated-waves.gif");
+const BACKGROUND_POSTER = publicAsset("backgrounds/background.jpg");
 
 type MediaMode = "gif" | "poster";
 

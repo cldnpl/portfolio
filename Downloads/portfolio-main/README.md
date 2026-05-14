@@ -6,6 +6,24 @@
 
 This portfolio is static after build. There is no backend API and the app data/content lives in the frontend source files and local assets under `public/`.
 
+## Open locally without a dev server
+
+Use the already-built local version in:
+
+```sh
+dist/local/index.html
+```
+
+Open that file in your browser. You do not need to run `npm install` or `npm run dev` just to view the site.
+
+If you edit the source code later and want to refresh the local copy, run only:
+
+```sh
+npm run build:local
+```
+
+Then open `dist/local/index.html` again.
+
 Build the deployable site with:
 
 ```sh
@@ -21,6 +39,11 @@ dist/client
 The `server.js` file is only an optional local/SSR preview server. You do not need to run it in production if your host can serve static files such as Netlify, Vercel static output, GitHub Pages, Cloudflare Pages, or any static web host.
 
 This repo also includes `.github/workflows/deploy-pages.yml`: every push to `main` automatically builds the static site and publishes `dist/client` to GitHub Pages. Visitors only open the site URL; they never run any command.
+
+For Vercel, the repository includes `vercel.json` with:
+
+- Build Command: `npm run build`
+- Output Directory: `dist/client`
 
 ## How can I edit this code?
 

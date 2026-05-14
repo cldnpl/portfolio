@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/lib/language";
+import { publicAsset } from "@/lib/assets";
 
 type AboutBlock = {
   id: "academy" | "psychology" | "hackathon" | "languages";
@@ -17,7 +18,7 @@ const aboutBlocks: AboutBlock[] = [
     id: "academy",
     align: "left",
     image: {
-      src: "/about/academy-group.jpg",
+      src: publicAsset("about/academy-group.jpg"),
       alt: "Claudia at the Apple Developer Academy community",
       variant: "wide",
     },
@@ -30,7 +31,7 @@ const aboutBlocks: AboutBlock[] = [
     id: "hackathon",
     align: "left",
     image: {
-      src: "/about/hackathon-winner.png",
+      src: publicAsset("about/hackathon-winner.png"),
       alt: "Claudia winning a hackathon challenge",
       variant: "portrait",
     },
@@ -39,7 +40,7 @@ const aboutBlocks: AboutBlock[] = [
     id: "languages",
     align: "right",
     image: {
-      src: "/about/language-notes.png",
+      src: publicAsset("about/language-notes.png"),
       alt: "Claudia's notes for studying foreign languages",
       variant: "notes",
     },
@@ -87,10 +88,10 @@ const AboutPage = () => {
       <section className="about-hero about-section-intro" aria-labelledby="about-title">
         <div className="about-hero-collage about-slide" data-align="left">
           <div className="about-photo-card about-photo-child">
-            <img className="about-photo" src="/about/child-computer.png" alt="Claudia as a child at a computer" />
+            <img className="about-photo" src={publicAsset("about/child-computer.png")} alt="Claudia as a child at a computer" />
           </div>
           <div className="about-photo-card about-photo-selfie">
-            <img className="about-photo" src="/about/claudia-mirror.png" alt="Claudia Napolitano" />
+            <img className="about-photo" src={publicAsset("about/claudia-mirror.png")} alt="Claudia Napolitano" />
           </div>
         </div>
 
