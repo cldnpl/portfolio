@@ -1,21 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#f6f5f2"/>
-  <defs>
-    <linearGradient id="cnGradient" x1="72" y1="256" x2="440" y2="256" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0756b8"/>
-      <stop offset="0.55" stop-color="#7d59d6"/>
-      <stop offset="1" stop-color="#c45be7"/>
-    </linearGradient>
-  </defs>
+  <rect width="512" height="512" rx="112" fill="#07050d"/>
+  <rect x="40" y="40" width="432" height="432" rx="88" fill="none" stroke="#f6f5f2" stroke-width="20"/>
   <text
     x="256"
-    y="326"
-    fill="url(#cnGradient)"
+    y="307"
+    fill="#f6f5f2"
     font-family="Georgia, 'Times New Roman', serif"
-    font-size="250"
-    font-weight="900"
-    font-style="italic"
-    letter-spacing="-44"
+    font-size="178"
+    font-weight="700"
+    letter-spacing="-18"
     text-anchor="middle"
   >CN</text>
 </svg>

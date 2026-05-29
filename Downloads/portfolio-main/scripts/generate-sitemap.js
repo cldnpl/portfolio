@@ -7,7 +7,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const clientDir = path.join(root, "dist", "client");
 
-const SITE_ORIGIN = process.env.SITE_ORIGIN || "https://yourdomain.com";
+const getSiteOrigin = () => {
+  const configured = process.env.SITE_ORIGIN;
+  const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const vercelUrl = process.env.VERCEL_URL;
+  const raw = configured || vercelProductionUrl || vercelUrl || "https://portfolio.vercel.app";
+  return raw.startsWith("http") ? raw : `https://${raw}`;
+};
+
+const SITE_ORIGIN = getSiteOrigin().replace(/\/$/, "");
 
 const buildDate = new Date().toISOString().slice(0, 10);
 

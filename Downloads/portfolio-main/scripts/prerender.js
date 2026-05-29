@@ -9,7 +9,15 @@ const root = path.resolve(__dirname, "..");
 const clientDir = path.join(root, "dist", "client");
 const serverEntry = path.join(root, "dist", "server", "entry-server.js");
 
-const SITE_ORIGIN = process.env.SITE_ORIGIN || "https://yourdomain.com";
+const getSiteOrigin = () => {
+  const configured = process.env.SITE_ORIGIN;
+  const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const vercelUrl = process.env.VERCEL_URL;
+  const raw = configured || vercelProductionUrl || vercelUrl || "https://portfolio.vercel.app";
+  return raw.startsWith("http") ? raw : `https://${raw}`;
+};
+
+const SITE_ORIGIN = getSiteOrigin().replace(/\/$/, "");
 
 const escapeHtml = (value) =>
   value
@@ -23,10 +31,6 @@ const injectHeadTags = (html, route) => {
   const canonical = route === "/" ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${route}`;
 
   const tags = [
-    `<title>${escapeHtml(meta.title)}</title>`,
-    `<meta name="description" content="${escapeHtml(meta.description)}" />`,
-    `<meta property="og:title" content="${escapeHtml(meta.ogTitle)}" />`,
-    `<meta property="og:description" content="${escapeHtml(meta.ogDescription)}" />`,
     `<meta property="og:url" content="${escapeHtml(canonical)}" />`,
     `<link rel="canonical" href="${escapeHtml(canonical)}" />`,
   ].join("");
@@ -34,7 +38,9 @@ const injectHeadTags = (html, route) => {
   // Replace existing <title> and description (if present) to ensure route-specific metadata.
   let next = html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(meta.title)}</title>`)
-    .replace(/<meta\s+name=\"description\"[^>]*>/i, `<meta name="description" content="${escapeHtml(meta.description)}" />`);
+    .replace(/<meta\s+name=\"description\"[^>]*>/i, `<meta name="description" content="${escapeHtml(meta.description)}" />`)
+    .replace(/<meta\s+property=\"og:title\"[^>]*>/i, `<meta property="og:title" content="${escapeHtml(meta.ogTitle)}" />`)
+    .replace(/<meta\s+property=\"og:description\"[^>]*>/i, `<meta property="og:description" content="${escapeHtml(meta.ogDescription)}" />`);
 
   // Use existing injection marker from index.html.
   next = next.replace("<!--seo-head-->", `${tags}<!--seo-head-->`);
