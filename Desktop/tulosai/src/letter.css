@@ -1,0 +1,102 @@
+.book-stage {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  overflow: hidden;
+  background: #fdf1f4 url('/book-model/hearts.jpg') center / cover no-repeat;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1200ms ease;
+  touch-action: none;
+}
+
+body.is-ready #scene {
+  opacity: 1;
+}
+
+/* Alone rosa appena più carico ai bordi: raccoglie lo sguardo sul libro
+   senza scurire lo sfondo a cuori. */
+.book-stage::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 46%, transparent 46%, rgba(255, 176, 200, 0.34) 100%);
+  content: '';
+  pointer-events: none;
+}
+
+.book-back {
+  display: flex;
+  position: absolute;
+  z-index: 3;
+  top: max(22px, env(safe-area-inset-top));
+  left: max(22px, env(safe-area-inset-left));
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(190, 92, 130, 0.24);
+  border-radius: 50%;
+  opacity: 0;
+  transition:
+    opacity 900ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+  background: rgba(255, 255, 255, 0.52);
+  color: rgba(168, 66, 106, 0.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+body.is-ready .book-back {
+  opacity: 1;
+  transition-delay: 1400ms;
+}
+
+.book-back svg {
+  width: 20px;
+  height: 20px;
+  /* La punta del chevron sbilancia il cerchio: lo ricompensiamo. */
+  margin-right: 2px;
+}
+
+.book-back:hover,
+.book-back:focus-visible {
+  border-color: rgba(190, 92, 130, 0.5);
+  background: rgba(255, 255, 255, 0.82);
+  color: rgba(150, 44, 88, 0.95);
+}
+
+.book-hint {
+  position: absolute;
+  z-index: 2;
+  bottom: max(34px, env(safe-area-inset-bottom));
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 900ms ease;
+  color: rgba(154, 76, 108, 0.62);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.86rem;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+body.is-ready .book-hint {
+  opacity: 1;
+  transition-delay: 2600ms;
+}
+
+.book-hint.is-hidden {
+  opacity: 0;
+  transition-delay: 0ms;
+}
