@@ -1211,9 +1211,11 @@
   margin: clamp(1.25rem, 3vh, 2.25rem) 0 0;
 }
 
+/* Uneven on purpose: the group shot is a wide frame full of small faces and
+   needs the room, the portrait is one figure and does not. */
 .a-about__portraits {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   gap: clamp(1rem, 2vw, 1.75rem);
   align-items: start;
 }
@@ -1309,25 +1311,45 @@
     0 30px 70px -30px rgba(0, 0, 0, 0.95);
 }
 
-.a-frame--portrait .a-frame__box { aspect-ratio: 4 / 5; }
-.a-frame--square .a-frame__box { aspect-ratio: 1 / 1; }
+/* Two shapes only, and both are the shape of a photograph we actually have:
+   a frame that crops a picture to a proportion the layout picked in advance
+   is how you lose somebody's head. */
+.a-frame--tall .a-frame__box { aspect-ratio: 3 / 4; }
 .a-frame--wide .a-frame__box { aspect-ratio: 4 / 3; }
 
+/* These are phone photographs — fluorescent ceilings, grey offices, cold
+   white light — dropped onto a page of black stone. Left alone they read as
+   snapshots pasted over the design. Pulled down and warmed they read as
+   documents, and the reader gets the full colour back on hover. */
 .a-frame__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  /* Held back at rest, full colour when the reader looks at it — the same
-     treatment the project captures get. */
-  filter: saturate(0.85) brightness(0.88);
-  transition: filter 0.6s var(--ease-soft), transform 0.9s var(--ease);
+  filter: saturate(0.5) brightness(0.78) contrast(1.06) sepia(0.14);
+  transition: filter 0.7s var(--ease-soft), transform 0.9s var(--ease);
 }
 
 .a-frame:hover .a-frame__image {
-  filter: none;
+  filter: saturate(0.95) brightness(0.96);
   transform: scale(1.015);
 }
+
+/* A vignette tying the picture to the stone it sits on, rather than a hard
+   rectangle of daylight. */
+.a-frame__box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 40%, rgba(10, 8, 6, 0.55) 100%),
+    linear-gradient(to top, rgba(10, 8, 6, 0.42), transparent 45%);
+  opacity: 1;
+  transition: opacity 0.7s var(--ease-soft);
+}
+
+.a-frame:hover .a-frame__box::after { opacity: 0.45; }
 
 .a-frame__pending {
   color: var(--cream-22);

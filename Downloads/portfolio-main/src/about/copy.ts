@@ -3,15 +3,17 @@ import type { Lang } from "@/lib/language";
 export type PhotoKey = "portrait" | "academy" | "hackathon" | "languages";
 
 /**
- * The photographs are not in yet. Each slot already knows the shape it will
- * hold, so the page reserves the right space now and nothing reflows when a
- * file lands: set `src` to a path under `public/` and the frame fills itself.
+ * Each slot carries the proportion of the file it holds, so a frame never
+ * crops a photograph to fit a shape the page decided in advance. The files
+ * come out of `scripts/prepare-about.py`, which resizes the originals in
+ * ../art/about down to what the frames actually draw. A slot with `src: null`
+ * still reserves its space and shows "photo pending".
  */
-export const PHOTOS: Record<PhotoKey, { src: string | null; ratio: "portrait" | "wide" | "square" }> = {
-  portrait: { src: null, ratio: "portrait" },
-  academy: { src: null, ratio: "portrait" },
-  hackathon: { src: null, ratio: "wide" },
-  languages: { src: null, ratio: "square" },
+export const PHOTOS: Record<PhotoKey, { src: string | null; ratio: "tall" | "wide" }> = {
+  portrait: { src: "about/portrait.jpg", ratio: "tall" },
+  academy: { src: "about/academy.jpg", ratio: "wide" },
+  hackathon: { src: "about/hackathon.jpg", ratio: "tall" },
+  languages: { src: "about/languages.jpg", ratio: "wide" },
 };
 
 type Chapter = {
@@ -50,8 +52,8 @@ const en: AboutCopy = {
   alt: {
     portrait: "Claudia Napolitano",
     academy: "Claudia at the Apple Developer Academy in Naples",
-    hackathon: "Claudia and her team after winning the Naples hackathon in 2025",
-    languages: "Claudia's notebook for studying foreign languages",
+    hackathon: "Claudia holding the winner's banner of the Naples hackathon, 2025",
+    languages: "Claudia's notebooks, filled with handwritten Arabic",
   },
   columns: [
     {
@@ -104,8 +106,8 @@ const it: AboutCopy = {
   alt: {
     portrait: "Claudia Napolitano",
     academy: "Claudia all'Apple Developer Academy di Napoli",
-    hackathon: "Claudia e il suo team dopo la vittoria all'hackathon di Napoli nel 2025",
-    languages: "Il quaderno di Claudia per lo studio delle lingue straniere",
+    hackathon: "Claudia con lo striscione da vincitrice dell'hackathon di Napoli, 2025",
+    languages: "I quaderni di Claudia, riempiti di arabo scritto a mano",
   },
   columns: [
     {
