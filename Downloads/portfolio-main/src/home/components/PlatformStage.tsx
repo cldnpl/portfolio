@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/lib/language";
 import { publicAsset } from "@/lib/assets";
 import type { DeviceConfig, DeviceStage } from "../three/DeviceStage";
-import { CONTACT_EMAIL, homeCopy } from "../copy";
+import { homeCopy } from "../copy";
 
 const DEVICES: DeviceConfig[] = [
   {
@@ -47,8 +47,12 @@ const DEVICES: DeviceConfig[] = [
  */
 const OUTRO = 0.62;
 
-/** Where each on-screen button goes. */
-const DESTINATIONS = ["/projects", "/about", `mailto:${CONTACT_EMAIL}`];
+/**
+ * Where each on-screen button goes. Contact is a hash, not a mailto: the form
+ * is the last section of this same page, and throwing a mail client over the
+ * site is a worse answer than the thing the reader can already see.
+ */
+const DESTINATIONS = ["/projects", "/about", "#contact"];
 
 export default function PlatformStage() {
   const { lang } = useLanguage();
@@ -72,8 +76,13 @@ export default function PlatformStage() {
     (_key: string, index: number) => {
       const target = DESTINATIONS[index];
       if (!target) return;
-      if (target.startsWith("mailto:")) window.location.href = target;
-      else navigate(target);
+      if (target.startsWith("#")) {
+        document
+          .getElementById(target.slice(1))
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      navigate(target);
     },
     [navigate]
   );
