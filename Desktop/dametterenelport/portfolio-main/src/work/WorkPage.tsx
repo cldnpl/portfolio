@@ -35,7 +35,9 @@ const COPY = {
 
 /** A phone or headset window holding one real capture. */
 function DeviceShot({ shot, pending }: { shot: Shot; pending: string }) {
+  const { lang } = useLanguage();
   const isSpatial = shot.platform === "visionos";
+  const caption = shot.caption[lang];
 
   return (
     <figure className={`a-shot ${isSpatial ? "a-shot--spatial" : ""}`}>
@@ -44,7 +46,7 @@ function DeviceShot({ shot, pending }: { shot: Shot; pending: string }) {
           <img
             className="a-shot__image"
             src={publicAsset(shot.src)}
-            alt={shot.caption}
+            alt={caption}
             loading="lazy"
             decoding="async"
           />
@@ -55,7 +57,7 @@ function DeviceShot({ shot, pending }: { shot: Shot; pending: string }) {
       {/* Platform plus what the screen actually is: with two iOS shots side by
           side, "iOS" twice tells the reader nothing. */}
       <figcaption className="a-label a-shot__caption">
-        {PLATFORM_LABEL[shot.platform]} · {shot.caption}
+        {PLATFORM_LABEL[shot.platform]} · {caption}
       </figcaption>
     </figure>
   );
@@ -80,8 +82,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </header>
 
       <div className={`a-project__shots ${project.shots.length > 1 ? "is-pair" : ""}`}>
-        {project.shots.map((shot) => (
-          <DeviceShot key={`${project.slug}-${shot.platform}`} shot={shot} pending={copy.pending} />
+        {project.shots.map((shot, i) => (
+          <DeviceShot key={`${project.slug}-${i}`} shot={shot} pending={copy.pending} />
         ))}
       </div>
 

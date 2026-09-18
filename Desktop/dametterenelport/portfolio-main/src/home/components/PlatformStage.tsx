@@ -72,6 +72,14 @@ export default function PlatformStage() {
 
   const chapters = copy.stage.chapters;
 
+  // The scene boots lazily, screens after the reader has scrolled, and its
+  // effect deliberately runs once. Reading the copy straight from that closure
+  // froze the phone's buttons in whatever language the page first rendered in:
+  // a reader who had chosen English got an English site with an Italian phone
+  // in the middle of it. The ref hands the boot the copy in force at the time.
+  const phoneCopy = useRef(copy.phone);
+  phoneCopy.current = copy.phone;
+
   const handleSelect = useCallback(
     (_key: string, index: number) => {
       const target = DESTINATIONS[index];
@@ -122,7 +130,7 @@ export default function PlatformStage() {
 
       window.addEventListener("resize", onResize);
 
-      await stage.load(DEVICES, copy.phone).catch((error) => {
+      await stage.load(DEVICES, phoneCopy.current).catch((error) => {
         console.error("[stage] failed to load devices", error);
         setReady(true);
       });

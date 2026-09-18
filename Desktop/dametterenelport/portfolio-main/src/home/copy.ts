@@ -4,6 +4,8 @@ export type PlatformKey = "visionos" | "android" | "ios";
 
 export type HomeCopy = {
   nav: { work: string; about: string; contact: string; github: string };
+  /** Names for controls that show no text of their own. */
+  a11y: { language: string; menu: string };
   role: string;
   hero: {
     metaLeft: string;
@@ -65,6 +67,7 @@ export type HomeCopy = {
 
 const en: HomeCopy = {
   nav: { work: "Work", about: "About", contact: "Contact", github: "GitHub" },
+  a11y: { language: "Language", menu: "Menu" },
   role: "Mobile Developer",
   hero: {
     metaLeft: "Portfolio — 2026",
@@ -158,6 +161,7 @@ const en: HomeCopy = {
 
 const it: HomeCopy = {
   nav: { work: "Lavori", about: "Chi sono", contact: "Contatti", github: "GitHub" },
+  a11y: { language: "Lingua", menu: "Menu" },
   role: "Mobile Developer",
   hero: {
     metaLeft: "Portfolio — 2026",

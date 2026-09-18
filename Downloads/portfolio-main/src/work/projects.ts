@@ -6,8 +6,8 @@ export type Shot = {
   /** Path under public/work, or null until a capture exists. */
   src: string | null;
   platform: Platform;
-  /** What the screen shows — also the alt text. */
-  caption: string;
+  /** What the screen shows — also the alt text, so it follows the reader. */
+  caption: Record<Lang, string>;
 };
 
 export type Project = {
@@ -38,8 +38,8 @@ export const PROJECTS: Project[] = [
     },
     stack: ["Swift", "SwiftUI", "WidgetKit", "HealthKit", "MapKit", "Kotlin", "Jetpack Compose", "Health Connect", "Go", "PostgreSQL"],
     shots: [
-      { src: "work/leyla-ios.jpg", platform: "ios", caption: "Welcome" },
-      { src: "work/leyla-home.jpg", platform: "ios", caption: "Home" },
+      { src: "work/leyla-ios.jpg", platform: "ios", caption: { en: "Welcome", it: "Benvenuto" } },
+      { src: "work/leyla-home.jpg", platform: "ios", caption: { en: "Home", it: "Home" } },
     ],
   },
   {
@@ -52,7 +52,7 @@ export const PROJECTS: Project[] = [
       it: "Gli scacchi come un tavolo attorno a cui girare. Una scacchiera RealityKit in uno spazio immersivo, il motore Stockfish dietro, e Lichess per giocare con chi non è nella stanza.",
     },
     stack: ["Swift", "SwiftUI", "visionOS", "RealityKit", "Immersive Space", "Stockfish", "Lichess API"],
-    shots: [{ src: "work/livechess-visionos.jpg", platform: "visionos", caption: "Lobby, in the room" }],
+    shots: [{ src: "work/livechess-visionos.jpg", platform: "visionos", caption: { en: "Lobby, in the room", it: "Lobby, nella stanza" } }],
   },
   {
     slug: "stikar",
@@ -66,8 +66,8 @@ export const PROJECTS: Project[] = [
     stack: ["Swift", "SwiftUI", "ARKit", "RealityKit", "Core Data", "Firebase", "Kotlin", "Jetpack Compose", "ARCore"],
     repo: "https://github.com/HoussamAW/AcademyGO",
     shots: [
-      { src: "work/stikar-ios.jpg", platform: "ios", caption: "Launch" },
-      { src: "work/stikar-ar.jpg", platform: "ios", caption: "Stickers in a real room" },
+      { src: "work/stikar-ios.jpg", platform: "ios", caption: { en: "Launch", it: "Avvio" } },
+      { src: "work/stikar-ar.jpg", platform: "ios", caption: { en: "Stickers in a real room", it: "Sticker in una stanza vera" } },
     ],
   },
   {
@@ -80,7 +80,7 @@ export const PROJECTS: Project[] = [
       it: "Italiano e uzbeko dall'A1 al B2, in entrambe le direzioni sullo stesso corpus: un percorso di livelli, unità e lezioni con lettura, scrittura, ascolto e parlato.",
     },
     stack: ["Swift", "SwiftUI", "AVFoundation", "Speech", "XcodeGen"],
-    shots: [{ src: "work/uzbelia-ios.jpg", platform: "ios", caption: "Learning path" }],
+    shots: [{ src: "work/uzbelia-ios.jpg", platform: "ios", caption: { en: "Learning path", it: "Percorso di apprendimento" } }],
   },
   {
     slug: "tourism-accessible",
@@ -92,6 +92,6 @@ export const PROJECTS: Project[] = [
       it: "Nata per un hackathon a Trieste. Una mappa dei ristoranti della città dove ogni scheda si fa leggere ad alta voce: turismo accessibile vuol dire che la guida funziona anche quando lo schermo non lo puoi leggere.",
     },
     stack: ["Swift", "SwiftUI", "MapKit", "AVSpeechSynthesizer", "CoreLocation"],
-    shots: [{ src: "work/tourism-ios.jpg", platform: "ios", caption: "Trieste restaurants" }],
+    shots: [{ src: "work/tourism-ios.jpg", platform: "ios", caption: { en: "Trieste restaurants", it: "Ristoranti a Trieste" } }],
   },
 ];

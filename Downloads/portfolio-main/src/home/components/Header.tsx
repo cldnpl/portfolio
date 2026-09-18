@@ -89,7 +89,7 @@ export default function Header() {
         <div style={{ display: "flex", alignItems: "center", gap: "clamp(1.25rem, 3vw, 2.75rem)" }}>
           <nav className="a-nav">{links}</nav>
 
-          <div className="a-lang" role="group" aria-label="Language">
+          <div className="a-lang" role="group" aria-label={copy.a11y.language}>
             <span
               className="a-lang__thumb"
               style={{ transform: `translateX(${lang === "en" ? 0 : 100}%)` }}
@@ -113,7 +113,7 @@ export default function Header() {
           <button
             className={`a-burger ${open ? "is-open" : ""}`}
             onClick={() => setOpen((v) => !v)}
-            aria-label="Menu"
+            aria-label={copy.a11y.menu}
             aria-expanded={open}
           >
             <span />

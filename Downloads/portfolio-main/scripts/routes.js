@@ -1,31 +1,37 @@
 export const ROUTES = ["/", "/projects", "/about", "/contact"]; 
 
 // Basic per-route metadata used by prerender + sitemap.
+// English, like the page these tags describe: the site opens in English and a
+// search result that answers in another language than the page it opens is a
+// broken promise.
 export const ROUTE_META = {
   "/": {
-    title: "Claudia Napolitano — Portfolio 3D",
+    title: "Claudia Napolitano — Mobile Developer",
     description:
-      "Portfolio 3D di Claudia Napolitano con animazioni interattive, modello iPhone personalizzato e contenuti ottimizzati per SEO.",
-    ogTitle: "Claudia Napolitano — Portfolio 3D",
-    ogDescription: "Portfolio 3D con modello iPhone interattivo, animazioni scroll e layout ottimizzato per SEO.",
+      "Native mobile developer from Naples. iOS, Android and visionOS apps built at the Apple Developer Academy and in hackathon rooms.",
+    ogTitle: "Claudia Napolitano — Mobile Developer",
+    ogDescription:
+      "Native apps for iOS, Android and visionOS, shown on the devices they were built for.",
   },
   "/projects": {
-    title: "Projects — Claudia Napolitano",
-    description: "I progetti di Claudia Napolitano: portfolio, app e prototipi interattivi.",
-    ogTitle: "Projects — Claudia Napolitano",
-    ogDescription: "Scopri i progetti e le demo di Claudia Napolitano.",
+    title: "Work — Claudia Napolitano",
+    description:
+      "Selected projects: native apps for iOS, Android and visionOS, every screen a capture from the running app.",
+    ogTitle: "Work — Claudia Napolitano",
+    ogDescription: "Native apps for iOS, Android and visionOS, with real captures.",
   },
   "/about": {
     title: "About — Claudia Napolitano",
-    description: "Chi è Claudia Napolitano: percorso, interessi e background.",
+    description:
+      "Self-taught developer, Apple Developer Academy 2024—2027, a degree in Psychology for UX and six languages.",
     ogTitle: "About — Claudia Napolitano",
-    ogDescription: "Percorso personale e professionale di Claudia Napolitano.",
+    ogDescription: "Code, psychology and languages: the path behind the work.",
   },
   "/contact": {
     title: "Contact — Claudia Napolitano",
-    description: "Contatta Claudia Napolitano: link, profili e contatti.",
+    description: "Get in touch with Claudia Napolitano: a project, a role, or a question.",
     ogTitle: "Contact — Claudia Napolitano",
-    ogDescription: "Contatti e link utili per Claudia Napolitano.",
+    ogDescription: "A project, a role, or a question — the message lands directly with me.",
   },
 };
 

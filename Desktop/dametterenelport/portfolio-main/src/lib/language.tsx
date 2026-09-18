@@ -159,9 +159,11 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 const STORAGE_KEY = "portfolio-lang";
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  // Start with "it" on both server and first client render to avoid hydration
-  // mismatches. The persisted choice (if any) is restored in the effect below.
-  const [lang, setLangState] = useState<Lang>("it");
+  // English on both server and first client render: it is the default the site
+  // opens in, and using the same value on both sides avoids a hydration
+  // mismatch. A previous choice, if there is one, is restored in the effect
+  // below.
+  const [lang, setLangState] = useState<Lang>("en");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
