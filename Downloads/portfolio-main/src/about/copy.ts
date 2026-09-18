@@ -50,7 +50,7 @@ const en: AboutCopy = {
   pending: "Photo pending",
   captions: {
     portrait: "Portrait",
-    academy: "At the Academy",
+    academy: "At the Apple Academy",
     hackathon: "Hackathon win — Naples 2025",
     languages: "Language notes",
   },
@@ -62,7 +62,7 @@ const en: AboutCopy = {
   },
   columns: [
     {
-      eyebrow: "Before the Academy",
+      eyebrow: "Before the Apple Academy",
       body: "*Self-taught*: Python first, then Swift, pushed by a childhood spent surrounded by Apple hardware I wanted to take apart. *Two years of building on my own* before anyone taught me anything — and Kotlin picked up later, out of the same curiosity.",
     },
     {
@@ -72,7 +72,7 @@ const en: AboutCopy = {
   ],
   academy: {
     eyebrow: "Apple Developer Academy · 2024 — 2027",
-    title: "Three years at the Academy, hackathons across three cities",
+    title: "Three years at the Apple Developer Academy, hackathons in three cities",
     body: [
       "I joined the Apple Developer Academy in Naples with the Foundation programme in 2024 and I am still there, now on the *Advanced Research track that runs to 2027* — a year spent building and investigating rather than following a syllabus.",
       "Alongside it, hackathons: Naples, Trieste, Stockholm. *Forty-eight hours, one problem, no sleep.* The one I won was at home in Naples, October 2025, by doing the thing nobody else in the room was doing — *putting psychology inside the software*: ReclutIA, a hiring tool for an Italian bank built on the Big Five personality model.",
@@ -90,7 +90,7 @@ const en: AboutCopy = {
     eyebrow: "Six languages · still counting",
     title: "The other half of the work is listening",
     body: [
-      "*Six languages today*, kept alive at the Academy and on my own. It started at three years old, when my mother taught me Spanish through the games an institute for Spanish-speaking children in Naples lent out.",
+      "*Six languages today*, kept alive at the Apple Academy and on my own. It started at three years old, when my mother taught me Spanish through the games an institute for Spanish-speaking children in Naples lent out.",
       "It is the same instinct as the psychology: a language is a set of rules people actually live in, and you only learn it by paying attention to them. *The favourite is Arabic.*",
     ],
   },
@@ -104,7 +104,7 @@ const it: AboutCopy = {
   pending: "Foto in arrivo",
   captions: {
     portrait: "Ritratto",
-    academy: "In Academy",
+    academy: "All'Apple Academy",
     hackathon: "Hackathon vinto — Napoli 2025",
     languages: "Appunti di lingue",
   },
@@ -116,7 +116,7 @@ const it: AboutCopy = {
   },
   columns: [
     {
-      eyebrow: "Prima dell'Academy",
+      eyebrow: "Prima dell'Apple Academy",
       body: "*Da autodidatta*: prima Python, poi Swift, spinta da un'infanzia passata in mezzo a dispositivi Apple che volevo smontare. *Due anni a costruire da sola* prima che qualcuno mi insegnasse qualcosa — e Kotlin arrivato dopo, per la stessa curiosità.",
     },
     {
@@ -126,7 +126,7 @@ const it: AboutCopy = {
   ],
   academy: {
     eyebrow: "Apple Developer Academy · 2024 — 2027",
-    title: "Tre anni in Academy, hackathon in tre città",
+    title: "Tre anni all'Apple Developer Academy, hackathon in tre città",
     body: [
       "Sono entrata all'Apple Developer Academy di Napoli con il programma Foundation nel 2024 e ci sono ancora, ora sul *percorso Advanced Research che arriva al 2027* — un anno passato a costruire e a indagare invece che a seguire un programma.",
       "Accanto, gli hackathon: Napoli, Trieste, Stoccolma. *Quarantotto ore, un problema, zero sonno.* Quello che ho vinto era in casa, a Napoli, a ottobre 2025, facendo l'unica cosa che nessun altro in sala stava facendo: *mettere la psicologia dentro il software* con ReclutIA, uno strumento di selezione per una banca italiana costruito sul modello di personalità Big Five.",
@@ -144,7 +144,7 @@ const it: AboutCopy = {
     eyebrow: "Sei lingue · e non è finita",
     title: "L'altra metà del lavoro è ascoltare",
     body: [
-      "*Oggi sono sei*, tenute vive in Academy e da sola. È cominciata a tre anni, quando mia madre mi ha insegnato lo spagnolo con i videogiochi che l'istituto per bambini ispanofoni di Napoli metteva a disposizione.",
+      "*Oggi sono sei*, tenute vive all'Apple Academy e da sola. È cominciata a tre anni, quando mia madre mi ha insegnato lo spagnolo con i videogiochi che l'istituto per bambini ispanofoni di Napoli metteva a disposizione.",
       "È lo stesso istinto della psicologia: una lingua è un insieme di regole in cui le persone vivono davvero, e la impari solo facendo attenzione a loro. *La preferita è l'arabo.*",
     ],
   },
