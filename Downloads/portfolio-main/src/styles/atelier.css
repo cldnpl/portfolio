@@ -1178,6 +1178,194 @@
 }
 
 /* =========================================================================
+   ABOUT — the long form. Same grammar as WORK: hairlines, one accent, and
+   pictures treated as windows cut into the stone rather than as cards.
+   ========================================================================= */
+
+.a-about {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--nav-h);
+}
+
+.a-about__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  padding: clamp(3rem, 9vh, 6.5rem) var(--gutter) clamp(2.5rem, 7vh, 5rem);
+}
+
+.a-about__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  margin: clamp(0.75rem, 1.8vh, 1.5rem) 0 0;
+  color: var(--cream);
+}
+
+.a-about__intro {
+  max-width: 42ch;
+  margin: clamp(1.25rem, 3vh, 2.25rem) 0 0;
+}
+
+.a-about__portraits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  align-items: start;
+}
+
+/* The second frame rides higher than the first: on one line the pair reads
+   as a contact sheet, offset it reads as composition. */
+.a-about__portraits > .a-frame:last-child {
+  margin-top: clamp(-4.5rem, -6vh, -2rem);
+}
+
+.a-about__rule { margin: 0 var(--gutter); }
+
+.a-about__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(2.5rem, 7vh, 5rem) var(--gutter) 0;
+}
+
+.a-about__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.a-about__paragraph { max-width: 58ch; }
+.a-about__paragraph + .a-about__paragraph { margin-top: 1.1rem; }
+
+.a-about__chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  padding: clamp(3.5rem, 11vh, 8rem) var(--gutter) 0;
+}
+
+/* Alternating sides keeps a page of three chapters from reading as a list. */
+.a-about__chapter.is-reverse { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); }
+.a-about__chapter.is-reverse > .a-frame { order: 2; }
+
+.a-about__chapter-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.a-about__heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 0.2rem 0 0.4rem;
+  max-width: 20ch;
+  color: var(--cream);
+}
+
+.a-about__tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: clamp(1rem, 2.5vh, 1.75rem) 0 0;
+  padding: 0;
+}
+
+/* One tag in the row is the fact worth carrying away. */
+.a-chip--strong {
+  color: var(--cream);
+  border-color: var(--gold);
+}
+
+/* The page's last chapter would otherwise end flush against the viewport. */
+.a-about > .a-about__chapter:last-child { padding-bottom: clamp(4rem, 12vh, 9rem); }
+
+/* -- frames -------------------------------------------------------------- */
+
+.a-frame {
+  margin: 0;
+  min-width: 0;
+}
+
+.a-frame__box {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0d0b;
+  border: 1px solid var(--rule);
+  box-shadow:
+    0 2px 0 rgba(243, 238, 228, 0.04) inset,
+    0 30px 70px -30px rgba(0, 0, 0, 0.95);
+}
+
+.a-frame--portrait .a-frame__box { aspect-ratio: 4 / 5; }
+.a-frame--square .a-frame__box { aspect-ratio: 1 / 1; }
+.a-frame--wide .a-frame__box { aspect-ratio: 4 / 3; }
+
+.a-frame__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Held back at rest, full colour when the reader looks at it — the same
+     treatment the project captures get. */
+  filter: saturate(0.85) brightness(0.88);
+  transition: filter 0.6s var(--ease-soft), transform 0.9s var(--ease);
+}
+
+.a-frame:hover .a-frame__image {
+  filter: none;
+  transform: scale(1.015);
+}
+
+.a-frame__pending {
+  color: var(--cream-22);
+  text-align: center;
+  padding: 1rem;
+  white-space: normal;
+}
+
+.a-frame__caption {
+  display: block;
+  margin-top: 0.85rem;
+  color: var(--cream-38);
+  white-space: normal;
+  line-height: 1.7;
+}
+
+@media (max-width: 1000px) {
+  .a-about__head,
+  .a-about__chapter,
+  .a-about__chapter.is-reverse {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 5vh, 3rem);
+  }
+
+  /* Stacked, the picture belongs under the words that explain it. */
+  .a-about__chapter.is-reverse > .a-frame,
+  .a-about__chapter > .a-frame {
+    order: 2;
+  }
+
+  .a-about__portraits > .a-frame:last-child { margin-top: 0; }
+}
+
+@media (max-width: 700px) {
+  .a-about__columns { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* =========================================================================
    SKILLS — a capability chart, kept in the page's own register
    ========================================================================= */
 
