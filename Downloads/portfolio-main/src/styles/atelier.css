@@ -107,9 +107,13 @@
   font-family: var(--font-display);
   font-style: normal;
   font-weight: 500;
-  font-size: 1.08em;
+  font-size: 1.32em;
   letter-spacing: -0.005em;
   color: var(--cream);
+  /* Without this the taller inline box would stretch only the lines that
+     contain a mark, and the paragraph's leading would go ragged. At 1 the
+     box stays inside the line the body text already sets. */
+  line-height: 1;
 }
 
 /* -------------------------------------------------------------------------
