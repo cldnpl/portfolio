@@ -659,13 +659,29 @@
 }
 
 @media (max-width: 760px) {
-  .a-stats { grid-template-columns: repeat(2, 1fr); }
+  /* minmax(0, 1fr), not 1fr: a label is `white-space: nowrap`, so an `auto`
+     minimum grows the track to the width of the longest line and the second
+     column walks off the side of the phone. Two of the four stats were half
+     cut off. */
+  .a-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .a-stat:nth-child(2n) { border-right: 0; }
   .a-stat:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
-  .a-stat { padding-right: 1rem; }
+  .a-stat { padding-right: 1rem; min-width: 0; }
   /* Two columns: only the right-hand cell of each row follows a rule. */
   .a-stat + .a-stat { padding-left: 0; }
   .a-stat:nth-child(2n) { padding-left: clamp(1rem, 4vw, 1.75rem); }
+
+  /* Room to fold instead of room to overflow. */
+  .a-stat__label { white-space: normal; line-height: 1.65; }
+  .a-stat__value { font-size: 1.9rem; }
+
+  /* "cum laude" next to 110/110 is wider than half a phone; it goes under. */
+  .a-stat__suffix {
+    display: block;
+    margin-left: 0;
+    margin-top: 0.3rem;
+    font-size: 0.58rem;
+  }
 }
 
 /* =========================================================================
@@ -1243,7 +1259,10 @@
   margin-top: clamp(-4.5rem, -6vh, -2rem);
 }
 
-.a-about__rule { margin: 0 var(--gutter); }
+/* .a-rule is width:100%; with a margin on both sides that makes the line one
+   gutter wider than the page and it runs off the right edge — invisible on
+   desktop only because the page clips its overflow. */
+.a-about__rule { width: auto; margin: 0 var(--gutter); }
 
 .a-about__columns {
   display: grid;
@@ -1663,4 +1682,58 @@
 
 @media (max-width: 900px) {
   .a-contact__body { grid-template-columns: 1fr; }
+}
+
+/* -------------------------------------------------------------------------
+   Touch
+   A finger is not a cursor: anything it has to hit needs about 44px of
+   target, even when the thing it is hitting is a hairline. These rules add
+   the area without changing what is drawn.
+   ------------------------------------------------------------------------- */
+
+@media (hover: none), (pointer: coarse) {
+  /* The language switch was 40x25. */
+  .a-lang__btn {
+    padding-top: 0.92rem;
+    padding-bottom: 0.92rem;
+  }
+
+  .a-burger { width: 44px; height: 44px; }
+
+  /* The chapter marks are one pixel tall: tapping one was luck. The bar keeps
+     its drawn size and gets a transparent box around it. */
+  .a-stage__progress { gap: 0.2rem; }
+  .a-stage__dash {
+    height: 44px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+  }
+  .a-stage__dash::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--cream-22);
+  }
+  .a-stage__dash::after { top: 50%; height: 1px; bottom: auto; }
+
+  /* Links set in running text: taller boxes, same type. */
+  .a-contact__link,
+  .a-project__link {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .a-footer a.a-label {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+  }
+
+  /* Nothing on a phone can be reached only by hovering it. */
+  .a-frame .a-frame__image { filter: saturate(0.72) brightness(0.9) contrast(1.02) sepia(0.07); }
+  .a-frame .a-frame__box::after { opacity: 0.55; }
+  .a-shot__image { filter: saturate(0.9) brightness(0.94); }
 }

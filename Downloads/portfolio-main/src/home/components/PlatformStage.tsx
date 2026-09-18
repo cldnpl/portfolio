@@ -226,16 +226,30 @@ export default function PlatformStage() {
   }, []);
 
   // -- pointer --------------------------------------------------------------
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
+  const aimAt = (element: HTMLElement, clientX: number, clientY: number) => {
+    const rect = element.getBoundingClientRect();
     stageRef.current?.setPointer(
-      ((event.clientX - rect.left) / rect.width) * 2 - 1,
-      -(((event.clientY - rect.top) / rect.height) * 2 - 1),
+      ((clientX - rect.left) / rect.width) * 2 - 1,
+      -(((clientY - rect.top) / rect.height) * 2 - 1),
       true
     );
   };
 
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    aimAt(event.currentTarget, event.clientX, event.clientY);
+  };
+
   const onPointerLeave = () => stageRef.current?.setPointer(0, 0, false);
+
+  // The scene used to fire at whatever the last pointer move had aimed at.
+  // With a mouse that is the thing under the cursor; with a finger there may
+  // have been no move at all, so a tap hit whatever the mouse had last
+  // touched — usually nothing. Aiming from the tap itself makes the buttons
+  // work the same way on both.
+  const onSelect = (event: React.MouseEvent<HTMLDivElement>) => {
+    aimAt(event.currentTarget, event.clientX, event.clientY);
+    stageRef.current?.click();
+  };
 
   const jumpTo = (index: number) => {
     const wrapper = wrapperRef.current;
@@ -258,7 +272,7 @@ export default function PlatformStage() {
         className="a-stage__sticky"
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        onClick={() => stageRef.current?.click()}
+        onClick={onSelect}
       >
         <canvas className="a-stage__canvas" ref={canvasRef} />
 
