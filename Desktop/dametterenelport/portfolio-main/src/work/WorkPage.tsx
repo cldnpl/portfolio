@@ -52,8 +52,10 @@ function DeviceShot({ shot, pending }: { shot: Shot; pending: string }) {
           <span className="a-shot__pending a-label">{pending}</span>
         )}
       </div>
+      {/* Platform plus what the screen actually is: with two iOS shots side by
+          side, "iOS" twice tells the reader nothing. */}
       <figcaption className="a-label a-shot__caption">
-        {PLATFORM_LABEL[shot.platform]}
+        {PLATFORM_LABEL[shot.platform]} · {shot.caption}
       </figcaption>
     </figure>
   );

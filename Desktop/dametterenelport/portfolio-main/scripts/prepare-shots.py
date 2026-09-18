@@ -17,6 +17,9 @@ except ImportError:  # pragma: no cover
 
 ROOT = Path(__file__).resolve().parent.parent
 CAPS = Path("/tmp/caps")
+# Shots taken by hand — from a real device, or from a simulator session that
+# needed a login or a camera. Dropped in here, they win over any capture.
+ART = ROOT.parent / "art"
 OUT = ROOT / "public" / "work"
 
 # A phone card is never drawn wider than ~380 CSS px, so 720 covers retina.
@@ -45,9 +48,28 @@ JOBS = [
 ]
 
 
+# name in art/ → name in public/work/
+HAND_SHOTS = [
+    ("leyla-home.png", "leyla-home.jpg", PHONE_WIDTH),
+    ("stikar-ar.png", "stikar-ar.jpg", PHONE_WIDTH),
+    ("livechess-board.png", "livechess-visionos.jpg", SPATIAL_WIDTH),
+]
+
+
 def main() -> None:
+    hand_done = set()
+    for source_name, target_name, width in HAND_SHOTS:
+        for candidate in (ART / source_name, ART / source_name.replace(".png", ".jpg")):
+            if candidate.exists():
+                print(f"{candidate.name}  (fornita a mano)")
+                convert(candidate, target_name, width)
+                hand_done.add(target_name)
+                break
+
     missing = []
     for source_name, target_name, width in JOBS:
+        if target_name in hand_done:
+            continue
         source = CAPS / source_name
         if source.exists():
             print(source_name)

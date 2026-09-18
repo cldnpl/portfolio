@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "@/styles/atelier.css";
-import Closing from "./components/Closing";
+import Contact from "./components/Contact";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Manifesto from "./components/Manifesto";
@@ -39,7 +39,7 @@ export default function HomePage() {
         <StatsStrip />
         <Manifesto />
         <PlatformStage />
-        <Closing />
+        <Contact />
       </main>
     </div>
   );

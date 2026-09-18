@@ -40,7 +40,25 @@ export type HomeCopy = {
       android: { date: string; time: [string, string]; weather: string; caption: string };
     };
   };
-  closing: { line: string; mail: string };
+  skills: { eyebrow: string; title: string };
+  contact: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    name: string;
+    namePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    message: string;
+    messagePlaceholder: string;
+    send: string;
+    sending: string;
+    sent: string;
+    failed: string;
+    fallback: string;
+    location: string;
+    locationValue: string;
+  };
   footer: { left: string; right: string };
 };
 
@@ -113,9 +131,25 @@ const en: HomeCopy = {
       },
     },
   },
-  closing: {
-    line: "Tell me what it has to do. I will tell you how it should feel.",
-    mail: "Start a conversation",
+  skills: { eyebrow: "What I work with", title: "Capability" },
+  contact: {
+    eyebrow: "Contact",
+    title: "Tell me what it has to do",
+    intro:
+      "A project, a role, or a question about one of the apps above. Write here and it reaches me directly.",
+    name: "Name",
+    namePlaceholder: "Your name",
+    email: "Email",
+    emailPlaceholder: "you@example.com",
+    message: "Message",
+    messagePlaceholder: "What are you building?",
+    send: "Send message",
+    sending: "Sending",
+    sent: "Sent. I will get back to you.",
+    failed: "It did not go through.",
+    fallback: "Write to me directly",
+    location: "Based in",
+    locationValue: "Naples, Italy",
   },
   footer: { left: "© 2026 Claudia Napolitano", right: "Designed and built in Naples" },
 };
@@ -189,14 +223,31 @@ const it: HomeCopy = {
       },
     },
   },
-  closing: {
-    line: "Dimmi cosa deve fare. Ti dirò come dovrebbe farti sentire.",
-    mail: "Iniziamo a parlarne",
+  skills: { eyebrow: "Con cosa lavoro", title: "Competenze" },
+  contact: {
+    eyebrow: "Contatti",
+    title: "Dimmi cosa deve fare",
+    intro:
+      "Un progetto, una posizione, o una domanda su una delle app qui sopra. Scrivi qui e arriva direttamente a me.",
+    name: "Nome",
+    namePlaceholder: "Il tuo nome",
+    email: "Email",
+    emailPlaceholder: "tu@esempio.com",
+    message: "Messaggio",
+    messagePlaceholder: "Cosa stai costruendo?",
+    send: "Invia messaggio",
+    sending: "Invio in corso",
+    sent: "Inviato. Ti rispondo presto.",
+    failed: "Non è partito.",
+    fallback: "Scrivimi direttamente",
+    location: "Lavoro da",
+    locationValue: "Napoli, Italia",
   },
   footer: { left: "© 2026 Claudia Napolitano", right: "Progettato e costruito a Napoli" },
 };
 
 export const homeCopy: Record<Lang, HomeCopy> = { en, it };
 
-export const CONTACT_EMAIL = "claudia.napolitano@gmail.com";
+export const CONTACT_EMAIL = "napolitano.claudia@icloud.com";
 export const GITHUB_URL = "https://github.com/cldnpl";
+export const LINKEDIN_URL = "https://www.linkedin.com/in/claudia-napolitano-1660b533a";

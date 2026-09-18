@@ -13,6 +13,13 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    watch: {
+      // .claude holds git worktrees — copies of this same project, tens of
+      // megabytes and hundreds of files. Left in the watch set they make the
+      // dev server restart whenever anything touches them, and every restart
+      // is a full page reload for whoever is looking at the site.
+      ignored: ["**/.claude/**", "**/dist/**", "**/.git/**"],
+    },
   },
   plugins: [
     react(),

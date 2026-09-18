@@ -39,7 +39,7 @@ export const PROJECTS: Project[] = [
     stack: ["Swift", "SwiftUI", "WidgetKit", "HealthKit", "MapKit", "Kotlin", "Jetpack Compose", "Health Connect", "Go", "PostgreSQL"],
     shots: [
       { src: "work/leyla-ios.jpg", platform: "ios", caption: "Welcome" },
-      { src: null, platform: "android", caption: "Home" },
+      { src: "work/leyla-home.jpg", platform: "ios", caption: "Home" },
     ],
   },
   {
@@ -67,7 +67,7 @@ export const PROJECTS: Project[] = [
     repo: "https://github.com/HoussamAW/AcademyGO",
     shots: [
       { src: "work/stikar-ios.jpg", platform: "ios", caption: "Launch" },
-      { src: null, platform: "android", caption: "Launch" },
+      { src: "work/stikar-ar.jpg", platform: "ios", caption: "Stickers in a real room" },
     ],
   },
   {
