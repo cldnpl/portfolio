@@ -16,6 +16,38 @@ const ENDPOINT = "https://api.web3forms.com/submit";
 
 type Status = "idle" | "sending" | "sent" | "failed";
 
+/**
+ * Four marks drawn inline rather than pulled from an icon package: the whole
+ * point of dropping `lucide-react` was to keep 1500 files out of the graph,
+ * and these are the only icons on the page. One solid weight, one size, one
+ * colour — at 14px a filled glyph reads as a mark, not as a button.
+ */
+const ICONS: Record<string, string> = {
+  mail:
+    "M3 5h18a1 1 0 0 1 1 1v.3l-9.49 5.6a1 1 0 0 1-1.02 0L2 6.3V6a1 1 0 0 1 1-1Z" +
+    "M22 8.5V18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8.5l9.49 5.6a1 1 0 0 0 1.02 0L22 8.5Z",
+  linkedin:
+    "M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.86-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13Zm1.78 13.02H3.56V9h3.56v11.45ZM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.73V1.73C24 .77 23.21 0 22.23 0Z",
+  github:
+    "M12 .3a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58l-.01-2.04c-3.34.73-4.04-1.6-4.04-1.6-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.41-1.31.75-1.61-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.11-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.76.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.36.81 1.1.81 2.22l-.01 3.29c0 .31.21.69.83.57A12 12 0 0 0 12 .3Z",
+  pin:
+    "M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z",
+};
+
+function Icon({ name }: { name: keyof typeof ICONS }) {
+  return (
+    <svg
+      className="a-contact__icon"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d={ICONS[name]} />
+    </svg>
+  );
+}
+
 export default function Contact() {
   const { lang } = useLanguage();
   const copy = homeCopy[lang].contact;
@@ -83,32 +115,44 @@ export default function Contact() {
 
           <ul className="a-contact__links">
             <li>
-              <span className="a-label">Email</span>
-              <a className="a-contact__link" href={`mailto:${CONTACT_EMAIL}`}>
-                {CONTACT_EMAIL}
-              </a>
+              <Icon name="mail" />
+              <span className="a-contact__meta">
+                <span className="a-label">Email</span>
+                <a className="a-contact__link" href={`mailto:${CONTACT_EMAIL}`}>
+                  {CONTACT_EMAIL}
+                </a>
+              </span>
             </li>
             <li>
-              <span className="a-label">LinkedIn</span>
-              <a
-                className="a-contact__link"
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                claudia-napolitano
-              </a>
+              <Icon name="linkedin" />
+              <span className="a-contact__meta">
+                <span className="a-label">LinkedIn</span>
+                <a
+                  className="a-contact__link"
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  claudia-napolitano
+                </a>
+              </span>
             </li>
             <li>
-              <span className="a-label">GitHub</span>
-              <a className="a-contact__link" href={GITHUB_URL} target="_blank" rel="noreferrer">
-                cldnpl
-              </a>
+              <Icon name="github" />
+              <span className="a-contact__meta">
+                <span className="a-label">GitHub</span>
+                <a className="a-contact__link" href={GITHUB_URL} target="_blank" rel="noreferrer">
+                  cldnpl
+                </a>
+              </span>
             </li>
             <li>
-              <span className="a-label">{copy.location}</span>
-              <span className="a-contact__link a-contact__link--static">
-                {copy.locationValue}
+              <Icon name="pin" />
+              <span className="a-contact__meta">
+                <span className="a-label">{copy.location}</span>
+                <span className="a-contact__link a-contact__link--static">
+                  {copy.locationValue}
+                </span>
               </span>
             </li>
           </ul>

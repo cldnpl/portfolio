@@ -28,6 +28,7 @@ export type HomeCopy = {
       hint?: string;
     }[];
     loading: string;
+    scroll: string;
   };
   phone: {
     eyebrow: string;
@@ -115,6 +116,7 @@ const en: HomeCopy = {
       },
     ],
     loading: "Preparing the devices",
+    scroll: "Scroll",
   },
   phone: {
     eyebrow: "Claudia Napolitano",
@@ -207,6 +209,7 @@ const it: HomeCopy = {
       },
     ],
     loading: "Preparo i dispositivi",
+    scroll: "Scorri",
   },
   phone: {
     eyebrow: "Claudia Napolitano",

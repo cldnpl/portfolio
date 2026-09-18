@@ -62,6 +62,9 @@ export default function PlatformStage() {
   const [active, setActive] = useState(0);
   const [loaded, setLoaded] = useState(0);
   const [ready, setReady] = useState(false);
+  /** True once the reader is near the end of the pinned section, so the
+   *  "keep scrolling" cue can retire instead of nagging. */
+  const [nearEnd, setNearEnd] = useState(false);
 
   const chapters = copy.stage.chapters;
 
@@ -179,6 +182,7 @@ export default function PlatformStage() {
 
       stage.setProgress(progress);
       setActive(Math.min(DEVICES.length - 1, Math.round(progress)));
+      setNearEnd(raw > 0.9);
 
       // Render only while the section is near the viewport. Driving this from
       // the measurement we already have is more dependable than a second
@@ -268,6 +272,18 @@ export default function PlatformStage() {
 
         <div className={`a-stage__hint ${ready && chapters[active]?.hint ? "is-visible" : ""}`}>
           <span className="a-label a-label--gold">{chapters[active]?.hint ?? ""}</span>
+        </div>
+
+        {/* The section is pinned for several screens: without a cue on the
+            edge, a reader who sees a still device reads the page as stuck. */}
+        <div
+          className={`a-stage__scroll ${ready && !nearEnd ? "is-visible" : ""}`}
+          aria-hidden="true"
+        >
+          <span className="a-label a-stage__scroll-word">{copy.stage.scroll}</span>
+          <span className="a-stage__scroll-rail">
+            <i />
+          </span>
         </div>
 
         <div className="a-stage__progress">

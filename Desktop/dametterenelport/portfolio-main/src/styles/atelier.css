@@ -246,6 +246,7 @@
     opacity: 1 !important;
   }
   .a-backdrop__grain { animation: none; }
+  .a-stage__scroll-rail i { animation: none; opacity: 1; }
 }
 
 /* =========================================================================
@@ -828,6 +829,63 @@
 
 .a-stage__hint.is-visible { opacity: 1; }
 
+/* Scroll cue, right edge. The stage is pinned for several screens, so the
+   reader needs to be told that the page is still moving under them. A word
+   set vertically and a bead of light running down a hairline — it reads at a
+   glance and never competes with the device. */
+.a-stage__scroll {
+  position: absolute;
+  right: calc(var(--gutter) * 0.55);
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.9s var(--ease);
+  pointer-events: none;
+}
+
+.a-stage__scroll.is-visible { opacity: 1; }
+
+.a-stage__scroll-word {
+  writing-mode: vertical-rl;
+  letter-spacing: 0.4em;
+  color: var(--cream-38);
+}
+
+.a-stage__scroll-rail {
+  position: relative;
+  width: 1px;
+  height: clamp(3.5rem, 8vh, 5.5rem);
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.a-stage__scroll-rail i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 45%;
+  background: linear-gradient(180deg, transparent, var(--gold), transparent);
+  animation: a-scroll-bead 2.8s var(--ease-soft) infinite;
+}
+
+@keyframes a-scroll-bead {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  25%  { opacity: 1; }
+  75%  { opacity: 1; }
+  100% { transform: translateY(222%); opacity: 0; }
+}
+
+/* On a phone the device already fills the width: the cue would sit on top
+   of it. The progress dashes carry the same message there. */
+@media (max-width: 720px) {
+  .a-stage__scroll { display: none; }
+}
+
 /* Loading state for the 3D scene */
 .a-stage__loader {
   position: absolute;
@@ -1244,10 +1302,31 @@
 }
 
 .a-contact__links li {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  align-items: start;
+  column-gap: clamp(0.85rem, 1.1vw, 1.15rem);
+}
+
+.a-contact__meta {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  min-width: 0;
 }
+
+/* The mark sits on the cap height of the label above the link, not floating
+   between the two lines. */
+.a-contact__icon {
+  width: 14px;
+  height: 14px;
+  margin-top: -1px;
+  color: var(--cream-38);
+  flex: none;
+  transition: color 0.45s var(--ease-soft);
+}
+
+.a-contact__links li:hover .a-contact__icon { color: var(--gold); }
 
 .a-contact__link {
   font-family: var(--font-body);
@@ -1274,10 +1353,16 @@
 }
 
 .a-field {
+  /* One inset for the whole field, so the label above and the text inside
+     the input stay on the same vertical line — just off the edge, instead
+     of pinned to it. */
+  --field-inset: clamp(0.9rem, 1.3vw, 1.35rem);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
+
+.a-field > .a-label { padding-left: var(--field-inset); }
 
 /* Underlines, not boxes: a bordered card in the middle of this page would
    look like it came from a different site. */
@@ -1289,7 +1374,7 @@
   background: rgba(243, 238, 228, 0.03);
   border: 0;
   border-bottom: 1px solid var(--rule);
-  padding: 0.7rem 0.1rem;
+  padding: 0.8rem var(--field-inset);
   width: 100%;
   transition: border-color 0.45s var(--ease-soft), background-color 0.45s var(--ease-soft);
 }
