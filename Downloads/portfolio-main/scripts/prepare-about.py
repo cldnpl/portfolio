@@ -24,32 +24,37 @@ OUT = ROOT / "public" / "about"
 
 WIDTH = 1100
 
-# name in art/about → name in public/about
+# name in art/about → name in public/about, plus the rotation the original
+# needs. A phone held over a desk writes no orientation tag worth trusting,
+# so the correction lives here rather than in a re-saved original.
 JOBS = [
-    ("claudia-mirror.png", "portrait.jpg"),
-    ("academy-group.jpg", "academy.jpg"),
-    ("hackathon-winner.png", "hackathon.jpg"),
-    ("language-notes.png", "languages.jpg"),
+    ("claudia-mirror.png", "portrait.jpg", 0),
+    ("academy-group.jpg", "academy.jpg", 0),
+    ("hackathon-winner.png", "hackathon.jpg", 0),
+    ("language-notes.png", "languages.jpg", 180),
 ]
 
 
-def convert(source: Path, name: str) -> None:
+def convert(source: Path, name: str, rotate: int) -> None:
     image = Image.open(source).convert("RGB")
+    if rotate:
+        image = image.rotate(rotate, expand=True)
     if image.width > WIDTH:
         image = image.resize((WIDTH, round(image.height * WIDTH / image.width)), Image.LANCZOS)
     OUT.mkdir(parents=True, exist_ok=True)
     target = OUT / name
     image.save(target, quality=84, optimize=True, progressive=True)
-    print(f"  → public/about/{name}  {target.stat().st_size // 1024} KB  {image.size}")
+    turned = f"  ruotata di {rotate}°" if rotate else ""
+    print(f"  → public/about/{name}  {target.stat().st_size // 1024} KB  {image.size}{turned}")
 
 
 def main() -> None:
     missing = []
-    for source_name, target_name in JOBS:
+    for source_name, target_name, rotate in JOBS:
         source = ART / source_name
         if source.exists():
             print(source_name)
-            convert(source, target_name)
+            convert(source, target_name, rotate)
         else:
             missing.append(source_name)
 

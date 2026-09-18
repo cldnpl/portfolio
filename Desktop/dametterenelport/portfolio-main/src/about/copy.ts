@@ -53,7 +53,7 @@ const en: AboutCopy = {
     portrait: "Claudia Napolitano",
     academy: "Claudia at the Apple Developer Academy in Naples",
     hackathon: "Claudia holding the winner's banner of the Naples hackathon, 2025",
-    languages: "Claudia's notebooks, filled with handwritten Arabic",
+    languages: "Claudia's notebooks: Arabic script, declension tables, colour-coded grammar",
   },
   columns: [
     {
@@ -107,7 +107,7 @@ const it: AboutCopy = {
     portrait: "Claudia Napolitano",
     academy: "Claudia all'Apple Developer Academy di Napoli",
     hackathon: "Claudia con lo striscione da vincitrice dell'hackathon di Napoli, 2025",
-    languages: "I quaderni di Claudia, riempiti di arabo scritto a mano",
+    languages: "I quaderni di Claudia: arabo scritto a mano, tabelle di declinazioni, grammatica a colori",
   },
   columns: [
     {
