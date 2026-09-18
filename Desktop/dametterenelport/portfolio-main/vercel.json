@@ -6,7 +6,7 @@
   "trailingSlash": false,
   "headers": [
     {
-      "source": "/(favicon.ico|favicon.svg|favicon.png|favicon-64.png|icon.png|opengraph-image.svg|browserconfig.xml)",
+      "source": "/(favicon.ico|favicon.svg|favicon.png|favicon-64.png|icon.png|opengraph-image.jpg|browserconfig.xml)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -28,6 +28,13 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/contact",
+      "destination": "/#contact",
+      "permanent": true
     }
   ]
 }

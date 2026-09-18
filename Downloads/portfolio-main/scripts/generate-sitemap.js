@@ -1,21 +1,11 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ROUTES } from "./routes.js";
+import { ROUTES, SITE_ORIGIN } from "./routes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const clientDir = path.join(root, "dist", "client");
-
-const getSiteOrigin = () => {
-  const configured = process.env.SITE_ORIGIN;
-  const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  const vercelUrl = process.env.VERCEL_URL;
-  const raw = configured || vercelProductionUrl || vercelUrl || "https://portfolio.vercel.app";
-  return raw.startsWith("http") ? raw : `https://${raw}`;
-};
-
-const SITE_ORIGIN = getSiteOrigin().replace(/\/$/, "");
 
 const buildDate = new Date().toISOString().slice(0, 10);
 
