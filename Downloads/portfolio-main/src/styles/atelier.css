@@ -1118,3 +1118,231 @@
   .a-project { border-right: 0; }
   .a-project__shots { justify-content: flex-start; }
 }
+
+/* =========================================================================
+   SKILLS — a capability chart, kept in the page's own register
+   ========================================================================= */
+
+.a-skills { margin-top: clamp(3.5rem, 11vh, 8rem); }
+
+.a-skills__intro { margin-bottom: clamp(1.75rem, 4vh, 3rem); }
+
+.a-skills__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+.a-skills__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: clamp(1.1rem, 2.4vw, 1.6rem);
+}
+
+.a-skills__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* name … number, with the bar underneath spanning the full column */
+.a-skill {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  padding: 0.62rem 0 0.72rem;
+}
+
+.a-skill__name {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+  color: var(--cream-70);
+  letter-spacing: 0.01em;
+}
+
+.a-skill__value {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  color: var(--cream-38);
+  font-variant-numeric: tabular-nums;
+}
+
+.a-skill__track {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.a-skill__fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(to right, var(--gold-soft), var(--gold));
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1.25s var(--ease);
+}
+
+/* The bar thickens and the name brightens for the row under the cursor —
+   enough to let someone read one line at a time without any chrome. */
+.a-skill:hover .a-skill__name { color: var(--cream); }
+.a-skill:hover .a-skill__value { color: var(--gold-soft); }
+.a-skill:hover .a-skill__track { height: 2px; margin-top: -0.5px; }
+
+.a-skill__track { transition: height 0.4s var(--ease-soft); }
+
+@media (max-width: 860px) {
+  .a-skills__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+/* =========================================================================
+   CONTACT
+   ========================================================================= */
+
+.a-contact {
+  position: relative;
+  z-index: 1;
+  padding: clamp(5rem, 15vh, 10rem) var(--gutter) clamp(3rem, 8vh, 5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.a-contact__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: clamp(0.75rem, 1.8vh, 1.4rem) 0 0;
+  max-width: 16ch;
+  color: var(--cream);
+}
+
+.a-contact__body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 7vw, 6rem);
+  margin-top: clamp(2.5rem, 7vh, 4.5rem);
+}
+
+.a-contact__intro { max-width: 34ch; margin: 0; }
+
+.a-contact__links {
+  list-style: none;
+  margin: clamp(2rem, 5vh, 3rem) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.a-contact__links li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.a-contact__link {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.88rem, 1.05vw, 1rem);
+  color: var(--cream);
+  text-decoration: none;
+  width: fit-content;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--rule);
+  transition: color 0.45s var(--ease-soft), border-color 0.45s var(--ease-soft);
+}
+
+.a-contact__link:hover { color: var(--gold); border-bottom-color: var(--gold-soft); }
+.a-contact__link--static { border-bottom-color: transparent; }
+.a-contact__link--static:hover { color: var(--cream); }
+
+/* -- the form ------------------------------------------------------------ */
+
+.a-contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.6vh, 1.75rem);
+}
+
+.a-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Underlines, not boxes: a bordered card in the middle of this page would
+   look like it came from a different site. */
+.a-field__input {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.9rem, 1.05vw, 1rem);
+  color: var(--cream);
+  background: rgba(243, 238, 228, 0.03);
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.7rem 0.1rem;
+  width: 100%;
+  transition: border-color 0.45s var(--ease-soft), background-color 0.45s var(--ease-soft);
+}
+
+.a-field__input--area {
+  resize: vertical;
+  min-height: 7rem;
+  line-height: 1.7;
+}
+
+.a-field__input::placeholder { color: var(--cream-22); }
+
+.a-field__input:focus {
+  outline: none;
+  border-bottom-color: var(--gold);
+  background: rgba(243, 238, 228, 0.05);
+}
+
+.a-submit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background: transparent;
+  border: 1px solid var(--gold-soft);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.5s var(--ease-soft), color 0.5s var(--ease-soft),
+    border-color 0.5s var(--ease-soft);
+}
+
+.a-submit span:last-child { transition: transform 0.5s var(--ease); }
+.a-submit:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.a-submit:hover span:last-child { transform: translateX(5px); }
+.a-submit:disabled { opacity: 0.5; cursor: progress; }
+
+.a-contact__status {
+  min-height: 1.4rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  color: var(--gold-soft);
+}
+
+@media (max-width: 900px) {
+  .a-contact__body { grid-template-columns: 1fr; }
+}
