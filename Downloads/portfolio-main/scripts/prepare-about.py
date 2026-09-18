@@ -11,6 +11,7 @@ that is weight the reader pays for and never sees.
 """
 
 from pathlib import Path
+from typing import NamedTuple
 import sys
 
 try:
@@ -24,39 +25,71 @@ OUT = ROOT / "public" / "about"
 
 WIDTH = 1100
 
-# name in art/about → name in public/about, plus the rotation the original
-# needs. A phone held over a desk writes no orientation tag worth trusting,
-# so the correction lives here rather than in a re-saved original.
+class Job(NamedTuple):
+    source: str
+    target: str
+    #: Degrees anticlockwise. A phone held over a desk writes no orientation
+    #: tag worth trusting, so the correction lives here rather than in a
+    #: re-saved original.
+    rotate: int = 0
+    #: Width / height the frame draws. None keeps the original proportion.
+    aspect: float | None = None
+    #: Where the crop keeps its material when the original is the wrong
+    #: shape: 0 holds the top of the picture, 1 the bottom, 0.5 the middle.
+    focus: float = 0.5
+
+
 JOBS = [
-    ("claudia-mirror.png", "portrait.jpg", 0),
-    ("academy-group.jpg", "academy.jpg", 0),
-    ("hackathon-winner.png", "hackathon.jpg", 0),
-    ("language-notes.png", "languages.jpg", 180),
+    # Shot upright on a phone, far taller than the 3:4 frame: crop from the
+    # top so the face keeps its headroom and the legs go, not the hair.
+    Job("portrait.jpg", "portrait.jpg", aspect=3 / 4, focus=0.05),
+    Job("academy-group.jpg", "academy.jpg"),
+    Job("hackathon-winner.png", "hackathon.jpg"),
+    Job("language-notes.png", "languages.jpg", rotate=180),
 ]
 
 
-def convert(source: Path, name: str, rotate: int) -> None:
-    image = Image.open(source).convert("RGB")
-    if rotate:
-        image = image.rotate(rotate, expand=True)
+def reframe(image: Image.Image, aspect: float, focus: float) -> Image.Image:
+    width, height = image.size
+    if abs(width / height - aspect) < 0.005:
+        return image
+    if width / height > aspect:  # too wide: trim the sides evenly
+        cropped = round(height * aspect)
+        left = (width - cropped) // 2
+        return image.crop((left, 0, left + cropped, height))
+    cropped = round(width / aspect)  # too tall: trim around the focus
+    top = round((height - cropped) * focus)
+    return image.crop((0, top, width, top + cropped))
+
+
+def convert(job: Job) -> None:
+    image = Image.open(ART / job.source).convert("RGB")
+    if job.rotate:
+        image = image.rotate(job.rotate, expand=True)
+    if job.aspect:
+        image = reframe(image, job.aspect, job.focus)
     if image.width > WIDTH:
         image = image.resize((WIDTH, round(image.height * WIDTH / image.width)), Image.LANCZOS)
     OUT.mkdir(parents=True, exist_ok=True)
-    target = OUT / name
+    target = OUT / job.target
     image.save(target, quality=84, optimize=True, progressive=True)
-    turned = f"  ruotata di {rotate}°" if rotate else ""
-    print(f"  → public/about/{name}  {target.stat().st_size // 1024} KB  {image.size}{turned}")
+    notes = []
+    if job.rotate:
+        notes.append(f"ruotata di {job.rotate}°")
+    if job.aspect:
+        notes.append("ritagliata")
+    suffix = f"  ({', '.join(notes)})" if notes else ""
+    print(f"  → public/about/{job.target}  {target.stat().st_size // 1024} KB  {image.size}{suffix}")
 
 
 def main() -> None:
     missing = []
-    for source_name, target_name, rotate in JOBS:
-        source = ART / source_name
-        if source.exists():
-            print(source_name)
-            convert(source, target_name, rotate)
+    for job in JOBS:
+        if (ART / job.source).exists():
+            print(job.source)
+            convert(job)
         else:
-            missing.append(source_name)
+            missing.append(job.source)
 
     if missing:
         print(f"\nNon trovate in {ART}:")

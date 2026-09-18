@@ -38,13 +38,13 @@ function Marked({ text }: { text: string }) {
 function Frame({ photo, delay = 0 }: { photo: PhotoKey; delay?: number }) {
   const { lang } = useLanguage();
   const copy = aboutCopy[lang];
-  const { src, ratio } = PHOTOS[photo];
+  const { src, ratio, face } = PHOTOS[photo];
   const { ref, className } = useReveal<HTMLElement>({ threshold: 0.15 });
 
   return (
     <figure
       ref={ref}
-      className={`a-frame a-frame--${ratio} a-reveal ${className}`}
+      className={`a-frame a-frame--${ratio} ${face ? "a-frame--face" : ""} a-reveal ${className}`}
       style={{ ["--reveal-delay" as string]: `${delay}ms` }}
     >
       <div className="a-frame__box">

@@ -1352,6 +1352,12 @@
   transform: scale(1.015);
 }
 
+/* A frame holding a person gets half the treatment. Enough to belong to the
+   page, not so much that the eyes go out. */
+.a-frame--face .a-frame__image { filter: saturate(0.72) brightness(0.9) contrast(1.02) sepia(0.07); }
+.a-frame--face .a-frame__box::after { opacity: 0.6; }
+.a-frame--face:hover .a-frame__box::after { opacity: 0.3; }
+
 /* A vignette tying the picture to the stone it sits on, rather than a hard
    rectangle of daylight. */
 .a-frame__box::after {

@@ -9,10 +9,15 @@ export type PhotoKey = "portrait" | "academy" | "hackathon" | "languages";
  * ../art/about down to what the frames actually draw. A slot with `src: null`
  * still reserves its space and shows "photo pending".
  */
-export const PHOTOS: Record<PhotoKey, { src: string | null; ratio: "tall" | "wide" }> = {
-  portrait: { src: "about/portrait.jpg", ratio: "tall" },
+export const PHOTOS: Record<
+  PhotoKey,
+  { src: string | null; ratio: "tall" | "wide"; face?: boolean }
+> = {
+  // `face` asks for a lighter hand: the treatment that makes a room full of
+  // desks sit on black stone turns a portrait into a silhouette.
+  portrait: { src: "about/portrait.jpg", ratio: "tall", face: true },
   academy: { src: "about/academy.jpg", ratio: "wide" },
-  hackathon: { src: "about/hackathon.jpg", ratio: "tall" },
+  hackathon: { src: "about/hackathon.jpg", ratio: "tall", face: true },
   languages: { src: "about/languages.jpg", ratio: "wide" },
 };
 
