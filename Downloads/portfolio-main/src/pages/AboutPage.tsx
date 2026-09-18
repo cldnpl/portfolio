@@ -1,16 +1,15 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@/lib/language";
-import { publicAsset } from "@/lib/assets";
 
 type AboutBlock = {
-  id: "academy" | "psychology" | "hackathon" | "languages";
+  id: string;
   align: "left" | "right";
   image?: {
     src: string;
     alt: string;
     variant?: "wide" | "portrait" | "square" | "notes";
   };
+  text: string;
 };
 
 const aboutBlocks: AboutBlock[] = [
@@ -18,44 +17,41 @@ const aboutBlocks: AboutBlock[] = [
     id: "academy",
     align: "left",
     image: {
-      src: publicAsset("about/academy-group.jpg"),
-      alt: "Claudia at the Apple Developer Academy community",
+      src: "/about/academy-group.jpg",
+      alt: "Claudia con la community dell'Apple Developer Academy",
       variant: "wide",
     },
+    text: "Ho iniziato il mio percorso da programmatrice due anni fa, imparando da autodidatta Python ed in seguito Swift, spinta dal mio essere circondata da dispositivi Apple sin da piccola. Volevo capire come funzionassero. Ho poi approfondito con la Apple Developer Academy di Napoli, iniziata nel 2024 con la Foundation, per poi capire di voler fare esattamente questo nella vita. Qui ho trovato una fantastica community internazionale, ho legato con persone provenienti da ogni parte del mondo. Nel tempo, mi sono avvicinata anche a Kotlin, durante lo sviluppo di alcuni progetti proprio qui in Academy.",
   },
   {
     id: "psychology",
     align: "right",
+    text: "Contemporaneamente, studio alla facoltà di psicologia a Napoli; mi laureerò a luglio del 2026. Non ho mai visto i due percorsi come separati, anzi, credo vadano molto a braccetto. Ho trovato tantissimi modi di implementare teorie sul comportamento umano nello sviluppo di una UX funzionale ai bisogni degli utenti. Grazie alla scoperta di questo connubio, mi sono appassionata anche al training di IA ed al funzionamento di queste ultime, che ho scoperto essere incredibilmente simile a quello umano.",
   },
   {
     id: "hackathon",
     align: "left",
     image: {
-      src: publicAsset("about/hackathon-winner.png"),
-      alt: "Claudia winning a hackathon challenge",
+      src: "/about/hackathon-winner.png",
+      alt: "Claudia vincitrice di una challenge hackathon",
       variant: "portrait",
     },
+    text: "Durante il mio percorso all'Apple Academy ho scoperto il mondo degli Hackathon, competizioni in cui si chiede a dei team di programmatori di costruire una soluzione ad un dato problema in 48 ore. Una full immersion in VSC non-stop, praticamente. Ho viaggiato per parteciparvi da Trieste fino a Stoccolma. Ad ottobre 2025 io ed il mio team ci portiamo a casa la vittoria giocando a Napoli, in casa, programmando “ReclutIA”, un'app che integra un famoso test personologico (il Big Five) con la selezione di personale per una banca italiana.",
   },
   {
     id: "languages",
     align: "right",
     image: {
-      src: publicAsset("about/language-notes.png"),
-      alt: "Claudia's notes for studying foreign languages",
+      src: "/about/language-notes.png",
+      alt: "Appunti di Claudia per lo studio delle lingue straniere",
       variant: "notes",
     },
+    text: "Un altro pilastro della mia identità è l'amore per le lingue straniere: sono una poliglotta, al giorno d'oggi (2026) parlo sei lingue, continuandole a praticare sia in Academy che da sola. Ho iniziato da molto piccola, quando mia mamma già a tre anni, iniziò ad insegnarmi lo spagnolo grazie a dei videogiochi che l'istituto per bambini ispanofoni residenti in Italia della mia città metteva loro a disposizione. La mia lingua preferita? L'arabo.",
   },
 ];
 
 const AboutPage = () => {
   const pageRef = useRef<HTMLElement>(null);
-  const { t } = useLanguage();
-  const blockText: Record<AboutBlock["id"], string> = {
-    academy: t.aboutAcademy,
-    psychology: t.aboutPsychology,
-    hackathon: t.aboutHackathon,
-    languages: t.aboutLanguages,
-  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
@@ -81,24 +77,28 @@ const AboutPage = () => {
 
   return (
     <main ref={pageRef} className="about-page">
-      <Link className="about-back-link" to="/" aria-label="Home">
+      <Link className="about-back-link" to="/" aria-label="Torna alla homepage">
         CN
       </Link>
 
       <section className="about-hero about-section-intro" aria-labelledby="about-title">
         <div className="about-hero-collage about-slide" data-align="left">
           <div className="about-photo-card about-photo-child">
-            <img className="about-photo" src={publicAsset("about/child-computer.png")} alt="Claudia as a child at a computer" />
+            <img className="about-photo" src="/about/child-computer.png" alt="Claudia da bambina al computer" />
           </div>
           <div className="about-photo-card about-photo-selfie">
-            <img className="about-photo" src={publicAsset("about/claudia-mirror.png")} alt="Claudia Napolitano" />
+            <img className="about-photo" src="/about/claudia-mirror.png" alt="Claudia Napolitano" />
           </div>
         </div>
 
         <div className="about-copy about-slide" data-align="right">
-          <p className="about-eyebrow">{t.aboutEyebrow}</p>
-          <h1 id="about-title">{t.aboutTitle}</h1>
-          <p>{t.aboutIntro}</p>
+          <p className="about-eyebrow">About me</p>
+          <h1 id="about-title">Claudia Napolitano</h1>
+          <p>
+            Mi chiamo Claudia Napolitano, sono una mobile developer italiana. Mi ritengo una persona abbastanza
+            curiosa: mi è sempre piaciuto imparare e studiare in generale. Sono motivata dalle sfide complicate e mi
+            piace migliorarmi ogni giorno.
+          </p>
         </div>
       </section>
 
@@ -126,7 +126,7 @@ const AboutPage = () => {
 
           const copy = (
             <div className="about-copy about-slide" data-align={copyAlign}>
-              <p>{blockText[block.id]}</p>
+              <p>{block.text}</p>
             </div>
           );
 
