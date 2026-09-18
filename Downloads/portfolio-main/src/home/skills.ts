@@ -46,7 +46,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     index: "03",
-    title: { en: "Craft", it: "Mestiere" },
+    title: { en: "Other", it: "Altro" },
     skills: [
       { name: "MVVM · Modular", level: 90 },
       { name: "Swift Concurrency", level: 85 },

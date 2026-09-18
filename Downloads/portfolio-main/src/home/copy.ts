@@ -134,7 +134,7 @@ const en: HomeCopy = {
   skills: { eyebrow: "What I work with", title: "Capability" },
   contact: {
     eyebrow: "Contact",
-    title: "Tell me what it has to do",
+    title: "Got an idea? Let's talk!",
     intro:
       "A project, a role, or a question about one of the apps above. Write here and it reaches me directly.",
     name: "Name",
@@ -226,7 +226,7 @@ const it: HomeCopy = {
   skills: { eyebrow: "Con cosa lavoro", title: "Competenze" },
   contact: {
     eyebrow: "Contatti",
-    title: "Dimmi cosa deve fare",
+    title: "Hai qualche idea? Parliamone!",
     intro:
       "Un progetto, una posizione, o una domanda su una delle app qui sopra. Scrivi qui e arriva direttamente a me.",
     name: "Nome",
