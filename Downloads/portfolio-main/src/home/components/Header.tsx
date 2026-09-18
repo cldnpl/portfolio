@@ -45,7 +45,7 @@ export default function Header() {
     };
   }, [open]);
 
-  // "Work" and "Contact" are anchors on the home page and destinations
+  // "Projects" and "Contact" are anchors on the home page and destinations
   // everywhere else, so the same nav item does the right thing on both.
   const scrollTo = (id: string) => {
     setOpen(false);

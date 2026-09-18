@@ -66,7 +66,7 @@ export type HomeCopy = {
 };
 
 const en: HomeCopy = {
-  nav: { work: "Work", about: "About", contact: "Contact", github: "GitHub" },
+  nav: { work: "Projects", about: "About", contact: "Contact", github: "GitHub" },
   a11y: { language: "Language", menu: "Menu" },
   role: "Mobile Developer",
   hero: {
@@ -160,7 +160,7 @@ const en: HomeCopy = {
 };
 
 const it: HomeCopy = {
-  nav: { work: "Lavori", about: "Chi sono", contact: "Contatti", github: "GitHub" },
+  nav: { work: "Progetti", about: "Chi sono", contact: "Contatti", github: "GitHub" },
   a11y: { language: "Lingua", menu: "Menu" },
   role: "Mobile Developer",
   hero: {

@@ -17,7 +17,7 @@ const PLATFORM_LABEL: Record<Platform, string> = {
 const COPY = {
   en: {
     eyebrow: (n: number) => `Index — ${n} projects`,
-    title: "Work",
+    title: "Projects",
     intro:
       "Native apps built at the Apple Developer Academy, in hackathon rooms, and at my own desk at two in the morning. Every screen below is a capture from the running app, not a mockup.",
     repo: "Repository",
@@ -25,7 +25,7 @@ const COPY = {
   },
   it: {
     eyebrow: (n: number) => `Indice — ${n} progetti`,
-    title: "Lavori",
+    title: "Progetti",
     intro:
       "App native costruite all'Apple Developer Academy, nelle stanze degli hackathon e alla mia scrivania alle due di notte. Ogni schermata qui sotto è una cattura dall'app in esecuzione, non un mockup.",
     repo: "Repository",

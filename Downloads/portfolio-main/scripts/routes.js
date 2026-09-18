@@ -14,10 +14,10 @@ export const ROUTE_META = {
       "Native apps for iOS, Android and visionOS, shown on the devices they were built for.",
   },
   "/projects": {
-    title: "Work — Claudia Napolitano",
+    title: "Projects — Claudia Napolitano",
     description:
       "Selected projects: native apps for iOS, Android and visionOS, every screen a capture from the running app.",
-    ogTitle: "Work — Claudia Napolitano",
+    ogTitle: "Projects — Claudia Napolitano",
     ogDescription: "Native apps for iOS, Android and visionOS, with real captures.",
   },
   "/about": {
