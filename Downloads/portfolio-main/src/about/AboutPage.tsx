@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import "@/styles/atelier.css";
 import { useLanguage } from "@/lib/language";
 import { publicAsset } from "@/lib/assets";
@@ -7,6 +7,28 @@ import MarbleBackdrop from "@/home/components/MarbleBackdrop";
 import SplitWords from "@/home/components/SplitWords";
 import { useReveal } from "@/home/hooks/useReveal";
 import { PHOTOS, aboutCopy, type PhotoKey } from "./copy";
+
+/**
+ * Key phrases arrive from copy.ts wrapped in asterisks and are set here in the
+ * display serif. A column of Inter 300 at 70% opacity is a wall of grey; one
+ * phrase per paragraph lifted into the serif gives the eye a place to land,
+ * and says more than bold would — bold in a page this quiet reads as shouting.
+ */
+function Marked({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("*").map((part, i) =>
+        i % 2 ? (
+          <em key={i} className="a-mark">
+            {part}
+          </em>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        )
+      )}
+    </>
+  );
+}
 
 /**
  * One photograph, or the space one will occupy. The frame is the same object
@@ -64,7 +86,7 @@ function Chapter({
         <h2 className="a-about__heading">{chapter.title}</h2>
         {chapter.body.map((paragraph) => (
           <p key={paragraph.slice(0, 24)} className="a-body a-about__paragraph">
-            {paragraph}
+            <Marked text={paragraph} />
           </p>
         ))}
 
@@ -124,7 +146,7 @@ export default function AboutPage() {
               className={`a-body a-about__intro a-reveal ${head.className}`}
               style={{ ["--reveal-delay" as string]: "420ms" }}
             >
-              {copy.intro}
+              <Marked text={copy.intro} />
             </p>
           </div>
 
@@ -146,7 +168,9 @@ export default function AboutPage() {
               style={{ ["--reveal-delay" as string]: `${i * 140}ms` }}
             >
               <span className="a-label">{column.eyebrow}</span>
-              <p className="a-body a-about__paragraph">{column.body}</p>
+              <p className="a-body a-about__paragraph">
+                <Marked text={column.body} />
+              </p>
             </div>
           ))}
         </div>

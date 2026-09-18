@@ -99,6 +99,19 @@
   border: 0;
 }
 
+/* Emphasis inside body copy. Not bold: the page is set in one light weight and
+   a bold run would read as a shout. The display serif at full brightness does
+   the same job by changing the texture of the line instead of its weight —
+   1.08em because Playfair's x-height sits lower than Inter's. */
+.a-mark {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.08em;
+  letter-spacing: -0.005em;
+  color: var(--cream);
+}
+
 /* -------------------------------------------------------------------------
    Backdrop — marble, grain, vignette.
    The source marble is small, so it is scaled, softened and darkened:
