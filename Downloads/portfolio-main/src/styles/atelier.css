@@ -164,20 +164,26 @@
 /* Every stop is a small step from the last one. The earlier version dropped
    from 0.86 to 0.30 inside the top quarter, which printed a visible grey band
    across the head of the page. */
+/* A vignette, not a film. The stops used to sit at 58% black across the whole
+   middle of the screen, which is a sheet of black laid over the stone: the
+   marble was there and you could not see it. Now the centre is nearly clear
+   and the darkening lives where it earns its keep — under the fixed header,
+   along the footer, and at the corners, where it keeps small type off the
+   brightest veining. */
 .a-backdrop__vignette {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(
       to bottom,
-      rgba(10, 8, 6, 0.74) 0%,
-      rgba(10, 8, 6, 0.64) 14%,
-      rgba(10, 8, 6, 0.58) 34%,
-      rgba(10, 8, 6, 0.58) 66%,
-      rgba(10, 8, 6, 0.66) 86%,
-      rgba(10, 8, 6, 0.84) 100%
+      rgba(10, 8, 6, 0.58) 0%,
+      rgba(10, 8, 6, 0.22) 15%,
+      rgba(10, 8, 6, 0.08) 38%,
+      rgba(10, 8, 6, 0.08) 62%,
+      rgba(10, 8, 6, 0.30) 88%,
+      rgba(10, 8, 6, 0.58) 100%
     ),
-    radial-gradient(135% 105% at 50% 45%, transparent 30%, rgba(10, 8, 6, 0.52) 100%);
+    radial-gradient(130% 100% at 50% 45%, transparent 38%, rgba(10, 8, 6, 0.45) 100%);
 }
 
 /* Film grain — 1px noise, animated on a 6-step loop so it never sits still */
@@ -1544,6 +1550,10 @@
 
 .a-contact__intro { max-width: 34ch; margin: 0; }
 
+/* Every label in this section sits on the liveliest part of the stone. */
+.a-contact .a-label { color: var(--cream-50); }
+.a-contact .a-label--gold { color: var(--gold-soft); }
+
 .a-contact__links {
   list-style: none;
   margin: clamp(2rem, 5vh, 3rem) 0 0;
@@ -1631,6 +1641,11 @@
   transition: border-color 0.45s var(--ease-soft), background-color 0.45s var(--ease-soft);
 }
 
+/* Dark, not light. The fill used to be a whisper of cream, which worked when
+   the backdrop was a flat sheet; against live stone a field has to darken
+   what is behind it or the placeholder disappears into a vein. */
+.a-field__input { background: rgba(10, 8, 6, 0.62); }
+
 .a-field__input--area {
   resize: vertical;
   min-height: 7rem;
@@ -1642,7 +1657,7 @@
 .a-field__input:focus {
   outline: none;
   border-bottom-color: var(--gold);
-  background: rgba(243, 238, 228, 0.05);
+  background: rgba(10, 8, 6, 0.74);
 }
 
 .a-submit {

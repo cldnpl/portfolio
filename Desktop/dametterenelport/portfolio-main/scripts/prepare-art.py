@@ -44,15 +44,24 @@ def prepare_marble(source: Path) -> None:
     if image.width > 2560:
         image = image.resize((2560, round(image.height * 2560 / image.width)), Image.LANCZOS)
 
-    # Tuned for the marble currently in art/: black stone with one wide,
-    # bright rose-gold vein. Left at the values the previous, finer marble
-    # used, that vein sat on top of the contact form and the small mono
-    # labels stopped being readable. Saturation comes down further than
-    # brightness because the stone is pink and the page's accent is bronze:
-    # muting the pink is what makes the two agree.
+    # Saturation comes down further than brightness: the stone is pink and the
+    # page's accent is bronze, and muting the pink is what makes the two agree.
     image = ImageEnhance.Color(image).enhance(0.62)
-    image = ImageEnhance.Brightness(image).enhance(0.56)
-    image = ImageEnhance.Contrast(image).enhance(1.06)
+    image = ImageEnhance.Brightness(image).enhance(0.74)
+    image = ImageEnhance.Contrast(image).enhance(1.04)
+
+    # Then a shoulder on the highlights only.
+    #
+    # This marble is one wide, very bright vein on near-black stone. Dimming
+    # the whole picture to tame that vein is what a flat black film over the
+    # backdrop was doing, and it costs the thing worth having: the texture of
+    # the dark stone, which is where the depth lives. The curve below leaves
+    # everything under the knee untouched and squeezes what is above it, so
+    # the stone keeps its grain and the vein stops competing with the type.
+    KNEE, SLOPE = 62, 0.42
+    image = image.point(
+        [v if v <= KNEE else round(KNEE + (v - KNEE) * SLOPE) for v in range(256)] * 3
+    )
 
     save(image, BACKGROUNDS / "black-marble.jpg", 86)
     small = image.resize((1280, round(image.height * 1280 / image.width)), Image.LANCZOS)
