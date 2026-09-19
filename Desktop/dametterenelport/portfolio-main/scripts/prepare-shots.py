@@ -52,14 +52,17 @@ JOBS = [
 HAND_SHOTS = [
     ("leyla-home.png", "leyla-home.jpg", PHONE_WIDTH),
     ("stikar-ar.png", "stikar-ar.jpg", PHONE_WIDTH),
-    ("livechess-board.png", "livechess-visionos.jpg", SPATIAL_WIDTH),
+    ("livechess-lobby.png", "livechess-visionos.jpg", SPATIAL_WIDTH),
+    ("livechess-board.png", "livechess-board.jpg", SPATIAL_WIDTH),
 ]
 
 
 def main() -> None:
     hand_done = set()
     for source_name, target_name, width in HAND_SHOTS:
-        for candidate in (ART / source_name, ART / source_name.replace(".png", ".jpg")):
+        stem = source_name.rsplit(".", 1)[0]
+        candidates = (ART / source_name, ART / f"{stem}.jpg", ART / f"{stem}.webp", ART / f"{stem}.png")
+        for candidate in candidates:
             if candidate.exists():
                 print(f"{candidate.name}  (fornita a mano)")
                 convert(candidate, target_name, width)

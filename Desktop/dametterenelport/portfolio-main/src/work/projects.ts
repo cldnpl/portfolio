@@ -52,7 +52,18 @@ export const PROJECTS: Project[] = [
       it: "Gli scacchi come un tavolo attorno a cui girare. Una scacchiera RealityKit in uno spazio immersivo, il motore Stockfish dietro, e Lichess per giocare con chi non è nella stanza.",
     },
     stack: ["Swift", "SwiftUI", "visionOS", "RealityKit", "Immersive Space", "Stockfish", "Lichess API"],
-    shots: [{ src: "work/livechess-visionos.jpg", platform: "visionos", caption: { en: "Lobby, in the room", it: "Lobby, nella stanza" } }],
+    shots: [
+      {
+        src: "work/livechess-visionos.jpg",
+        platform: "visionos",
+        caption: { en: "Lobby, in the room", it: "Lobby, nella stanza" },
+      },
+      {
+        src: "work/livechess-board.jpg",
+        platform: "visionos",
+        caption: { en: "A game in progress", it: "Una partita in corso" },
+      },
+    ],
   },
   {
     slug: "stikar",
