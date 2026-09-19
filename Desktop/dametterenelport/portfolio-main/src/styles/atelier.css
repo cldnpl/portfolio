@@ -1066,6 +1066,26 @@
   margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
 
+.a-project__title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+/* The stamp on work done for a client and shipped. Bronze hairline, the same
+   box as a stack chip, so it reads as part of the index rather than as a
+   sticker someone put on top of it. */
+.a-project__badge {
+  color: rgba(201, 168, 106, 0.85);
+  border: 1px solid rgba(201, 168, 106, 0.28);
+  /* .34em of tracking is dead space after the last letter; the extra left
+     padding puts the word back in the middle of its box. */
+  padding: 0.3rem 0.5rem 0.3rem 0.62rem;
+  white-space: normal;
+}
+
 /* -- captures ------------------------------------------------------------ */
 
 .a-project__shots {
@@ -1166,7 +1186,11 @@
 
 /* -- text ---------------------------------------------------------------- */
 
+.a-project__text { min-width: 0; }
+
 .a-project__summary { margin: 0; }
+
+.a-project__contribution { margin: 0.9rem 0 0; }
 
 .a-project__stack {
   list-style: none;

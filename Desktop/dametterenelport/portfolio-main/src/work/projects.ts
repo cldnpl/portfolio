@@ -15,18 +15,52 @@ export type Project = {
   name: string;
   year: string;
   platforms: Platform[];
+  /**
+   * A stamp on the card, only on work that was done for someone else and
+   * shipped. Absent on personal work, which is most of this page.
+   */
+  badge?: Record<Lang, string>;
   /** One sentence, in the reader's language. */
   summary: Record<Lang, string>;
+  /** On team work, the paragraph that says which part of it was mine. */
+  contribution?: Record<Lang, string>;
   stack: string[];
   repo?: string;
   shots: Shot[];
 };
 
 /**
- * The order is the order on the page: the projects with the widest platform
- * reach first, since that is what the section is arguing.
+ * The order is the order on the page: work shipped for a client first, then
+ * the projects with the widest platform reach, since that is what the
+ * section is arguing.
  */
 export const PROJECTS: Project[] = [
+  {
+    slug: "farnesina",
+    name: "Viaggiare Sicuri",
+    year: "2026",
+    platforms: ["ios", "android"],
+    badge: { en: "In production", it: "In produzione" },
+    // Client, role and team are stated in the first sentence rather than in a
+    // spec table: the cards are a subgrid sharing rows, so a register here
+    // would push its own height into every other card on the same band.
+    summary: {
+      en: "Travel-safety app for the Farnesina — Italy's Ministry of Foreign Affairs and International Cooperation — public on iOS and Android. I work on it as a Mobile Developer, inside a professional mobile team.",
+      it: "App per chi viaggia, per la Farnesina — il Ministero degli Affari Esteri e della Cooperazione Internazionale — pubblica su iOS e Android. Ci lavoro come Mobile Developer, dentro un team mobile professionale.",
+    },
+    contribution: {
+      en: "My part, in a shared codebase: feature implementation, interface work, integration, bug fixing, and the maintenance a shipped app asks for.",
+      it: "La mia parte, in un codebase condiviso: implementazione di funzionalità, interfaccia, integrazione, correzione di bug e la manutenzione che chiede un'app già pubblicata.",
+    },
+    stack: ["Swift", "UIKit", "Kotlin"],
+    // Captures of the published app, off a real device — drop
+    // farnesina-ios.png / farnesina-android.png into ../art, run
+    // scripts/prepare-shots.py, then point these at work/farnesina-*.jpg.
+    shots: [
+      { src: null, platform: "ios", caption: { en: "Home", it: "Home" } },
+      { src: null, platform: "android", caption: { en: "Home", it: "Home" } },
+    ],
+  },
   {
     slug: "leyla",
     name: "Leyla",
