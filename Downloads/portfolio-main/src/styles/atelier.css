@@ -1028,9 +1028,16 @@
   margin: 0 var(--gutter);
 }
 
+/* Each card is a subgrid of the index it sits in, spanning one row per part:
+   title, captures, summary, stack, link. Cards in the same band therefore
+   share those five tracks, so the devices stand on one line and the
+   paragraphs start on one line — instead of each card stacking its own parts
+   and every column landing somewhere different. */
 .a-project {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 5;
+  align-content: start;
   padding: clamp(1.75rem, 3.4vw, 3rem) clamp(1.25rem, 2.4vw, 2.25rem)
     clamp(2.5rem, 5vw, 4rem);
   border-right: 1px solid var(--rule);
@@ -1051,6 +1058,8 @@
 
 .a-project__shots {
   display: flex;
+  /* On a shared row this puts every capture — and every caption under it —
+     on the same floor, whatever its proportions. */
   align-items: flex-end;
   justify-content: center;
   gap: clamp(0.75rem, 1.6vw, 1.5rem);
@@ -1120,6 +1129,9 @@
 
 .a-shot__caption {
   display: block;
+  /* Two lines always: a one-line caption next to a two-line one would lift
+     its device by half a centimetre and break the row. */
+  min-height: 3.4em;
   margin-top: 0.85rem;
   text-align: center;
   color: var(--cream-38);
@@ -1131,10 +1143,7 @@
 
 /* -- text ---------------------------------------------------------------- */
 
-.a-project__summary {
-  margin: 0;
-  flex: 1;
-}
+.a-project__summary { margin: 0; }
 
 .a-project__stack {
   list-style: none;
@@ -1192,8 +1201,13 @@
 
 @media (max-width: 700px) {
   .a-work__grid { grid-template-columns: 1fr; }
-  .a-project { border-right: 0; }
+  .a-project {
+    display: flex;
+    flex-direction: column;
+    border-right: 0;
+  }
   .a-project__shots { justify-content: flex-start; }
+  .a-shot__caption { min-height: 0; }
 }
 
 /* =========================================================================
