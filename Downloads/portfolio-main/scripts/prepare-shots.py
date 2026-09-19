@@ -50,6 +50,10 @@ JOBS = [
 
 # name in art/ → name in public/work/
 HAND_SHOTS = [
+    # Viaggiare Sicuri ships on the stores; its captures come off a real
+    # device, never off a development build.
+    ("farnesina-ios.png", "farnesina-ios.jpg", PHONE_WIDTH),
+    ("farnesina-android.png", "farnesina-android.jpg", PHONE_WIDTH),
     ("leyla-home.png", "leyla-home.jpg", PHONE_WIDTH),
     ("stikar-ar.png", "stikar-ar.jpg", PHONE_WIDTH),
     ("livechess-lobby.png", "livechess-visionos.jpg", SPATIAL_WIDTH),

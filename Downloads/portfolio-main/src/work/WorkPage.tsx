@@ -19,7 +19,7 @@ const COPY = {
     eyebrow: (n: number) => `Index — ${n} projects`,
     title: "Projects",
     intro:
-      "Native apps built at the Apple Developer Academy, in hackathon rooms, and at my own desk at two in the morning. Every screen below is a capture from the running app, not a mockup.",
+      "Native apps built in production for a client, at the Apple Developer Academy, in hackathon rooms, and at my own desk at two in the morning. Every screen below is a capture from the running app, not a mockup.",
     repo: "Repository",
     pending: "Capture pending",
   },
@@ -27,7 +27,7 @@ const COPY = {
     eyebrow: (n: number) => `Indice — ${n} progetti`,
     title: "Progetti",
     intro:
-      "App native costruite all'Apple Developer Academy, nelle stanze degli hackathon e alla mia scrivania alle due di notte. Ogni schermata qui sotto è una cattura dall'app in esecuzione, non un mockup.",
+      "App native costruite in produzione per un cliente, all'Apple Developer Academy, nelle stanze degli hackathon e alla mia scrivania alle due di notte. Ogni schermata qui sotto è una cattura dall'app in esecuzione, non un mockup.",
     repo: "Repository",
     pending: "Cattura in arrivo",
   },
@@ -75,8 +75,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       style={{ ["--reveal-delay" as string]: `${(index % 3) * 110}ms` }}
     >
       <header className="a-project__head">
-        <span className="a-label a-label--bright">
-          {String(index + 1).padStart(2, "0")} — {project.name}
+        {/* Name and stamp in one column so the year keeps sitting on the
+            name's baseline whether or not the card carries a badge. */}
+        <span className="a-project__title">
+          <span className="a-label a-label--bright">
+            {String(index + 1).padStart(2, "0")} — {project.name}
+          </span>
+          {project.badge ? (
+            <span className="a-label a-project__badge">{project.badge[lang]}</span>
+          ) : null}
         </span>
         <span className="a-label">{project.year}</span>
       </header>
@@ -87,7 +94,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         ))}
       </div>
 
-      <p className="a-body a-project__summary">{project.summary[lang]}</p>
+      {/* One child, whatever it holds: the card is a subgrid spanning five
+          rows, so an extra element here would shift every band on the page. */}
+      <div className="a-project__text">
+        <p className="a-body a-project__summary">{project.summary[lang]}</p>
+
+        {project.contribution ? (
+          <p className="a-body a-project__contribution">{project.contribution[lang]}</p>
+        ) : null}
+      </div>
 
       <ul className="a-project__stack">
         {project.stack.map((item) => (
