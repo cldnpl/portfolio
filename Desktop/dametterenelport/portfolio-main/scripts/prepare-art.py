@@ -44,9 +44,15 @@ def prepare_marble(source: Path) -> None:
     if image.width > 2560:
         image = image.resize((2560, round(image.height * 2560 / image.width)), Image.LANCZOS)
 
-    image = ImageEnhance.Color(image).enhance(0.86)
-    image = ImageEnhance.Brightness(image).enhance(0.72)
-    image = ImageEnhance.Contrast(image).enhance(1.10)
+    # Tuned for the marble currently in art/: black stone with one wide,
+    # bright rose-gold vein. Left at the values the previous, finer marble
+    # used, that vein sat on top of the contact form and the small mono
+    # labels stopped being readable. Saturation comes down further than
+    # brightness because the stone is pink and the page's accent is bronze:
+    # muting the pink is what makes the two agree.
+    image = ImageEnhance.Color(image).enhance(0.62)
+    image = ImageEnhance.Brightness(image).enhance(0.56)
+    image = ImageEnhance.Contrast(image).enhance(1.06)
 
     save(image, BACKGROUNDS / "black-marble.jpg", 86)
     small = image.resize((1280, round(image.height * 1280 / image.width)), Image.LANCZOS)
