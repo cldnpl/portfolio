@@ -174,14 +174,20 @@
   position: absolute;
   inset: 0;
   background:
+    /* The patina: one uniform film at 10% and not a point more. Enough to
+       lift the type off the stone everywhere; far from the sheet of black
+       that used to sit here at 58%. */
+    linear-gradient(rgba(10, 8, 6, 0.1), rgba(10, 8, 6, 0.1)),
+    /* Then the vignette proper, which is transparent across the middle and
+       only does its work at the top, the foot and the corners. */
     linear-gradient(
       to bottom,
-      rgba(10, 8, 6, 0.58) 0%,
-      rgba(10, 8, 6, 0.22) 15%,
-      rgba(10, 8, 6, 0.08) 38%,
-      rgba(10, 8, 6, 0.08) 62%,
-      rgba(10, 8, 6, 0.30) 88%,
-      rgba(10, 8, 6, 0.58) 100%
+      rgba(10, 8, 6, 0.48) 0%,
+      rgba(10, 8, 6, 0.14) 15%,
+      transparent 38%,
+      transparent 62%,
+      rgba(10, 8, 6, 0.22) 88%,
+      rgba(10, 8, 6, 0.48) 100%
     ),
     radial-gradient(130% 100% at 50% 45%, transparent 38%, rgba(10, 8, 6, 0.45) 100%);
 }
@@ -1086,6 +1092,17 @@
 .is-pair .a-shot { width: min(48%, 168px); }
 
 .a-shot--spatial { width: 100%; }
+
+/* Two spatial captures are two 16:9 frames. Side by side in a column this
+   narrow they come out about ninety pixels tall, which shows a room and no
+   chessboard — so they stack and keep the full width instead. */
+.a-project__shots:has(.a-shot--spatial + .a-shot--spatial) {
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.85rem, 1.8vw, 1.6rem);
+}
+
+.is-pair .a-shot--spatial { width: 100%; }
 
 .a-shot__frame {
   position: relative;
