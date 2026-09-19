@@ -69,6 +69,9 @@ export default function PlatformStage() {
   /** True once the reader is near the end of the pinned section, so the
    *  "keep scrolling" cue can retire instead of nagging. */
   const [nearEnd, setNearEnd] = useState(false);
+  /** The filled part of the scroll rail. Written to directly: this changes on
+   *  every scroll frame and has no business going through React. */
+  const railRef = useRef<HTMLElement>(null);
 
   const chapters = copy.stage.chapters;
 
@@ -200,6 +203,7 @@ export default function PlatformStage() {
       stage.setProgress(progress);
       setActive(Math.min(DEVICES.length - 1, Math.round(progress)));
       setNearEnd(raw > 0.9);
+      if (railRef.current) railRef.current.style.transform = `scaleY(${raw})`;
 
       // Render only while the section is near the viewport. Driving this from
       // the measurement we already have is more dependable than a second
@@ -251,14 +255,6 @@ export default function PlatformStage() {
     stageRef.current?.click();
   };
 
-  const jumpTo = (index: number) => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-    const total = wrapper.offsetHeight - window.innerHeight;
-    const y = wrapper.offsetTop + (index / (DEVICES.length - 1 + OUTRO)) * total;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  };
-
   return (
     <section
       className="a-stage"
@@ -305,30 +301,22 @@ export default function PlatformStage() {
           <span className="a-label a-label--gold">{chapters[active]?.hint ?? ""}</span>
         </div>
 
-        {/* The section is pinned for several screens: without a cue on the
-            edge, a reader who sees a still device reads the page as stuck. */}
+        {/* The section is pinned for several screens, so a reader looking at a
+            still device reads the page as stuck. This is the only cue, and it
+            is deliberately vertical: the three marks that used to sit in the
+            corner were a row, and a row says "swipe sideways" — which is
+            exactly the wrong thing to tell somebody who has to keep going
+            down. The rail doubles as the progress of the section, so it also
+            answers "how much of this is left". */}
         <div
           className={`a-stage__scroll ${ready && !nearEnd ? "is-visible" : ""}`}
           aria-hidden="true"
         >
           <span className="a-label a-stage__scroll-word">{copy.stage.scroll}</span>
           <span className="a-stage__scroll-rail">
-            <i />
+            <i ref={railRef} />
           </span>
-        </div>
-
-        <div className="a-stage__progress">
-          {chapters.map((chapter, i) => (
-            <button
-              key={chapter.key}
-              className={`a-stage__dash ${active === i ? "is-active" : ""}`}
-              onClick={(event) => {
-                event.stopPropagation();
-                jumpTo(i);
-              }}
-              aria-label={chapter.title}
-            />
-          ))}
+          <span className="a-stage__scroll-chevron" />
         </div>
       </div>
     </section>
