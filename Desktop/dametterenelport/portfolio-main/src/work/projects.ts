@@ -53,12 +53,16 @@ export const PROJECTS: Project[] = [
       it: "La mia parte, in un codebase condiviso: implementazione di funzionalità, interfaccia, integrazione, correzione di bug e la manutenzione che chiede un'app già pubblicata.",
     },
     stack: ["Swift", "UIKit", "Kotlin"],
-    // Captures of the published app, off a real device — drop
-    // farnesina-ios.png / farnesina-android.png into ../art, run
-    // scripts/prepare-shots.py, then point these at work/farnesina-*.jpg.
+    // Captures of the published app, off a real device — never a development
+    // build. Both are iOS: the Android side is stated in the summary rather
+    // than claimed by a screenshot that does not exist.
     shots: [
-      { src: null, platform: "ios", caption: { en: "Home", it: "Home" } },
-      { src: null, platform: "android", caption: { en: "Home", it: "Home" } },
+      { src: "work/farnesina-ios.jpg", platform: "ios", caption: { en: "Home", it: "Home" } },
+      {
+        src: "work/farnesina-country.jpg",
+        platform: "ios",
+        caption: { en: "Country file", it: "Scheda paese" },
+      },
     ],
   },
   {
