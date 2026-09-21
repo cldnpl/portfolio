@@ -7,11 +7,24 @@ import SplitWords from "./SplitWords";
 /**
  * Web3Forms relays the message to CONTACT_EMAIL without a backend of our own.
  * The key is public by design — it only authorises delivery to the one
- * address it was issued for — so it belongs in the client bundle. Without it
- * the form still works: it hands the reader a pre-filled mail draft instead of
- * silently pretending to have sent something.
+ * address it was issued for — so it belongs in the client bundle.
+ *
+ * ── WHERE THE KEY GOES ────────────────────────────────────────────────────
+ * Get one free at https://web3forms.com (it is emailed to you, no account),
+ * then put it in EITHER place:
+ *
+ *   1. Vercel → Settings → Environment Variables → VITE_WEB3FORMS_KEY
+ *      (preferred: it stays out of git and applies to every deploy), or
+ *   2. straight below, replacing YOUR_ACCESS_KEY_HERE.
+ *
+ * Until one of the two is done the form reports a failure instead of opening
+ * a mail client: the reader is told the message did not go, rather than being
+ * handed to another app without asking.
+ * ──────────────────────────────────────────────────────────────────────────
  */
-const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
+const PLACEHOLDER_KEY = "YOUR_ACCESS_KEY_HERE";
+const ACCESS_KEY = (import.meta.env.VITE_WEB3FORMS_KEY as string | undefined) || PLACEHOLDER_KEY;
+const IS_CONFIGURED = ACCESS_KEY !== PLACEHOLDER_KEY && ACCESS_KEY.trim().length > 0;
 const ENDPOINT = "https://api.web3forms.com/submit";
 
 type Status = "idle" | "sending" | "sent" | "failed";
@@ -58,14 +71,16 @@ export default function Contact() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
-    if (!ACCESS_KEY) {
-      // No key configured: fall back to the reader's own mail client, with
-      // everything they typed already in the draft.
-      const subject = encodeURIComponent(`Portfolio — ${data.get("name") ?? ""}`);
-      const body = encodeURIComponent(String(data.get("message") ?? ""));
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    // Held onto here, not read later: React clears currentTarget as soon as
+    // the handler yields, so reaching for it after the await hands back null —
+    // and the reset would then throw on a message that had in fact been sent.
+    const formEl = event.currentTarget;
+    const data = new FormData(formEl);
+
+    if (!IS_CONFIGURED) {
+      console.error("[contact] no Web3Forms key configured — see Contact.tsx");
+      setStatus("failed");
       return;
     }
 
@@ -83,9 +98,17 @@ export default function Contact() {
         }),
       });
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      // Web3Forms answers 200 with { success: false } when it rejects a
+      // submission, so the status code alone is not the answer.
+      const result = (await response.json().catch(() => null)) as { success?: boolean } | null;
+      if (!response.ok || result?.success === false) {
+        throw new Error(`HTTP ${response.status} — ${JSON.stringify(result)}`);
+      }
+
       setStatus("sent");
-      event.currentTarget.reset();
+      // Only the successful path clears the fields: on a failure the reader
+      // keeps every word they typed and can simply press send again.
+      formEl.reset();
     } catch (error) {
       console.error("[contact] send failed", error);
       setStatus("failed");
