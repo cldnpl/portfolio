@@ -249,7 +249,6 @@ export default function Contact() {
         <a className="a-label" href={GITHUB_URL} target="_blank" rel="noreferrer">
           GitHub
         </a>
-        <span className="a-label">{footer.right}</span>
       </footer>
     </>
   );

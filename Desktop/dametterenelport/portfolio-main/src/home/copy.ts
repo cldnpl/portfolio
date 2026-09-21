@@ -62,7 +62,7 @@ export type HomeCopy = {
     location: string;
     locationValue: string;
   };
-  footer: { left: string; right: string };
+  footer: { left: string };
 };
 
 const en: HomeCopy = {
@@ -156,7 +156,7 @@ const en: HomeCopy = {
     location: "Based in",
     locationValue: "Naples, Italy",
   },
-  footer: { left: "© 2026 Claudia Napolitano", right: "Designed and built in Naples" },
+  footer: { left: "© 2026 Claudia Napolitano" },
 };
 
 const it: HomeCopy = {
@@ -250,7 +250,7 @@ const it: HomeCopy = {
     location: "Lavoro da",
     locationValue: "Napoli, Italia",
   },
-  footer: { left: "© 2026 Claudia Napolitano", right: "Progettato e costruito a Napoli" },
+  footer: { left: "© 2026 Claudia Napolitano" },
 };
 
 export const homeCopy: Record<Lang, HomeCopy> = { en, it };
