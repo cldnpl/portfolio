@@ -70,7 +70,7 @@ export const PROJECTS: Project[] = [
     name: "Banca di Asti Mobile",
     year: "2025 — 2026",
     platforms: ["ios", "android"],
-    badge: { en: "In production", it: "In produzione" },
+    badge: { en: "Client project", it: "Progetto cliente" },
     summary: {
       en: "Mobile banking app for Banca di Asti, public on iOS and Android. Five months on a fixed-term contract at Venture Lab, as a Mobile Developer on both native codebases.",
       it: "App di mobile banking per la Banca di Asti, pubblica su iOS e Android. Cinque mesi con contratto a tempo determinato in Venture Lab, come Mobile Developer su entrambi i codebase nativi.",
@@ -79,7 +79,7 @@ export const PROJECTS: Project[] = [
       en: "September 2025 to February 2026, inside the team: feature implementation, interface work and bug fixing across the two native apps.",
       it: "Da settembre 2025 a febbraio 2026, dentro il team: implementazione di funzionalità, interfaccia e correzione di bug sulle due app native.",
     },
-    stack: ["Swift", "Kotlin"],
+    stack: ["UIKit", "Kotlin"],
     // The app needs credentials to get past its own login, so these are not
     // captures of a running build: they are the two screens the bank publishes
     // itself, on its public setup guide, cropped down to the screen alone.
