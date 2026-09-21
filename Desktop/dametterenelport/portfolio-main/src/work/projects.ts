@@ -70,7 +70,6 @@ export const PROJECTS: Project[] = [
     name: "Banca di Asti Mobile",
     year: "2025 — 2026",
     platforms: ["ios", "android"],
-    badge: { en: "Client project", it: "Progetto cliente" },
     summary: {
       en: "Mobile banking app for Banca di Asti, public on iOS and Android. Five months on a fixed-term contract at Venture Lab, as a Mobile Developer on both native codebases.",
       it: "App di mobile banking per la Banca di Asti, pubblica su iOS e Android. Cinque mesi con contratto a tempo determinato in Venture Lab, come Mobile Developer su entrambi i codebase nativi.",
@@ -99,6 +98,7 @@ export const PROJECTS: Project[] = [
       it: "Un'app privata per due, pensata prima di tutto per la distanza. Presenza costante: il partner a un tocco o a un widget. Scritta due volte su un backend Go condiviso: SwiftUI con WidgetKit su iOS, Compose su Android.",
     },
     stack: ["Swift", "SwiftUI", "WidgetKit", "HealthKit", "MapKit", "Kotlin", "Jetpack Compose", "Health Connect", "Go", "PostgreSQL"],
+    repo: "https://github.com/cldnpl/Leyla-app",
     shots: [
       { src: "work/leyla-ios.jpg", platform: "ios", caption: { en: "Welcome", it: "Benvenuto" } },
       { src: "work/leyla-home.jpg", platform: "ios", caption: { en: "Home", it: "Home" } },
@@ -153,6 +153,7 @@ export const PROJECTS: Project[] = [
       it: "Italiano e uzbeko dall'A1 al B2, in entrambe le direzioni sullo stesso corpus: un percorso di livelli, unità e lezioni con lettura, scrittura, ascolto e parlato.",
     },
     stack: ["Swift", "SwiftUI", "AVFoundation", "Speech", "XcodeGen"],
+    repo: "https://github.com/cldnpl/Uzbelia",
     shots: [{ src: "work/uzbelia-ios.jpg", platform: "ios", caption: { en: "Learning path", it: "Percorso di apprendimento" } }],
   },
   {
