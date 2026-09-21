@@ -45,26 +45,31 @@ export default function Header() {
     };
   }, [open]);
 
-  // "Projects" and "Contact" are anchors on the home page and destinations
-  // everywhere else, so the same nav item does the right thing on both.
-  const scrollTo = (id: string) => {
+  // Contact is an anchor on the home page and a destination everywhere else,
+  // so the one nav item does the right thing on both.
+  //
+  // Projects is not like that: it is always the index at /projects. It used to
+  // scroll to id="work" while on the home page, but that id belongs to the
+  // device stage — so the reader asking for the projects got the three
+  // spinning phones instead of the work.
+  const goToContact = () => {
     setOpen(false);
     if (!onHome) {
-      navigate(id === "work" ? "/projects" : "/#contact");
+      navigate("/#contact");
       return;
     }
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const links = (
     <>
-      <button className="a-nav__link" onClick={() => scrollTo("work")}>
+      <Link className="a-nav__link" to="/projects" onClick={() => setOpen(false)}>
         {copy.nav.work}
-      </button>
+      </Link>
       <Link className="a-nav__link" to="/about" onClick={() => setOpen(false)}>
         {copy.nav.about}
       </Link>
-      <button className="a-nav__link" onClick={() => scrollTo("contact")}>
+      <button className="a-nav__link" onClick={goToContact}>
         {copy.nav.contact}
       </button>
       <a
@@ -123,13 +128,13 @@ export default function Header() {
       </header>
 
       <div className={`a-drawer ${open ? "is-open" : ""}`}>
-        <button className="a-drawer__link" onClick={() => scrollTo("work")}>
+        <Link className="a-drawer__link" to="/projects" onClick={() => setOpen(false)}>
           {copy.nav.work}
-        </button>
+        </Link>
         <Link className="a-drawer__link" to="/about" onClick={() => setOpen(false)}>
           {copy.nav.about}
         </Link>
-        <button className="a-drawer__link" onClick={() => scrollTo("contact")}>
+        <button className="a-drawer__link" onClick={goToContact}>
           {copy.nav.contact}
         </button>
         <a className="a-drawer__link" href={GITHUB_URL} target="_blank" rel="noreferrer">
