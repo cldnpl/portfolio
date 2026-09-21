@@ -6,25 +6,27 @@ import SplitWords from "./SplitWords";
 
 /**
  * Web3Forms relays the message to CONTACT_EMAIL without a backend of our own.
- * The key is public by design — it only authorises delivery to the one
- * address it was issued for — so it belongs in the client bundle.
  *
- * ── WHERE THE KEY GOES ────────────────────────────────────────────────────
- * Get one free at https://web3forms.com (it is emailed to you, no account),
- * then put it in EITHER place:
+ * The key below is public by design — Web3Forms says so on the page that
+ * issues it, and it authorises one thing only: delivery to the address it was
+ * issued for. It cannot read anything back. So it belongs in the client
+ * bundle, and committing it is the intended use, not a leak.
  *
- *   1. Vercel → Settings → Environment Variables → VITE_WEB3FORMS_KEY
- *      (preferred: it stays out of git and applies to every deploy), or
- *   2. straight below, replacing YOUR_ACCESS_KEY_HERE.
- *
- * Until one of the two is done the form reports a failure instead of opening
- * a mail client: the reader is told the message did not go, rather than being
- * handed to another app without asking.
- * ──────────────────────────────────────────────────────────────────────────
+ * To rotate it (say the address starts collecting spam), issue a new one at
+ * https://web3forms.com and either replace it here or set
+ * VITE_WEB3FORMS_KEY in Vercel → Settings → Environment Variables, which
+ * wins over this value. Vite reads env vars at build time, so a change there
+ * needs a redeploy to take effect.
  */
 const PLACEHOLDER_KEY = "YOUR_ACCESS_KEY_HERE";
-const ACCESS_KEY = (import.meta.env.VITE_WEB3FORMS_KEY as string | undefined) || PLACEHOLDER_KEY;
-const IS_CONFIGURED = ACCESS_KEY !== PLACEHOLDER_KEY && ACCESS_KEY.trim().length > 0;
+const FALLBACK_KEY = "31f5603a-2a63-4b0f-8664-0592d8171fd9";
+const ACCESS_KEY = (
+  (import.meta.env.VITE_WEB3FORMS_KEY as string | undefined) || FALLBACK_KEY
+).trim();
+// Compared against the placeholder itself, not against the fallback: the
+// fallback is now a real key, and testing ACCESS_KEY !== FALLBACK_KEY would
+// have declared the form unconfigured exactly when it is configured.
+const IS_CONFIGURED = ACCESS_KEY.length > 0 && ACCESS_KEY !== PLACEHOLDER_KEY;
 const ENDPOINT = "https://api.web3forms.com/submit";
 
 type Status = "idle" | "sending" | "sent" | "failed";
