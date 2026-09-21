@@ -54,6 +54,10 @@ HAND_SHOTS = [
     # device, never off a development build.
     ("farnesina-home.png", "farnesina-ios.jpg", PHONE_WIDTH),
     ("farnesina-country.png", "farnesina-country.jpg", PHONE_WIDTH),
+    # Cropped out of the bank's own public setup guide — the app will not open
+    # without credentials, so there is no build to capture.
+    ("asti-login.png", "asti-login.jpg", PHONE_WIDTH),
+    ("asti-pin.png", "asti-pin.jpg", PHONE_WIDTH),
     ("leyla-home.png", "leyla-home.jpg", PHONE_WIDTH),
     ("stikar-ar.png", "stikar-ar.jpg", PHONE_WIDTH),
     ("livechess-lobby.png", "livechess-visionos.jpg", SPATIAL_WIDTH),
