@@ -58,6 +58,7 @@ HAND_SHOTS = [
     # without credentials, so there is no build to capture.
     ("asti-login.png", "asti-login.jpg", PHONE_WIDTH),
     ("asti-pin.png", "asti-pin.jpg", PHONE_WIDTH),
+    ("uzbelia-grammar.png", "uzbelia-grammar.jpg", PHONE_WIDTH),
     ("leyla-home.png", "leyla-home.jpg", PHONE_WIDTH),
     ("stikar-ar.png", "stikar-ar.jpg", PHONE_WIDTH),
     ("livechess-lobby.png", "livechess-visionos.jpg", SPATIAL_WIDTH),

@@ -154,7 +154,14 @@ export const PROJECTS: Project[] = [
     },
     stack: ["Swift", "SwiftUI", "AVFoundation", "Speech", "XcodeGen"],
     repo: "https://github.com/cldnpl/Uzbelia",
-    shots: [{ src: "work/uzbelia-ios.jpg", platform: "ios", caption: { en: "Learning path", it: "Percorso di apprendimento" } }],
+    shots: [
+      { src: "work/uzbelia-ios.jpg", platform: "ios", caption: { en: "Learning path", it: "Percorso di apprendimento" } },
+      {
+        src: "work/uzbelia-grammar.jpg",
+        platform: "ios",
+        caption: { en: "Grammar notes", it: "Note di grammatica" },
+      },
+    ],
   },
   {
     slug: "tourism-accessible",
