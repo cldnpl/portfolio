@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import AboutPage from "./about/AboutPage";
 import HomePage from "./home/HomePage";
 import NotFound from "./pages/NotFound";
@@ -21,6 +22,12 @@ const App = () => (
       <Route path="/contact" element={<PhoneRevealPage kind="contact" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
+
+    {/* Vercel Web Analytics. Draws nothing and reads nothing back: it counts
+        page views, including the client-side ones React Router makes without
+        a reload, which a plain server log cannot see. No cookies, so no
+        consent banner to bolt onto the page. */}
+    <Analytics />
   </LanguageProvider>
 );
 
