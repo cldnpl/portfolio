@@ -16,19 +16,43 @@ export type ScreenContent = {
 /** Button hit boxes in normalised screen space (0..1, origin top-left). */
 export type HitBox = { x: number; y: number; w: number; h: number };
 
-/**
- * Redrawing a 720×1560 canvas and re-uploading it as a texture is expensive,
- * so the entrance is quantised: sixteen steps is well below what anyone can
- * see on a fade this short, and costs sixteen redraws instead of a hundred.
- */
-const INTRO_STEPS = 16;
-
 /** Where the button stack starts when it sits on a real lock screen capture:
  *  below the clock and widgets, above the torch and camera. */
 const BUTTON_TOP = 690;
 
+/** The coordinate system everything below is drawn in. Not the size of the
+ *  canvas: see `detail`. */
 const W = 720;
 const H = 1560; // ≈ 19.5:9 — close enough for both handsets
+
+/**
+ * How much of that coordinate system is actually rasterised.
+ *
+ * Every redraw hands the GPU a whole new texture, and 720×1560 in RGBA is four
+ * and a half megabytes of upload — on a phone, several frames' worth of work
+ * for a picture that is never shown at anything like that size. The renderer
+ * caps its own pixel ratio at 1.6, so on a 400-point screen the display is
+ * drawn into fewer than five hundred device pixels whatever we do here.
+ * Two thirds of the plate is therefore free: the same picture, a third of the
+ * bytes.
+ */
+function detailForDevice(): number {
+  if (typeof window === "undefined") return 1;
+  const narrow = Math.min(window.innerWidth, window.innerHeight) < 760;
+  const coarse = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+  return narrow || coarse ? 0.62 : 1;
+}
+
+/**
+ * Redrawing the screen and re-uploading it as a texture is expensive, so the
+ * entrance is quantised: sixteen steps is well below what anyone can see on a
+ * fade this short, and costs sixteen redraws instead of a hundred. On a phone
+ * even sixteen is too many — they all land inside one chapter change, which is
+ * also when the scroll has to stay smooth — so it drops to nine.
+ */
+function introStepsForDevice(detail: number): number {
+  return detail < 1 ? 9 : 16;
+}
 
 const CREAM = "#f3eee4";
 const GOLD = "#c9a86a";
@@ -57,24 +81,32 @@ export class PhoneScreen {
 
   private ctx: CanvasRenderingContext2D;
   private options: Options;
-  private wallpaper: HTMLImageElement | null = null;
+  /** The capture, already fitted and scrimmed, at the backing store's size. */
+  private plate: HTMLCanvasElement | null = null;
   private hovered = -1;
   private pressed = -1;
   /** 0..1 entrance progress for the on-screen content */
   private intro = 0;
   private boxes: HitBox[] = [];
   private disposed = false;
+  private readonly detail: number;
+  private readonly introSteps: number;
 
   constructor(options: Options) {
     this.options = options;
+    this.detail = detailForDevice();
+    this.introSteps = introStepsForDevice(this.detail);
+
     this.canvas = document.createElement("canvas");
-    this.canvas.width = W;
-    this.canvas.height = H;
+    this.canvas.width = Math.round(W * this.detail);
+    this.canvas.height = Math.round(H * this.detail);
     this.ctx = this.canvas.getContext("2d")!;
 
     this.texture = new THREE.CanvasTexture(this.canvas);
     this.texture.colorSpace = THREE.SRGBColorSpace;
-    this.texture.anisotropy = 8;
+    // Anisotropy is paid per sample, on a texture the phone's GPU is already
+    // re-uploading; four is indistinguishable from eight at this size.
+    this.texture.anisotropy = this.detail < 1 ? 4 : 8;
 
     this.loadWallpaper();
     this.draw();
@@ -87,7 +119,7 @@ export class PhoneScreen {
 
   setIntro(value: number) {
     const clamped = Math.max(0, Math.min(1, value));
-    const next = Math.round(clamped * INTRO_STEPS) / INTRO_STEPS;
+    const next = Math.round(clamped * this.introSteps) / this.introSteps;
     if (next === this.intro) return;
     this.intro = next;
     this.draw();
@@ -129,7 +161,7 @@ export class PhoneScreen {
     image.decoding = "async";
     image.onload = () => {
       if (this.disposed) return;
-      this.wallpaper = image;
+      this.preparePlate(image);
       this.draw();
     };
     // A missing wallpaper is not an error worth shouting about: the painted
@@ -138,21 +170,42 @@ export class PhoneScreen {
     image.src = src;
   }
 
+  /**
+   * Fits the capture to the display and lays the scrim on it, once.
+   *
+   * This is the same picture on every frame of the entrance — the only things
+   * that change are the buttons drawn over it — so rescaling a two-megapixel
+   * JPEG for each of them was work done nine or sixteen times for one result.
+   */
+  private preparePlate(image: HTMLImageElement) {
+    const plate = document.createElement("canvas");
+    plate.width = this.canvas.width;
+    plate.height = this.canvas.height;
+
+    const ctx = plate.getContext("2d");
+    if (!ctx) return;
+
+    ctx.scale(this.detail, this.detail);
+
+    const scale = Math.max(W / image.naturalWidth, H / image.naturalHeight);
+    const w = image.naturalWidth * scale;
+    const h = image.naturalHeight * scale;
+    ctx.drawImage(image, (W - w) / 2, (H - h) / 2, w, h);
+
+    // A light scrim only: enough to settle the capture into the page's key
+    // without hiding what it is a picture of.
+    ctx.fillStyle = "rgba(8,7,6,0.20)";
+    ctx.fillRect(0, 0, W, H);
+
+    this.plate = plate;
+  }
+
   /** Returns true when a real lock screen capture was drawn. */
   private drawWallpaper(): boolean {
     const ctx = this.ctx;
-    const image = this.wallpaper;
 
-    if (image && image.naturalWidth > 0) {
-      const scale = Math.max(W / image.naturalWidth, H / image.naturalHeight);
-      const w = image.naturalWidth * scale;
-      const h = image.naturalHeight * scale;
-      ctx.drawImage(image, (W - w) / 2, (H - h) / 2, w, h);
-
-      // A light scrim only: enough to settle the capture into the page's key
-      // without hiding what it is a picture of.
-      ctx.fillStyle = "rgba(8,7,6,0.20)";
-      ctx.fillRect(0, 0, W, H);
+    if (this.plate) {
+      ctx.drawImage(this.plate, 0, 0, W, H);
       return true;
     }
 
@@ -176,6 +229,10 @@ export class PhoneScreen {
 
   private draw() {
     const ctx = this.ctx;
+    // Re-established rather than assumed: everything below is written in the
+    // 720x1560 design space, and this is the one place that maps it onto
+    // whatever the backing store actually is.
+    ctx.setTransform(this.detail, 0, 0, this.detail, 0, 0);
     ctx.clearRect(0, 0, W, H);
     ctx.textBaseline = "alphabetic";
     ctx.textAlign = "left";

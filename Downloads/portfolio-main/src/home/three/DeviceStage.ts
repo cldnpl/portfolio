@@ -16,7 +16,10 @@ export type DeviceConfig = {
   rest: [number, number, number];
   /** Name of the mesh that carries the display, if the device has one. */
   screenMesh?: string;
-  /** Screen is inset from the panel edge by this fraction on each side. */
+  /**
+   * The bezel: how far the lit display is held in from the edge of the glass,
+   * as a fraction of the display's width, applied evenly on all four sides.
+   */
   screenInset?: number;
   /** Which lock screen to draw on the display. */
   screenVariant?: ScreenVariant;
@@ -58,6 +61,72 @@ function matchesScreen(mesh: THREE.Mesh, wanted: string): boolean {
   if (norm(mesh.name) === norm(wanted)) return true;
   const material = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
   return norm(material?.name ?? "") === norm(wanted);
+}
+
+/** Flips every triangle's winding in place — indices, or attributes if there
+ *  are none. */
+function reverseWinding(geometry: THREE.BufferGeometry) {
+  const index = geometry.getIndex();
+
+  if (index) {
+    const array = index.array as Uint16Array | Uint32Array;
+    for (let i = 0; i + 2 < array.length; i += 3) {
+      const held = array[i + 1];
+      array[i + 1] = array[i + 2];
+      array[i + 2] = held;
+    }
+    index.needsUpdate = true;
+    return;
+  }
+
+  for (const attribute of Object.values(geometry.attributes) as THREE.BufferAttribute[]) {
+    const { array, itemSize } = attribute;
+    for (let i = 0; i + 2 < attribute.count; i += 3) {
+      for (let c = 0; c < itemSize; c++) {
+        const a = (i + 1) * itemSize + c;
+        const b = (i + 2) * itemSize + c;
+        const held = array[a];
+        array[a] = array[b];
+        array[b] = held;
+      }
+    }
+    attribute.needsUpdate = true;
+  }
+}
+
+/**
+ * Which way a geometry looks, along +z: 1 when every face points at the
+ * reader, -1 when every face points away, and about 0 for a closed solid,
+ * whose two sides cancel. Area-weighted, so a fringe of slivers cannot
+ * outvote the sheet they hang off.
+ */
+function facingAlongZ(geometry: THREE.BufferGeometry): number {
+  const position = geometry.getAttribute("position") as THREE.BufferAttribute;
+  const index = geometry.getIndex();
+  const triangles = Math.floor((index ? index.count : position.count) / 3);
+
+  const a = new THREE.Vector3();
+  const b = new THREE.Vector3();
+  const c = new THREE.Vector3();
+  const edge1 = new THREE.Vector3();
+  const edge2 = new THREE.Vector3();
+  const cross = new THREE.Vector3();
+
+  let signed = 0;
+  let total = 0;
+
+  for (let t = 0; t < triangles; t++) {
+    const base = t * 3;
+    a.fromBufferAttribute(position, index ? index.getX(base) : base);
+    b.fromBufferAttribute(position, index ? index.getX(base + 1) : base + 1);
+    c.fromBufferAttribute(position, index ? index.getX(base + 2) : base + 2);
+
+    cross.crossVectors(edge1.subVectors(b, a), edge2.subVectors(c, a));
+    signed += cross.z;
+    total += cross.length();
+  }
+
+  return total > 0 ? signed / total : 0;
 }
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -116,11 +185,27 @@ export class DeviceStage {
   };
   /** Idle float and pointer parallax are decoration; scroll motion is content. */
   private calm: boolean;
+  /** A phone or a tablet: no cursor to follow, and a third of the fill rate. */
+  private handheld: boolean;
+  /** Something has moved since the last frame the renderer drew. */
+  private dirty = true;
 
   constructor(canvas: HTMLCanvasElement, callbacks: StageCallbacks = {}) {
     this.canvas = canvas;
     this.callbacks = callbacks;
-    this.calm = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    const coarse = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+    const narrow = Math.min(window.innerWidth, window.innerHeight) < 760;
+    this.handheld = coarse || narrow;
+
+    // On a handheld the idle float buys nothing and costs everything. There is
+    // no cursor for the parallax to answer, the device is held still, and the
+    // float alone means a full redraw of three models sixty times a second for
+    // as long as the section is on screen — next to a scroll that has to stay
+    // smooth on a quarter of the power. Held still, the scene can skip every
+    // frame nothing happened in, which is most of them.
+    this.calm = reduced || this.handheld;
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -132,7 +217,9 @@ export class DeviceStage {
     // Cap the pixel ratio hard. A full retina buffer on a fifty-material model
     // is the difference between a smooth scroll and a stuttering one, and at
     // this size, against this background, nobody can tell the two apart.
-    this.dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+    // A phone's ratio is capped harder still: it is the one device where the
+    // buffer is nearly the whole screen and the GPU is the smallest.
+    this.dpr = Math.min(window.devicePixelRatio || 1, this.handheld ? 1.3 : 1.6);
     this.renderer.setPixelRatio(this.dpr);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -328,8 +415,8 @@ export class DeviceStage {
   }
 
   /**
-   * Builds a flat panel matched to the model's own screen mesh, and turns the
-   * whole device so that panel faces the camera.
+   * Builds a panel matched to the model's own screen mesh, and turns the whole
+   * device so that panel faces the camera.
    *
    * Two things make the obvious approach fail. The imported screen mesh has a
    * UV island running from -0.97 to 0.82, so a canvas mapped straight onto it
@@ -339,6 +426,21 @@ export class DeviceStage {
    * explicitly right-handed basis, and attached to the device pivot instead of
    * to the mesh. Drawing, hit-testing and orientation then all agree by
    * construction.
+   *
+   * What the panel is *shaped* like is a separate question, and the answer
+   * used to be wrong: a PlaneGeometry cut to the screen mesh's bounding box.
+   * A phone display is a rounded rectangle with a very large radius — some
+   * 13% of its width — so the smallest rectangle containing it overhangs the
+   * real glass by about three percent of the width at each corner. That is
+   * what put four square black ears outside the polished frame, over the
+   * chamfer and out onto the marble. Sizing the rectangle down cannot fix it:
+   * shrink it enough to hide the corners and the sides pull away from the
+   * bezel. The shape has to be the right shape.
+   *
+   * So the panel borrows the display's own outline. The screen mesh's geometry
+   * is cloned, moved into the panel's frame, and given flat UVs computed from
+   * where each vertex lands — corner radius, notch and all, because they are
+   * the modeller's, not ours.
    */
   private buildScreenPanel(
     screen: THREE.Mesh,
@@ -395,25 +497,47 @@ export class DeviceStage {
     yAxis.addScaledVector(zAxis, -yAxis.dot(zAxis)).normalize();
     const xAxis = new THREE.Vector3().crossVectors(yAxis, zAxis).normalize();
 
-    const inset = config.screenInset ?? 0.018;
     const material = new THREE.MeshBasicMaterial({
       map: ui.texture,
       transparent: true,
       toneMapped: false,
       depthWrite: false,
+      // The panel lies on the glass it is a picture of, and the two would
+      // otherwise argue over every pixel — which is a chequerboard, not a
+      // screen. The clearance below settles it geometrically; this settles it
+      // in the depth buffer as well, for the grazing angles where a hundredth
+      // of a world unit is worth less than a pixel.
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      polygonOffsetUnits: -1,
     });
 
-    const panel = new THREE.Mesh(
-      new THREE.PlaneGeometry(width * (1 - inset * 2), height * (1 - inset * 2)),
-      material
-    );
+    // Resolve the panel's own frame first: the geometry has to be built in it.
+    const basis = new THREE.Matrix4().makeBasis(xAxis, yAxis, zAxis);
+    const orientation = new THREE.Quaternion().setFromRotationMatrix(basis);
+
+    // Clearance, in the panel's own z. It belongs to the geometry and not to
+    // the panel's position: the outline is traced *into* this frame, so an
+    // offset built into the frame would be undone by the very transform that
+    // puts the vertices in it, and the copy would land exactly on the glass.
+    const lift = Math.max(width * 0.006, 0.002);
+
+    const geometry =
+      this.traceScreenOutline(
+        screen,
+        worldCenter,
+        orientation,
+        config.screenInset ?? 0.012,
+        lift
+      ) ?? new THREE.PlaneGeometry(width * 0.976, height * 0.976).translate(0, 0, lift);
+
+    const panel = new THREE.Mesh(geometry, material);
     panel.name = "__screen_panel";
     panel.renderOrder = 4;
     panel.frustumCulled = false;
 
-    const basis = new THREE.Matrix4().makeBasis(xAxis, yAxis, zAxis);
-    panel.quaternion.setFromRotationMatrix(basis);
-    panel.position.copy(worldCenter).addScaledVector(zAxis, Math.max(width * 0.004, 0.0015));
+    panel.quaternion.copy(orientation);
+    panel.position.copy(worldCenter);
 
     inner.add(panel);
 
@@ -426,6 +550,106 @@ export class DeviceStage {
     inner.quaternion.copy(upright).premultiply(pose);
 
     return panel;
+  }
+
+  /**
+   * The display's own outline, ready to be worn by the panel.
+   *
+   * The screen mesh is cloned and carried into the panel's frame, where the
+   * glass lies flat on z ≈ 0 with x to the right and y up. From there the UVs
+   * are just the vertex's place in the outline's bounding box, so the canvas
+   * is stretched across the display exactly once — the model's own UVs, which
+   * run from -0.97 to 0.82 on the iPhone, never come into it.
+   *
+   * @param bezel How far to pull the outline in from the glass, as a fraction
+   *   of the display's width. Uniform in millimetres rather than in percent
+   *   per axis: a screen is twice as tall as it is wide, so an even percentage
+   *   would leave a band at the top and bottom twice as thick as the one down
+   *   the sides, which is not what a bezel looks like.
+   * @param lift How far to float the traced copy off the glass it was traced
+   *   from, so the two do not fight over the depth buffer.
+   */
+  private traceScreenOutline(
+    screen: THREE.Mesh,
+    origin: THREE.Vector3,
+    orientation: THREE.Quaternion,
+    bezel: number,
+    lift: number
+  ): THREE.BufferGeometry | null {
+    const source = screen.geometry;
+    if (!source?.getAttribute("position")) return null;
+
+    const geometry = source.clone();
+
+    // Position is the only attribute the panel has any use for: it is lit by
+    // nothing, and its UVs are about to be computed rather than read.
+    for (const name of Object.keys(geometry.attributes)) {
+      if (name !== "position") geometry.deleteAttribute(name);
+    }
+    geometry.morphAttributes = {};
+
+    // screen-local → panel-local. `inner` is unrotated and sits at the origin
+    // while this runs, so the mesh's world matrix is its matrix in the frame
+    // the panel is about to be added to.
+    const toPanel = new THREE.Matrix4()
+      .compose(origin, orientation, new THREE.Vector3(1, 1, 1))
+      .invert()
+      .multiply(screen.matrixWorld);
+
+    geometry.applyMatrix4(toPanel);
+
+    // A mirrored source node — and at least one of these models has one —
+    // leaves the composite with a negative determinant, which turns every
+    // triangle inside out. applyMatrix4 does not care; the rasteriser does,
+    // and would cull the whole display. Put the winding back by hand.
+    if (toPanel.determinant() < 0) reverseWinding(geometry);
+
+    geometry.computeBoundingBox();
+    const box = geometry.boundingBox;
+    if (!box) return null;
+
+    const width = box.max.x - box.min.x;
+    const height = box.max.y - box.min.y;
+    if (width < 1e-6 || height < 1e-6) return null;
+
+    const position = geometry.getAttribute("position") as THREE.BufferAttribute;
+    const count = position.count;
+    const uv = new Float32Array(count * 2);
+
+    const pad = Math.min(width * bezel, width * 0.2, height * 0.2);
+    const scaleX = (width - pad * 2) / width;
+    const scaleY = (height - pad * 2) / height;
+    const centreX = (box.min.x + box.max.x) / 2;
+    const centreY = (box.min.y + box.max.y) / 2;
+
+    for (let i = 0; i < count; i++) {
+      const x = position.getX(i);
+      const y = position.getY(i);
+
+      // UVs come from where the vertex sits before the bezel is taken, so
+      // pulling the outline in crops nothing: the picture simply shrinks with
+      // the glass it is painted on.
+      uv[i * 2] = (x - box.min.x) / width;
+      uv[i * 2 + 1] = (y - box.min.y) / height;
+
+      position.setX(i, centreX + (x - centreX) * scaleX);
+      position.setY(i, centreY + (y - centreY) * scaleY);
+    }
+
+    position.needsUpdate = true;
+    geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    geometry.translate(0, 0, lift);
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+
+    // Some of these displays are modelled as a wafer with a back face, some as
+    // a single sheet. A single sheet facing away from the reader would be
+    // culled and the screen would go dark, so check which way the mesh looks
+    // and flip it if it is the wrong one. A wafer's two faces cancel out and
+    // it is left alone — being a closed solid, its winding is already right.
+    if (facingAlongZ(geometry) < -0.25) reverseWinding(geometry);
+
+    return geometry;
   }
 
   // -- driving -------------------------------------------------------------
@@ -441,6 +665,13 @@ export class DeviceStage {
     this.pointerActive = active;
     if (this.calm) this.parallaxTarget.set(0, 0);
     else this.parallaxTarget.set(active ? x : 0, active ? y : 0);
+
+    // A cursor moving over the screen changes what is highlighted, so the
+    // scene has to be redrawn — including when the reader has asked for
+    // reduced motion and nothing else is moving. A finger does not: it has no
+    // hover state to show, and on a handheld every drag of the page would
+    // otherwise wake the renderer for the whole length of the scroll.
+    if (!this.handheld) this.dirty = true;
   }
 
   /** The device whose screen is currently close enough to accept a tap. */
@@ -483,12 +714,17 @@ export class DeviceStage {
     const device = this.interactiveDevice();
     if (!device) return;
     device.screenUi?.setPressed(index);
-    window.setTimeout(() => device.screenUi?.setPressed(-1), 180);
+    window.setTimeout(() => {
+      device.screenUi?.setPressed(-1);
+      this.dirty = true;
+    }, 180);
+    this.dirty = true;
     this.callbacks.onSelect?.(device.config.key, index);
   }
 
   setScreenContent(content: ScreenContent) {
     for (const device of this.devices) device.screenUi?.setContent(content);
+    this.dirty = true;
   }
 
   // -- loop ----------------------------------------------------------------
@@ -496,6 +732,7 @@ export class DeviceStage {
   start() {
     if (this.running) return;
     this.running = true;
+    this.dirty = true;
     this.clock.start();
     const tick = () => {
       if (!this.running) return;
@@ -516,8 +753,24 @@ export class DeviceStage {
 
     // getDelta() must come first: getElapsedTime() consumes the same delta
     // internally, which would leave dt at zero and freeze every easing below.
+    // It is also read before any early exit below, so that a frame the stage
+    // sits out does not hand the next one a delta of everything that happened
+    // while it was idle.
     const dt = Math.min(this.clock.getDelta(), 0.05);
     const time = this.clock.elapsedTime;
+
+    // When the scene is calm there is no ambient motion left in it: the
+    // devices are exactly where the scroll put them, and drawing them again
+    // would produce the identical image. Three models, fifty blended
+    // materials and a full-screen buffer, sixty times a second, for a picture
+    // that has not changed — this is where a phone's frame budget was going,
+    // and the whole of it comes back. When the scene *is* moving the flag is
+    // never consulted, so the desktop is untouched.
+    const settling =
+      Math.abs(this.progress - this.renderedProgress) > 0.0002 ||
+      this.parallax.manhattanDistanceTo(this.parallaxTarget) > 0.0002;
+
+    if (this.calm && !settling && !this.dirty) return;
 
     // Ease the scroll value so a trackpad flick still resolves smoothly
     this.renderedProgress += (this.progress - this.renderedProgress) * Math.min(1, dt * 7.5);
@@ -627,6 +880,7 @@ export class DeviceStage {
     }
 
     this.renderer.render(this.scene, this.camera);
+    this.dirty = false;
   }
 
   /** Development only: describes what the stage actually built. */
@@ -648,6 +902,7 @@ export class DeviceStage {
   // -- lifecycle -----------------------------------------------------------
 
   resize() {
+    this.dirty = true;
     const parent = this.canvas.parentElement;
     const width = parent?.clientWidth || window.innerWidth;
     const height = parent?.clientHeight || window.innerHeight;

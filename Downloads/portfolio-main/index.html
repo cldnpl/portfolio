@@ -6,6 +6,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.gstatic.com" />
+    <!--
+      Every family the site uses, in one request, made by the HTML parser.
+      These used to be two `@import` rules inside stylesheets that are
+      themselves loaded by the JavaScript bundle: the browser could not even
+      learn that the fonts existed until the bundle had been fetched, parsed
+      and run, so the first paint of the page was always in fallback type and
+      then reflowed. Declared here they are in flight with the first byte.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@200;300;400&family=Cormorant+Garamond:wght@500;600&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap"
+    />
     <link rel="preload" as="image" href="/backgrounds/black-marble.jpg" media="(min-width: 901px)" />
     <link rel="preload" as="image" href="/backgrounds/black-marble-sm.jpg" media="(max-width: 900px)" />
     <title>Claudia Napolitano — Mobile Developer</title>

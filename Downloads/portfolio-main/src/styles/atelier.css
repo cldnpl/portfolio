@@ -3,27 +3,50 @@
    Black marble, cream ink, bronze accent. Nothing decorative without reason.
    ========================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@200;300;400&display=swap');
 
 :root {
   /* Surface */
   --ink:        #0a0806;
   --ink-soft:   #12100d;
 
-  /* Type */
+  /* Type
+     These are set against live stone, not against a flat sheet. A vein of
+     bright travertine runs at roughly 45% luminance, so anything below about
+     0.55 alpha disappears into it — which is exactly what had happened to
+     every small-caps label on the page. The ladder still descends, it just
+     starts high enough that its bottom rung can be read. */
   --cream:      #f3eee4;
-  --cream-70:   rgba(243, 238, 228, 0.76);
-  --cream-50:   rgba(243, 238, 228, 0.50);
-  --cream-38:   rgba(243, 238, 228, 0.38);
-  --cream-22:   rgba(243, 238, 228, 0.22);
+  --cream-70:   rgba(243, 238, 228, 0.88);
+  --cream-50:   rgba(243, 238, 228, 0.72);
+  --cream-38:   rgba(243, 238, 228, 0.62);
+  --cream-22:   rgba(243, 238, 228, 0.42);
 
-  /* Accent — bronze, never yellow */
+  /* Accent — bronze, never yellow.
+     The soft variant carries type (labels, chapter numbers), so it sits close
+     to the full accent; the hairlines that used to borrow it now use
+     --gold-line, which is where the old value went. */
   --gold:       #c9a86a;
-  --gold-soft:  rgba(201, 168, 106, 0.55);
+  --gold-soft:  rgba(206, 174, 112, 0.88);
+  --gold-line:  rgba(201, 168, 106, 0.55);
 
   /* Structure */
-  --rule:       rgba(243, 238, 228, 0.09);
-  --rule-soft:  rgba(243, 238, 228, 0.05);
+  --rule:       rgba(243, 238, 228, 0.14);
+  --rule-soft:  rgba(243, 238, 228, 0.08);
+
+  /* The halo that keeps small type off the veining. Cheaper and far less
+     destructive than darkening the stone until nothing of it is left.
+     Two of them: the full one for the eleven-pixel labels, which are few and
+     need the help; a single tight shadow for running copy, which is heavier
+     type and much more of it — a twelve-pixel blur behind every paragraph on
+     the page is paid for again in every tile the scroll uncovers. */
+  --ink-halo:      0 1px 2px rgba(10, 8, 6, 0.92), 0 0 12px rgba(10, 8, 6, 0.75);
+  --ink-halo-soft: 0 1px 2px rgba(10, 8, 6, 0.85);
+
+  /* How much black lies over the stone, everywhere. One number, here, because
+     it is the one knob worth turning by feel: down towards 0.2 the marble gets
+     its glare back, up towards 0.45 the page goes quiet and the type gets
+     louder. */
+  --patina:     0.34;
 
   /* Rhythm */
   --gutter:     clamp(1.5rem, 4vw, 5rem);
@@ -63,7 +86,11 @@
    Typography primitives
    ------------------------------------------------------------------------- */
 
-/* Small caps label — the connective tissue of the whole layout */
+/* Small caps label — the connective tissue of the whole layout.
+   Eleven pixels of 300-weight mono, tracked out to a third of an em, is about
+   the least ink a line of type can be made of; on a photograph of stone it
+   needs a ground of its own. The halo gives it one without touching the
+   palette or laying more black over the marble. */
 .a-label {
   font-family: var(--font-mono);
   font-weight: 300;
@@ -72,10 +99,30 @@
   text-transform: uppercase;
   color: var(--cream-38);
   white-space: nowrap;
+  text-shadow: var(--ink-halo);
 }
 
 .a-label--gold { color: var(--gold-soft); }
 .a-label--bright { color: var(--cream-70); }
+
+/* The same ground for the rest of the small type. Display type is excluded on
+   purpose: at four to twelve rem it has all the mass it needs, and a halo on
+   it would read as a drop shadow. */
+.a-wordmark__role,
+.a-skill__value,
+.a-chip {
+  text-shadow: var(--ink-halo);
+}
+
+.a-body,
+.a-nav__link,
+.a-skill__name,
+.a-contact__link,
+.a-project__link,
+.a-closing__mail,
+.a-drawer__link {
+  text-shadow: var(--ink-halo-soft);
+}
 
 .a-display {
   font-family: var(--font-display);
@@ -151,14 +198,17 @@
   .a-backdrop__plate { background-image: var(--marble-sm); }
 }
 
-/* Warm bloom where the veining catches light */
+/* Warm bloom where the veining catches light.
+   Plain alpha, not `mix-blend-mode: screen`. The blend mode forced the
+   compositor to read back the whole backdrop and re-blend it, which is a
+   full-viewport operation on a layer that is otherwise free — and it worked
+   against the page by lifting exactly the veins the type has to sit on. */
 .a-backdrop__bloom {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(90% 60% at 72% 8%, rgba(201, 168, 106, 0.10), transparent 62%),
-    radial-gradient(70% 50% at 18% 92%, rgba(201, 168, 106, 0.05), transparent 60%);
-  mix-blend-mode: screen;
+    radial-gradient(90% 60% at 72% 8%, rgba(201, 168, 106, 0.07), transparent 62%),
+    radial-gradient(70% 50% at 18% 92%, rgba(201, 168, 106, 0.04), transparent 60%);
 }
 
 /* Every stop is a small step from the last one. The earlier version dropped
@@ -174,10 +224,13 @@
   position: absolute;
   inset: 0;
   background:
-    /* The patina: one uniform film at 10% and not a point more. Enough to
-       lift the type off the stone everywhere; far from the sheet of black
-       that used to sit here at 58%. */
-    linear-gradient(rgba(10, 8, 6, 0.1), rgba(10, 8, 6, 0.1)),
+    /* The patina. It sat at 10% and the page paid for it: a small-caps label
+       in bronze has nothing like the weight of a 12rem serif, and on the
+       bright travertine veining it simply was not there. 34% is the point
+       where the stone still reads as stone — the veins, the depth and the
+       warmth all survive — and the type stops competing with it. Type
+       brightness does the rest of the work, above. */
+    linear-gradient(rgba(10, 8, 6, var(--patina)), rgba(10, 8, 6, var(--patina))),
     /* Then the vignette proper, which is transparent across the middle and
        only does its work at the top, the foot and the corners. */
     linear-gradient(
@@ -198,9 +251,12 @@
    animation keeps it off the paint path entirely. */
 .a-backdrop__grain {
   position: absolute;
-  inset: -22%;
-  width: 144%;
-  height: 144%;
+  /* The overhang only has to cover the largest shuffle below, which is 6%.
+     It used to be 22% on every side — 2.07 viewports of permanently promoted
+     compositor memory for a layer that shows one pixel of noise. */
+  inset: -8%;
+  width: 116%;
+  height: 116%;
   opacity: 0.3;
   background-image: var(--grain);
   background-repeat: repeat;
@@ -216,6 +272,21 @@
   66%  { transform: translate3d(-1%, 5%, 0); }
   83%  { transform: translate3d(5%, 1%, 0); }
   100% { transform: translate3d(0, 0, 0); }
+}
+
+/* On a phone the grain is a full-screen layer being re-composited seven times
+   a second for an effect nobody holds the device close enough to see, while
+   the GPU next to it is drawing the device stage. It stays — the stone looks
+   flat without it — but it stops moving, and stops asking to be promoted. */
+@media (max-width: 900px), (pointer: coarse) {
+  .a-backdrop__grain {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.22;
+    animation: none;
+    will-change: auto;
+  }
 }
 
 /* -------------------------------------------------------------------------
@@ -336,7 +407,9 @@
   font-size: 0.5625rem;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--cream-38);
+  /* A notch brighter than a plain label: it sits in the top-left corner,
+     where the marble is at its liveliest and the header scrim its thinnest. */
+  color: var(--cream-50);
   line-height: 1;
   transition: color 0.5s var(--ease-soft);
 }
@@ -548,7 +621,7 @@
   width: clamp(3.5rem, 7vw, 6rem);
   height: 1px;
   margin: clamp(1.5rem, 3.4vh, 2.75rem) auto 0;
-  background: var(--gold-soft);
+  background: var(--gold-line);
 }
 
 /* The title is set roman and widely tracked rather than italic: it is a
@@ -588,10 +661,17 @@
   overflow: hidden;
 }
 
+/* The travelling spark. It used to animate `top`, which is a layout property:
+   a loop that never ends and re-lays-out the hero on every frame of it, for
+   the whole time the page is open. Same movement, expressed as a transform,
+   so the compositor owns it and the main thread never hears about it.
+   The percentages are of the spark's own height (45% of the rail), so -100%
+   parks it one length above the top and 222% is one rail length below. */
 .a-hero__cue-line::after {
   content: '';
   position: absolute;
   left: 0;
+  top: 0;
   width: 1px;
   height: 45%;
   background: var(--gold);
@@ -599,10 +679,10 @@
 }
 
 @keyframes a-cue {
-  0%   { top: -45%; opacity: 0; }
+  0%   { transform: translate3d(0, -100%, 0); opacity: 0; }
   25%  { opacity: 1; }
   75%  { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  100% { transform: translate3d(0, 222%, 0); opacity: 0; }
 }
 
 /* =========================================================================
@@ -805,7 +885,7 @@
 .a-stage__eyebrow-rule {
   width: 2.75rem;
   height: 1px;
-  background: var(--gold-soft);
+  background: var(--gold-line);
 }
 
 /* The chapter subtitle is the one label long enough to need a second line on
@@ -986,7 +1066,7 @@
   transition: color 0.5s var(--ease-soft), border-color 0.5s var(--ease-soft);
 }
 
-.a-closing__mail:hover { color: var(--gold); border-bottom-color: var(--gold-soft); }
+.a-closing__mail:hover { color: var(--gold); border-bottom-color: var(--gold-line); }
 .a-closing__mail span { transition: transform 0.5s var(--ease); display: inline-block; }
 .a-closing__mail:hover span { transform: translateX(5px); }
 
@@ -1242,7 +1322,7 @@
   transition: transform 0.45s var(--ease);
 }
 
-.a-project__link:hover { color: var(--gold); border-bottom-color: var(--gold-soft); }
+.a-project__link:hover { color: var(--gold); border-bottom-color: var(--gold-line); }
 .a-project__link:hover span { transform: translateX(5px); }
 
 @media (max-width: 1080px) {
@@ -1547,7 +1627,7 @@
 .a-skill__fill {
   display: block;
   height: 100%;
-  background: linear-gradient(to right, var(--gold-soft), var(--gold));
+  background: linear-gradient(to right, var(--gold-line), var(--gold));
   transform-origin: left;
   transform: scaleX(0);
   transition: transform 1.25s var(--ease);
@@ -1648,7 +1728,7 @@
   transition: color 0.45s var(--ease-soft), border-color 0.45s var(--ease-soft);
 }
 
-.a-contact__link:hover { color: var(--gold); border-bottom-color: var(--gold-soft); }
+.a-contact__link:hover { color: var(--gold); border-bottom-color: var(--gold-line); }
 .a-contact__link--static { border-bottom-color: transparent; }
 .a-contact__link--static:hover { color: var(--cream); }
 
@@ -1690,7 +1770,7 @@
 /* Dark, not light. The fill used to be a whisper of cream, which worked when
    the backdrop was a flat sheet; against live stone a field has to darken
    what is behind it or the placeholder disappears into a vein. */
-.a-field__input { background: rgba(10, 8, 6, 0.62); }
+.a-field__input { background: rgba(10, 8, 6, 0.78); }
 
 .a-field__input--area {
   resize: vertical;
@@ -1703,7 +1783,7 @@
 .a-field__input:focus {
   outline: none;
   border-bottom-color: var(--gold);
-  background: rgba(10, 8, 6, 0.74);
+  background: rgba(10, 8, 6, 0.88);
 }
 
 .a-submit {
@@ -1714,7 +1794,7 @@
   margin-top: 0.5rem;
   padding: 0.85rem 1.75rem;
   background: transparent;
-  border: 1px solid var(--gold-soft);
+  border: 1px solid var(--gold-line);
   color: var(--cream);
   font-family: var(--font-mono);
   font-weight: 300;

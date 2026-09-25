@@ -22,6 +22,7 @@ const DEVICES: DeviceConfig[] = [
     // measures each model's own orientation and corrects for it on load.
     rest: [0.07, -0.36, 0.03],
     screenMesh: "Screen_Screen_0",
+    // A fraction of the display's width, taken on all four sides.
     screenInset: 0.012,
     screenVariant: "android",
     wallpaper: publicAsset("lockscreens/android.jpg"),
@@ -32,7 +33,7 @@ const DEVICES: DeviceConfig[] = [
     height: 3.35,
     rest: [0.05, -0.24, 0.01],
     screenMesh: "Cube.014_screen.001_0",
-    screenInset: 0.02,
+    screenInset: 0.012,
     screenVariant: "ios",
     wallpaper: publicAsset("lockscreens/ios.jpg"),
     // The buttons live on the iPhone and nowhere else.
@@ -72,6 +73,12 @@ export default function PlatformStage() {
   /** The filled part of the scroll rail. Written to directly: this changes on
    *  every scroll frame and has no business going through React. */
   const railRef = useRef<HTMLElement>(null);
+  /** What was last handed to React, so the scroll loop can tell when there is
+   *  nothing to hand it. Both of these change a handful of times across the
+   *  whole section; calling the setters unconditionally re-ran this component
+   *  on every frame of every scroll through it. */
+  const activeRef = useRef(0);
+  const nearEndRef = useRef(false);
 
   const chapters = copy.stage.chapters;
 
@@ -201,8 +208,19 @@ export default function PlatformStage() {
       if (!stage) return;
 
       stage.setProgress(progress);
-      setActive(Math.min(DEVICES.length - 1, Math.round(progress)));
-      setNearEnd(raw > 0.9);
+
+      const chapter = Math.min(DEVICES.length - 1, Math.round(progress));
+      if (chapter !== activeRef.current) {
+        activeRef.current = chapter;
+        setActive(chapter);
+      }
+
+      const closing = raw > 0.9;
+      if (closing !== nearEndRef.current) {
+        nearEndRef.current = closing;
+        setNearEnd(closing);
+      }
+
       if (railRef.current) railRef.current.style.transform = `scaleY(${raw})`;
 
       // Render only while the section is near the viewport. Driving this from
@@ -240,6 +258,11 @@ export default function PlatformStage() {
   };
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    // A finger dragging the page is not a cursor looking at a screen. It has
+    // no hover state to update, and following it would measure the section and
+    // wake the renderer on every frame of every scroll. The tap handler below
+    // takes its own aim, so nothing is lost.
+    if (event.pointerType !== "mouse") return;
     aimAt(event.currentTarget, event.clientX, event.clientY);
   };
 
