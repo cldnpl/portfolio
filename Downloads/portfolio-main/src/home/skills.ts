@@ -6,7 +6,7 @@ export type Skill = {
    *  never fewer than one — so the page does not go stale on the first of
    *  January. */
   since: number;
-  /** How many projects used it. This is what the bar measures. */
+  /** How many projects used it. The bar draws one mark per project. */
   projects: number;
 };
 
@@ -58,23 +58,3 @@ export const SKILL_GROUPS: SkillGroup[] = [
     ],
   },
 ];
-
-/** Marks in a full bar. */
-export const BAR_MARKS = 20;
-
-const MOST_PROJECTS = Math.max(
-  ...SKILL_GROUPS.flatMap((group) => group.skills.map((skill) => skill.projects))
-);
-
-/**
- * How many marks a skill's bar gets: how much it has been used, on a
- * generous curve. A straight count drew two marks for two projects, which
- * reads as having barely touched something that shipped in two apps. The
- * bar starts half full, and the square root lets the first few projects move
- * it the most — the order between skills is kept, the steps between the
- * small ones are not flattened into nothing.
- */
-export function barMarks(projects: number) {
-  const share = Math.sqrt(Math.min(1, projects / MOST_PROJECTS));
-  return Math.round(BAR_MARKS * (0.5 + 0.5 * share));
-}

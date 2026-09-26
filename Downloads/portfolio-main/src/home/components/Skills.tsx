@@ -1,6 +1,6 @@
 import { useLanguage } from "@/lib/language";
 import { homeCopy } from "../copy";
-import { SKILL_GROUPS, barMarks, type Skill, type SkillGroup } from "../skills";
+import { SKILL_GROUPS, type Skill, type SkillGroup } from "../skills";
 import { useReveal } from "../hooks/useReveal";
 
 const THIS_YEAR = new Date().getFullYear();
@@ -8,10 +8,9 @@ const THIS_YEAR = new Date().getFullYear();
 const plural = (n: number, [one, many]: [string, string]) => (n === 1 ? one : many);
 
 /**
- * One bronze bar per skill, as long as the skill has been used. It used to be
- * a bar filled to a self-assessed percentage — "90" next to SwiftUI, a number
- * nobody can check. The line above it says what the bar is made of: years
- * and projects, in plain words.
+ * One bronze mark per project, so the bar is exactly as long as the skill has
+ * been used: seven projects, seven marks. It used to be a bar filled to a
+ * self-assessed percentage — "90" next to SwiftUI, a number nobody can check.
  */
 function Row({ skill, delay }: { skill: Skill; delay: number }) {
   const { lang } = useLanguage();
@@ -27,7 +26,7 @@ function Row({ skill, delay }: { skill: Skill; delay: number }) {
         {`${skill.projects} ${plural(skill.projects, copy.project)}`}
       </span>
       <span className="a-skill__tally" aria-hidden="true">
-        {Array.from({ length: barMarks(skill.projects) }, (_, i) => (
+        {Array.from({ length: skill.projects }, (_, i) => (
           <i key={i} className="a-tick" />
         ))}
       </span>
