@@ -1690,7 +1690,9 @@
 .a-tick {
   display: block;
   flex: none;
-  width: 6px;
+  /* Five, not six: the longest bar (29 marks) has to fit a third of a
+     window just wide enough for three columns. */
+  width: 5px;
   height: 16px;
   border-radius: 1.5px;
   background: var(--gold);

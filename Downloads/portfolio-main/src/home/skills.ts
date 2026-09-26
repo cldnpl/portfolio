@@ -6,7 +6,7 @@ export type Skill = {
    *  never fewer than one — so the page does not go stale on the first of
    *  January. */
   since: number;
-  /** How many projects used it. The bar draws one mark per project. */
+  /** How many projects used it. Each one adds a mark to the bar. */
   projects: number;
 };
 
@@ -58,3 +58,14 @@ export const SKILL_GROUPS: SkillGroup[] = [
     ],
   },
 ];
+
+/**
+ * Marks every bar starts with, before its projects are added. A bare count
+ * drew one mark for one project, which reads as having barely touched
+ * something that shipped; a curve that started at half a bar made every bar
+ * the same length. A fixed base keeps the bars full and still gives each
+ * project its own mark, so eight projects are visibly more than six.
+ */
+const BASE_MARKS = 10;
+
+export const barMarks = (projects: number) => BASE_MARKS + projects;
