@@ -43,7 +43,19 @@ export type HomeCopy = {
       android: { date: string; time: [string, string]; weather: string; caption: string };
     };
   };
-  skills: { eyebrow: string; title: string };
+  skills: {
+    eyebrow: string;
+    title: string;
+    /** The key under the heading: what one bronze mark and one cream mark are. */
+    legendYear: string;
+    legendProject: string;
+    /** "Counted across 18 projects" — the total goes where {n} is. */
+    source: string;
+    year: [one: string, many: string];
+    project: [one: string, many: string];
+    /** For a skill picked up this year, where "0 years" would read as none. */
+    since: string;
+  };
   contact: {
     eyebrow: string;
     title: string;
@@ -136,7 +148,16 @@ const en: HomeCopy = {
       },
     },
   },
-  skills: { eyebrow: "What I work with", title: "Capability" },
+  skills: {
+    eyebrow: "What I work with",
+    title: "Capability",
+    legendYear: "Year of use",
+    legendProject: "Project",
+    source: "Counted across {n} projects, 2024 — 2026",
+    year: ["year", "years"],
+    project: ["project", "projects"],
+    since: "since",
+  },
   contact: {
     eyebrow: "Contact",
     title: "Got an idea? Let's talk!",
@@ -230,7 +251,16 @@ const it: HomeCopy = {
       },
     },
   },
-  skills: { eyebrow: "Con cosa lavoro", title: "Competenze" },
+  skills: {
+    eyebrow: "Con cosa lavoro",
+    title: "Competenze",
+    legendYear: "Anno di utilizzo",
+    legendProject: "Progetto",
+    source: "Contati su {n} progetti, 2024 — 2026",
+    year: ["anno", "anni"],
+    project: ["progetto", "progetti"],
+    since: "dal",
+  },
   contact: {
     eyebrow: "Contatti",
     title: "Hai qualche idea? Parliamone!",

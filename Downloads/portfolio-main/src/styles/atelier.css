@@ -16,17 +16,17 @@
      every small-caps label on the page. The ladder still descends, it just
      starts high enough that its bottom rung can be read. */
   --cream:      #f3eee4;
-  --cream-70:   rgba(243, 238, 228, 0.88);
-  --cream-50:   rgba(243, 238, 228, 0.72);
-  --cream-38:   rgba(243, 238, 228, 0.62);
-  --cream-22:   rgba(243, 238, 228, 0.42);
+  --cream-70:   rgba(243, 238, 228, 0.92);
+  --cream-50:   rgba(243, 238, 228, 0.8);
+  --cream-38:   rgba(243, 238, 228, 0.72);
+  --cream-22:   rgba(243, 238, 228, 0.52);
 
   /* Accent — bronze, never yellow.
      The soft variant carries type (labels, chapter numbers), so it sits close
      to the full accent; the hairlines that used to borrow it now use
      --gold-line, which is where the old value went. */
   --gold:       #c9a86a;
-  --gold-soft:  rgba(206, 174, 112, 0.88);
+  --gold-soft:  rgba(214, 182, 120, 0.95);
   --gold-line:  rgba(201, 168, 106, 0.55);
 
   /* Structure */
@@ -44,9 +44,11 @@
 
   /* How much black lies over the stone, everywhere. One number, here, because
      it is the one knob worth turning by feel: down towards 0.2 the marble gets
-     its glare back, up towards 0.45 the page goes quiet and the type gets
-     louder. */
-  --patina:     0.34;
+     its glare back, up towards 0.6 the page goes quiet and the type gets
+     louder. 0.34 was still too little: readers said they could not read the
+     page, on a phone above all. It costs nothing to turn — the layer it
+     tints is painted once and never again. */
+  --patina:     0.48;
 
   /* Rhythm */
   --gutter:     clamp(1.5rem, 4vw, 5rem);
@@ -60,6 +62,13 @@
   --font-display: 'Playfair Display', 'Times New Roman', serif;
   --font-body:    'Inter', system-ui, -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+}
+
+/* A phone is read at arm's length, often outdoors, on a screen a third the
+   size: the veining that is texture on a desktop runs straight through every
+   line of type. The stone stays, just further back. */
+@media (max-width: 900px) {
+  :root { --patina: 0.6; }
 }
 
 /* -------------------------------------------------------------------------
@@ -93,9 +102,11 @@
    palette or laying more black over the marble. */
 .a-label {
   font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: clamp(0.5625rem, 0.72vw, 0.6875rem);
-  letter-spacing: 0.34em;
+  font-weight: 400;
+  /* Eleven pixels at the least. It bottomed out at nine, which on a phone is
+     a line of dots, and at 300 the strokes were thinner than the veins. */
+  font-size: clamp(0.6875rem, 0.8vw, 0.78rem);
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--cream-38);
   white-space: nowrap;
@@ -109,7 +120,7 @@
    purpose: at four to twelve rem it has all the mass it needs, and a halo on
    it would read as a drop shadow. */
 .a-wordmark__role,
-.a-skill__value,
+.a-skill__meta,
 .a-chip {
   text-shadow: var(--ink-halo);
 }
@@ -134,8 +145,10 @@
 .a-body {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: clamp(0.875rem, 1.02vw, 1rem);
-  line-height: 1.72;
+  /* Sixteen pixels at the least, the size a phone's own text is set at; the
+     old floor of fourteen was the main thing readers were squinting at. */
+  font-size: clamp(1rem, 1.06vw, 1.0625rem);
+  line-height: 1.7;
   color: var(--cream-70);
 }
 
@@ -347,6 +360,7 @@
   }
   .a-backdrop__grain { animation: none; }
   .a-stage__scroll-chevron { animation: none; opacity: 1; }
+  .a-skill__tally { clip-path: none !important; transition: none !important; }
 }
 
 /* =========================================================================
@@ -373,12 +387,15 @@
    laid over the photograph; this keeps the navigation legible while letting
    the stone run behind it uninterrupted. Deliberately not backdrop-filter —
    blurring a live backdrop re-rasterises it on every scroll frame. */
+/* Nearly solid behind the wordmark and the links, then a short fade: with the
+   body copy now set larger, the old curve (74% black at mid-height) let whole
+   lines of text show through the name as they scrolled underneath it. */
 .a-header.is-stuck {
   background: linear-gradient(
     to bottom,
-    rgba(10, 8, 6, 0.92) 0%,
-    rgba(10, 8, 6, 0.74) 42%,
-    rgba(10, 8, 6, 0.38) 74%,
+    rgba(10, 8, 6, 0.96) 0%,
+    rgba(10, 8, 6, 0.9) 55%,
+    rgba(10, 8, 6, 0.5) 82%,
     rgba(10, 8, 6, 0) 100%
   );
   border-bottom-color: transparent;
@@ -403,8 +420,8 @@
 
 .a-wordmark__role {
   font-family: var(--font-mono);
-  font-weight: 200;
-  font-size: 0.5625rem;
+  font-weight: 300;
+  font-size: 0.625rem;
   letter-spacing: 0.42em;
   text-transform: uppercase;
   /* A notch brighter than a plain label: it sits in the top-left corner,
@@ -492,7 +509,7 @@
   cursor: pointer;
   font-family: var(--font-mono);
   font-weight: 400;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.16em;
   color: var(--cream-50);
   transition: color 0.4s var(--ease-soft);
@@ -693,7 +710,10 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* minmax(0, 1fr) for the same reason as on the phone, below: at the larger
+     label size "Hackathon won — Naples" no longer fits a quarter of a
+     tablet, and a bare 1fr pushed the last cell off the page. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   margin: 0 var(--gutter);
@@ -728,7 +748,12 @@
 .a-stat--gold .a-stat__value { color: var(--gold); }
 .a-stat--gold .a-label { color: var(--gold-soft); }
 
-.a-stat__label { margin-top: clamp(0.6rem, 1.3vw, 1rem); display: block; }
+.a-stat__label {
+  margin-top: clamp(0.6rem, 1.3vw, 1rem);
+  display: block;
+  white-space: normal;
+  line-height: 1.65;
+}
 
 /* "e lode" / "cum laude" — arrives after the mark has finished counting. */
 .a-stat__suffix {
@@ -772,7 +797,7 @@
     display: block;
     margin-left: 0;
     margin-top: 0.3rem;
-    font-size: 0.58rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -993,7 +1018,7 @@
     right: 0.55rem;
     gap: 0.6rem;
   }
-  .a-stage__scroll-word { letter-spacing: 0.3em; font-size: 0.5rem; }
+  .a-stage__scroll-word { letter-spacing: 0.3em; font-size: 0.625rem; }
   .a-stage__scroll-rail { height: 3.5rem; }
 }
 
@@ -1057,7 +1082,7 @@
   margin-top: clamp(2rem, 5vh, 3.25rem);
   font-family: var(--font-mono);
   font-weight: 300;
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   letter-spacing: 0.16em;
   color: var(--cream-70);
   text-decoration: none;
@@ -1288,11 +1313,11 @@
 
 .a-chip {
   font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
-  color: rgba(201, 168, 106, 0.78);
-  border: 1px solid rgba(201, 168, 106, 0.28);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: rgba(214, 182, 120, 0.92);
+  border: 1px solid rgba(201, 168, 106, 0.38);
   padding: 0.3rem 0.55rem;
   white-space: nowrap;
 }
@@ -1306,8 +1331,8 @@
 
 .a-project__link {
   font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: 0.6875rem;
+  font-weight: 400;
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--cream-70);
@@ -1332,7 +1357,12 @@
 }
 
 @media (max-width: 700px) {
-  .a-work__grid { grid-template-columns: 1fr; }
+  /* minmax(0, 1fr): a bare 1fr grows to the widest line that will not wrap,
+     and the project names are labels, which do not. */
+  .a-work__grid { grid-template-columns: minmax(0, 1fr); }
+  /* Name and year no longer fit side by side at the larger label size: the
+     name folds rather than pushing the card off the screen. */
+  .a-project__title .a-label--bright { white-space: normal; line-height: 1.8; }
   .a-project {
     display: flex;
     flex-direction: column;
@@ -1396,10 +1426,12 @@
    desktop only because the page clips its overflow. */
 .a-about__rule { width: auto; margin: 0 var(--gutter); }
 
+/* The 2007 photograph, then the two short columns it introduces. */
 .a-about__columns {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 0.9fr) repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(2rem, 4.5vw, 4.5rem);
   padding: clamp(2.5rem, 7vh, 5rem) var(--gutter) 0;
 }
 
@@ -1410,6 +1442,14 @@
 }
 
 .a-about__paragraph { max-width: 58ch; }
+
+/* These eyebrows are sentences ("Psychology for UX — 110/110 with honours"),
+   and a label does not wrap: on a phone the end of it ran off the screen. */
+.a-about__column > .a-label,
+.a-about__chapter-text > .a-label {
+  white-space: normal;
+  line-height: 1.8;
+}
 .a-about__paragraph + .a-about__paragraph { margin-top: 1.1rem; }
 
 .a-about__chapter {
@@ -1540,6 +1580,8 @@
   line-height: 1.7;
 }
 
+.a-frame__year { color: var(--gold-soft); }
+
 @media (max-width: 1000px) {
   .a-about__head,
   .a-about__chapter,
@@ -1557,17 +1599,51 @@
   .a-about__portraits > .a-frame:last-child { margin-top: 0; }
 }
 
+@media (max-width: 1000px) {
+  /* Two text columns side by side still fit; the photograph takes a row of
+     its own above them, at the size it would have in a column. */
+  .a-about__columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .a-about__columns > .a-frame { grid-column: 1 / -1; max-width: 30rem; }
+}
+
 @media (max-width: 700px) {
   .a-about__columns { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* =========================================================================
-   SKILLS — a capability chart, kept in the page's own register
+   SKILLS — a ledger of years and projects, kept in the page's own register
    ========================================================================= */
 
 .a-skills { margin-top: clamp(3.5rem, 11vh, 8rem); }
 
-.a-skills__intro { margin-bottom: clamp(1.75rem, 4vh, 3rem); }
+/* The eyebrow on the left, and on the right the key that says what a mark is
+   and where the numbers come from. On a phone the key folds under the label. */
+.a-skills__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2.5rem;
+  margin-bottom: clamp(2rem, 4.5vh, 3.25rem);
+}
+
+.a-skills__key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.75rem;
+}
+
+.a-skills__key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Smaller than a row's marks: in the key they are glyphs, not quantities. */
+.a-skills__key-item .a-tick { height: 11px; }
+
+.a-skills__source { white-space: normal; color: var(--cream-38); }
 
 .a-skills__grid {
   display: grid;
@@ -1577,12 +1653,15 @@
 
 .a-skills__head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.6rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--rule);
-  margin-bottom: clamp(1.1rem, 2.4vw, 1.6rem);
+  margin-bottom: 0.35rem;
 }
+
+/* "Architettura e framework" is wider than a third of a tablet. */
+.a-skills__head .a-label--bright { white-space: normal; line-height: 1.7; }
 
 .a-skills__list {
   list-style: none;
@@ -1590,59 +1669,81 @@
   padding: 0;
 }
 
-/* name … number, with the bar underneath spanning the full column */
+/* name … years · projects, and the tally underneath on its own line */
 .a-skill {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
-  gap: 0.5rem 1rem;
-  padding: 0.62rem 0 0.72rem;
+  column-gap: 1rem;
+  padding: 1rem 0 1.05rem;
+  border-bottom: 1px solid var(--rule-soft);
 }
+
+.a-skill:last-child { border-bottom: 0; }
 
 .a-skill__name {
   font-family: var(--font-body);
-  font-weight: 300;
-  font-size: clamp(0.82rem, 0.95vw, 0.95rem);
-  color: var(--cream-70);
-  letter-spacing: 0.01em;
+  font-weight: 400;
+  font-size: clamp(0.98rem, 1.02vw, 1.06rem);
+  color: var(--cream);
+  letter-spacing: 0.005em;
+  transition: color 0.4s var(--ease-soft);
 }
 
-.a-skill__value {
+.a-skill__meta {
   font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: 0.625rem;
-  letter-spacing: 0.14em;
-  color: var(--cream-38);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--cream-50);
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
-.a-skill__track {
+/* The years in the same bronze as their marks: the colour is the legend. */
+.a-skill__years { color: var(--gold-soft); }
+
+/* Drawn in left to right as the column arrives. A clip, not a transform: a
+   scaleX would squash the marks into a smear on the way in, and the clip
+   leaves every mark its real width from the first frame. */
+.a-skill__tally {
   grid-column: 1 / -1;
-  height: 1px;
-  background: var(--rule);
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  gap: 3px;
+  margin-top: 0.7rem;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.2s var(--ease) var(--tally-delay, 0ms);
 }
 
-.a-skill__fill {
+.is-in .a-skill__tally { clip-path: inset(0 0 0 0); }
+
+.a-tick {
   display: block;
-  height: 100%;
-  background: linear-gradient(to right, var(--gold-line), var(--gold));
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 1.25s var(--ease);
+  flex: none;
+  width: 5px;
+  height: 15px;
+  border-radius: 1.5px;
+  background: rgba(243, 238, 228, 0.5);
+  transition: background-color 0.4s var(--ease-soft);
 }
 
-/* The bar thickens and the name brightens for the row under the cursor —
-   enough to let someone read one line at a time without any chrome. */
-.a-skill:hover .a-skill__name { color: var(--cream); }
-.a-skill:hover .a-skill__value { color: var(--gold-soft); }
-.a-skill:hover .a-skill__track { height: 2px; margin-top: -0.5px; }
+.a-tick--year { background: var(--gold); }
 
-.a-skill__track { transition: height 0.4s var(--ease-soft); }
+/* A breath between the years and the projects, so the two runs read as two
+   numbers and not as one longer one. */
+.a-tick--year + .a-tick:not(.a-tick--year) { margin-left: 7px; }
+
+.a-skill:hover .a-tick:not(.a-tick--year) { background: rgba(243, 238, 228, 0.82); }
+
+@media (max-width: 1100px) and (min-width: 861px) {
+  /* Three columns this narrow cannot hold a long name and its count on one
+     line; the count goes under the name instead of crushing it. */
+  .a-skill { grid-template-columns: minmax(0, 1fr); }
+  .a-skill__meta { margin-top: 0.3rem; }
+}
 
 @media (max-width: 860px) {
-  .a-skills__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .a-skills__grid { grid-template-columns: 1fr; gap: 3rem; }
 }
 
 /* =========================================================================
@@ -1719,7 +1820,7 @@
 .a-contact__link {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: clamp(0.88rem, 1.05vw, 1rem);
+  font-size: clamp(1rem, 1.06vw, 1.0625rem);
   color: var(--cream);
   text-decoration: none;
   width: fit-content;
@@ -1757,7 +1858,9 @@
 .a-field__input {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: clamp(0.9rem, 1.05vw, 1rem);
+  /* Never under 16px: iOS zooms the whole page into any field set smaller
+     the moment it is tapped. */
+  font-size: clamp(1rem, 1.06vw, 1.0625rem);
   color: var(--cream);
   background: rgba(243, 238, 228, 0.03);
   border: 0;
@@ -1797,8 +1900,8 @@
   border: 1px solid var(--gold-line);
   color: var(--cream);
   font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: 0.6875rem;
+  font-weight: 400;
+  font-size: 0.75rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1815,14 +1918,34 @@
   min-height: 1.4rem;
   margin: 0;
   font-family: var(--font-mono);
-  font-weight: 300;
-  font-size: 0.6875rem;
+  font-weight: 400;
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
   color: var(--gold-soft);
 }
 
 @media (max-width: 900px) {
   .a-contact__body { grid-template-columns: 1fr; }
+}
+
+/* -------------------------------------------------------------------------
+   Phone reading
+   Light type on a dark ground reads a weight bolder than it is on a large
+   screen, and a weight thinner on a small one held at arm's length. On a
+   phone the running copy steps up from 300 to 400, and the small caps give
+   back some of their tracking so the larger size still fits on one line.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .a-body,
+  .a-contact__link,
+  .a-field__input,
+  .a-closing__mail {
+    font-weight: 400;
+  }
+
+  .a-label { letter-spacing: 0.22em; }
+  .a-chip { font-size: 0.75rem; }
 }
 
 /* -------------------------------------------------------------------------

@@ -38,7 +38,7 @@ function Marked({ text }: { text: string }) {
 function Frame({ photo, delay = 0 }: { photo: PhotoKey; delay?: number }) {
   const { lang } = useLanguage();
   const copy = aboutCopy[lang];
-  const { src, ratio, face } = PHOTOS[photo];
+  const { src, ratio, face, year } = PHOTOS[photo];
   const { ref, className } = useReveal<HTMLElement>({ threshold: 0.15 });
 
   return (
@@ -60,7 +60,10 @@ function Frame({ photo, delay = 0 }: { photo: PhotoKey; delay?: number }) {
           <span className="a-frame__pending a-label">{copy.pending}</span>
         )}
       </div>
-      <figcaption className="a-label a-frame__caption">{copy.captions[photo]}</figcaption>
+      <figcaption className="a-label a-frame__caption">
+        {year ? <span className="a-frame__year">{year} — </span> : null}
+        {copy.captions[photo]}
+      </figcaption>
     </figure>
   );
 }
@@ -160,12 +163,16 @@ export default function AboutPage() {
 
         <hr className="a-rule a-about__rule" />
 
+        {/* The 2007 photograph opens the band about where it all started,
+            rather than sitting in the header: next to "self-taught" it is
+            evidence, up there it would only be a baby picture. */}
         <div className="a-about__columns" ref={columns.ref}>
+          <Frame photo="childhood" />
           {copy.columns.map((column, i) => (
             <div
               key={column.eyebrow}
               className={`a-about__column a-reveal ${columns.className}`}
-              style={{ ["--reveal-delay" as string]: `${i * 140}ms` }}
+              style={{ ["--reveal-delay" as string]: `${120 + i * 140}ms` }}
             >
               <span className="a-label">{column.eyebrow}</span>
               <p className="a-body a-about__paragraph">

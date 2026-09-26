@@ -300,6 +300,19 @@ export class DeviceStage {
 
     draco.dispose();
 
+    // Compile every device's shaders now, before the first frame. Left to the
+    // renderer, each program is built the first time something uses it — and
+    // frame() hides every device that is not on stage, so the second and third
+    // were compiled the moment they slid in: a 100–300 ms freeze in the middle
+    // of the showcase on a phone, exactly where the scroll has to be smoothest.
+    // compile() walks hidden objects too, and the async version lets the
+    // driver build them in parallel (KHR_parallel_shader_compile) instead of
+    // blocking on each link.
+    await this.renderer.compileAsync(this.scene, this.camera).catch(() => {
+      // Without it the programs are simply compiled on first draw, as before.
+    });
+    if (this.disposed) return;
+
     // Pose and draw once straight away, so the section is correct even if the
     // render loop has not been asked to start yet.
     this.frame();

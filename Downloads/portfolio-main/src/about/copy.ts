@@ -1,6 +1,6 @@
 import type { Lang } from "@/lib/language";
 
-export type PhotoKey = "portrait" | "academy" | "hackathon" | "languages";
+export type PhotoKey = "portrait" | "academy" | "childhood" | "hackathon" | "languages";
 
 /**
  * Each slot carries the proportion of the file it holds, so a frame never
@@ -11,12 +11,15 @@ export type PhotoKey = "portrait" | "academy" | "hackathon" | "languages";
  */
 export const PHOTOS: Record<
   PhotoKey,
-  { src: string | null; ratio: "tall" | "wide"; face?: boolean }
+  { src: string | null; ratio: "tall" | "wide"; face?: boolean; year?: string }
 > = {
   // `face` asks for a lighter hand: the treatment that makes a room full of
   // desks sit on black stone turns a portrait into a silhouette.
-  portrait: { src: "about/portrait.jpg", ratio: "tall", face: true },
+  portrait: { src: "about/portrait-2026.jpg", ratio: "tall", face: true },
   academy: { src: "about/academy.jpg", ratio: "wide" },
+  // `year` is set in bronze ahead of the caption: the date is the point of
+  // this one.
+  childhood: { src: "about/childhood-2007.jpg", ratio: "wide", face: true, year: "2007" },
   hackathon: { src: "about/hackathon.jpg", ratio: "tall", face: true },
   languages: { src: "about/languages.jpg", ratio: "wide" },
 };
@@ -51,12 +54,14 @@ const en: AboutCopy = {
   captions: {
     portrait: "Portrait",
     academy: "At the Apple Academy",
+    childhood: "Already at the keyboard",
     hackathon: "Hackathon win — Naples 2025",
     languages: "Language notes",
   },
   alt: {
     portrait: "Claudia Napolitano",
     academy: "Claudia at the Apple Developer Academy in Naples",
+    childhood: "Claudia as a small child in 2007, grinning at a desktop computer with a page of typed letters on the screen",
     hackathon: "Claudia holding the winner's banner of the Naples hackathon, 2025",
     languages: "Claudia's notebooks: Arabic script, declension tables, colour-coded grammar",
   },
@@ -105,12 +110,14 @@ const it: AboutCopy = {
   captions: {
     portrait: "Ritratto",
     academy: "All'Apple Academy",
+    childhood: "Già alla tastiera",
     hackathon: "Hackathon vinto — Napoli 2025",
     languages: "Appunti di lingue",
   },
   alt: {
     portrait: "Claudia Napolitano",
     academy: "Claudia all'Apple Developer Academy di Napoli",
+    childhood: "Claudia bambina nel 2007, sorridente davanti a un computer fisso con una pagina di lettere digitate sullo schermo",
     hackathon: "Claudia con lo striscione da vincitrice dell'hackathon di Napoli, 2025",
     languages: "I quaderni di Claudia: arabo scritto a mano, tabelle di declinazioni, grammatica a colori",
   },
