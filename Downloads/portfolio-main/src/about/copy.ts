@@ -11,15 +11,14 @@ export type PhotoKey = "portrait" | "academy" | "childhood" | "hackathon" | "lan
  */
 export const PHOTOS: Record<
   PhotoKey,
-  { src: string | null; ratio: "tall" | "wide"; face?: boolean; year?: string }
+  { src: string | null; ratio: "tall" | "wide"; face?: boolean; dated?: boolean }
 > = {
   // `face` asks for a lighter hand: the treatment that makes a room full of
   // desks sit on black stone turns a portrait into a silhouette.
   portrait: { src: "about/portrait-2026.jpg", ratio: "tall", face: true },
   academy: { src: "about/academy.jpg", ratio: "wide" },
-  // `year` is set in bronze ahead of the caption: the date is the point of
-  // this one.
-  childhood: { src: "about/childhood-2007.jpg", ratio: "wide", face: true, year: "2007" },
+  // `dated`: the caption is only the date, set in bronze.
+  childhood: { src: "about/childhood-2007.jpg", ratio: "wide", face: true, dated: true },
   hackathon: { src: "about/hackathon.jpg", ratio: "tall", face: true },
   languages: { src: "about/languages.jpg", ratio: "wide" },
 };
@@ -37,6 +36,7 @@ export type AboutCopy = {
   intro: string;
   /** Shown inside a frame that has no photograph yet. */
   pending: string;
+  /** An empty caption draws no caption at all. */
   captions: Record<PhotoKey, string>;
   alt: Record<PhotoKey, string>;
   /** The two short columns under the opening. */
@@ -52,16 +52,16 @@ const en: AboutCopy = {
     "Italian mobile developer. Curious by default, motivated by problems that look unreasonable at first, and convinced that *understanding people is half of understanding software*.",
   pending: "Photo pending",
   captions: {
-    portrait: "Portrait",
+    portrait: "",
     academy: "At the Apple Academy",
-    childhood: "Already at the keyboard",
+    childhood: "March 2007",
     hackathon: "Hackathon win — Naples 2025",
     languages: "Language notes",
   },
   alt: {
     portrait: "Claudia Napolitano",
     academy: "Claudia at the Apple Developer Academy in Naples",
-    childhood: "Claudia as a small child in 2007, grinning at a desktop computer with a page of typed letters on the screen",
+    childhood: "Claudia as a small child in March 2007, grinning at a desktop computer with a page of typed letters on the screen",
     hackathon: "Claudia holding the winner's banner of the Naples hackathon, 2025",
     languages: "Claudia's notebooks: Arabic script, declension tables, colour-coded grammar",
   },
@@ -108,16 +108,16 @@ const it: AboutCopy = {
     "Mobile developer italiana. Curiosa per impostazione, mossa dai problemi che all'inizio sembrano irragionevoli, e convinta che *capire le persone sia metà del capire il software*.",
   pending: "Foto in arrivo",
   captions: {
-    portrait: "Ritratto",
+    portrait: "",
     academy: "All'Apple Academy",
-    childhood: "Già alla tastiera",
+    childhood: "Marzo 2007",
     hackathon: "Hackathon vinto — Napoli 2025",
     languages: "Appunti di lingue",
   },
   alt: {
     portrait: "Claudia Napolitano",
     academy: "Claudia all'Apple Developer Academy di Napoli",
-    childhood: "Claudia bambina nel 2007, sorridente davanti a un computer fisso con una pagina di lettere digitate sullo schermo",
+    childhood: "Claudia bambina a marzo 2007, sorridente davanti a un computer fisso con una pagina di lettere digitate sullo schermo",
     hackathon: "Claudia con lo striscione da vincitrice dell'hackathon di Napoli, 2025",
     languages: "I quaderni di Claudia: arabo scritto a mano, tabelle di declinazioni, grammatica a colori",
   },

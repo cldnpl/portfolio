@@ -46,15 +46,8 @@ export type HomeCopy = {
   skills: {
     eyebrow: string;
     title: string;
-    /** The key under the heading: what one bronze mark and one cream mark are. */
-    legendYear: string;
-    legendProject: string;
-    /** "Counted across 18 projects" — the total goes where {n} is. */
-    source: string;
     year: [one: string, many: string];
     project: [one: string, many: string];
-    /** For a skill picked up this year, where "0 years" would read as none. */
-    since: string;
   };
   contact: {
     eyebrow: string;
@@ -151,12 +144,8 @@ const en: HomeCopy = {
   skills: {
     eyebrow: "What I work with",
     title: "Capability",
-    legendYear: "Year of use",
-    legendProject: "Project",
-    source: "Counted across {n} projects, 2024 — 2026",
     year: ["year", "years"],
     project: ["project", "projects"],
-    since: "since",
   },
   contact: {
     eyebrow: "Contact",
@@ -254,12 +243,8 @@ const it: HomeCopy = {
   skills: {
     eyebrow: "Con cosa lavoro",
     title: "Competenze",
-    legendYear: "Anno di utilizzo",
-    legendProject: "Progetto",
-    source: "Contati su {n} progetti, 2024 — 2026",
     year: ["anno", "anni"],
     project: ["progetto", "progetti"],
-    since: "dal",
   },
   contact: {
     eyebrow: "Contatti",

@@ -38,7 +38,8 @@ function Marked({ text }: { text: string }) {
 function Frame({ photo, delay = 0 }: { photo: PhotoKey; delay?: number }) {
   const { lang } = useLanguage();
   const copy = aboutCopy[lang];
-  const { src, ratio, face, year } = PHOTOS[photo];
+  const { src, ratio, face, dated } = PHOTOS[photo];
+  const caption = copy.captions[photo];
   const { ref, className } = useReveal<HTMLElement>({ threshold: 0.15 });
 
   return (
@@ -60,10 +61,11 @@ function Frame({ photo, delay = 0 }: { photo: PhotoKey; delay?: number }) {
           <span className="a-frame__pending a-label">{copy.pending}</span>
         )}
       </div>
-      <figcaption className="a-label a-frame__caption">
-        {year ? <span className="a-frame__year">{year} — </span> : null}
-        {copy.captions[photo]}
-      </figcaption>
+      {caption ? (
+        <figcaption className={`a-label a-frame__caption ${dated ? "a-frame__caption--date" : ""}`}>
+          {caption}
+        </figcaption>
+      ) : null}
     </figure>
   );
 }

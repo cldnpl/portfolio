@@ -52,10 +52,11 @@ class Job(NamedTuple):
 
 
 JOBS = [
-    # Against the pink wall, 2026. The original is nearly square with a lot of
-    # wall above the fringe: come in to the top 83% and centre on the face,
-    # which sits just right of the middle.
-    Job("portrait-2026.webp", "portrait-2026.jpg", aspect=3 / 4, zoom=0.83, top=0.17, focus_x=0.55),
+    # Against the pink wall, 2026, the wider take down to the shirt buttons.
+    # Nearly square: only the wall at the sides goes, centred on the face
+    # (just right of the middle), which also drops the dark strip the
+    # original carries down its left edge.
+    Job("portrait-2026.webp", "portrait-2026.jpg", aspect=3 / 4, focus_x=0.61),
     # 2007, at the family computer. Already 4:3, the shape of the frame.
     Job("childhood-2007.jpg", "childhood-2007.jpg"),
     Job("academy-group.jpg", "academy.jpg"),
