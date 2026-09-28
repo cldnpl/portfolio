@@ -4,7 +4,7 @@
  * every name.webp) that is at least as wide as the slot asks for.
  */
 const WIDTHS = [640, 1200, 1800];
-const HAS_VARIANTS = /^\/images\/(work\/.+|portrait|marble)\.webp$/;
+const HAS_VARIANTS = /^\/images\/(work\/.+|about\/.+|portrait|marble)\.webp$/;
 
 export default function imageLoader({ src, width }: { src: string; width: number }) {
   if (!HAS_VARIANTS.test(src)) return `${src}?w=${width}`;

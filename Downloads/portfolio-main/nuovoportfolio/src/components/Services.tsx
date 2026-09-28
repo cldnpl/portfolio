@@ -2,6 +2,7 @@ import { Box, Container, Text } from "@chakra-ui/react";
 import { useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { HoloText } from "@/components/HoloText";
+import { Photo, PhotoData } from "@/components/Photo";
 import { ScrollQuote } from "@/components/ScrollQuote";
 import { Section } from "@/components/Section";
 import { ServiceRow } from "@/components/ServiceRow";
@@ -20,7 +21,7 @@ const layoutBox = (el: HTMLElement) => {
   return { x, y, w: el.offsetWidth, h: el.offsetHeight };
 };
 
-const ServicesList = ({ intro, services }: { intro: string; services: Service[] }) => {
+const ServicesList = ({ intro, photo, services }: { intro: string; photo: PhotoData; services: Service[] }) => {
   const ref = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -20% 0px" });
@@ -114,7 +115,16 @@ const ServicesList = ({ intro, services }: { intro: string; services: Service[] 
       <Box mt={{ base: "space-64", md: "space-120" }}>
         <TimelinePanel ref={panelRef} services={services} showTiles={reduceMotion} />
       </Box>
-      <Box display="flex" justifyContent="flex-end" mt={{ base: "space-40", md: "space-64" }}>
+      {/* the hackathon it mentions, next to the text */}
+      <Box
+        display="flex"
+        flexDir={{ base: "column", md: "row" }}
+        justifyContent="space-between"
+        alignItems={{ md: "center" }}
+        gap={{ base: "space-40", md: "space-64" }}
+        mt={{ base: "space-40", md: "space-64" }}
+      >
+        <Photo photo={photo} sizes="(max-width: 832px) 80vw, 360px" width={{ base: "78%", md: "360px" }} flexShrink={0} />
         <Box position="relative" width={{ base: "100%", md: "480px" }}>
           <HoloText
             variant="paragraph"
@@ -131,13 +141,13 @@ const ServicesList = ({ intro, services }: { intro: string; services: Service[] 
 };
 
 export const Services = ({ data }: { data: typeof servicesData }) => {
-  const { content, servicesIntro, services } = data;
+  const { content, servicesIntro, photo, services } = data;
   return (
     <Section isFullScreen spacingBottom="extraLarge">
       <Container>
         <ScrollQuote text={content} />
       </Container>
-      <ServicesList intro={servicesIntro} services={services} />
+      <ServicesList intro={servicesIntro} photo={photo} services={services} />
     </Section>
   );
 };

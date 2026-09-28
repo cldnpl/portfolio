@@ -70,7 +70,7 @@ export const ContactForm = ({ email, isInView }: ContactFormProps) => {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: ACCESS_KEY,
-          subject: `Portfolio — ${data.get("name") ?? ""}`,
+          subject: `Portfolio: ${data.get("name") ?? ""}`,
           from_name: data.get("name"),
           email: data.get("email"),
           message: data.get("message"),
@@ -100,7 +100,7 @@ export const ContactForm = ({ email, isInView }: ContactFormProps) => {
       : status === "sent"
         ? "Sent. I will get back to you soon."
         : status === "failed"
-          ? "It did not go through — write to me directly:"
+          ? "It did not go through, write to me directly:"
           : "Or write to me directly:";
 
   return (

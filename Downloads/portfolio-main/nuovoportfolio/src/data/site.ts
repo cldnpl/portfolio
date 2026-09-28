@@ -1,3 +1,4 @@
+import type { PhotoData } from "@/components/Photo";
 import { projects } from "@/data/projects";
 
 export const SITE_URL = "https://claudianapolitano.dev";
@@ -68,9 +69,15 @@ export const platformsData = {
 
 export const aboutData = {
   heading: "About",
+  photo: {
+    src: "/images/about/academy.webp",
+    alt: "Claudia with her class at the Apple Developer Academy in Naples",
+    ratio: "1179/866",
+    caption: "Apple Developer Academy, Naples",
+  },
   content: [
-    "I design and build native mobile apps with a focus on precision, motion and the people using them — creating interfaces where every detail is intentional.",
-    "Based in Naples, I work at the intersection of software and psychology. Three years at the Apple Developer Academy in Naples: the Foundation programme in 2024, the one-year Academy in 2025–2026, and now ARTE, the 2026–2027 advanced research programme on augmented reality and Apple Vision Pro development.",
+    "I design and build native mobile apps with a focus on precision, motion and the people using them, creating interfaces where every detail is intentional.",
+    "Based in Naples, I work at the intersection of software and psychology. Three years at the Apple Developer Academy in Naples: the Foundation programme in 2024, the one-year Academy from 2025 to 2026, and now ARTE, the advanced research programme on augmented reality and Apple Vision Pro development, from 2026 to 2027.",
     "In October 2025 I won a hackathon in Naples, building an app for Crédit Agricole Italia. From SwiftUI to Compose to visionOS, I take ideas from the first sketch to the store with meticulous attention to detail.",
   ],
 };
@@ -90,7 +97,18 @@ export type Service = {
   items: string[];
 };
 
-export const servicesData: { content: string; servicesIntro: string; services: Service[] } = {
+export const servicesData: {
+  content: string;
+  servicesIntro: string;
+  photo: PhotoData;
+  services: Service[];
+} = {
+  photo: {
+    src: "/images/about/hackathon.webp",
+    alt: "Claudia holding the winner's banner of The Big Hack for Crédit Agricole, Naples 2025",
+    ratio: "3/4",
+    caption: "Winner, The Big Hack, Naples 2025",
+  },
   content:
     "\"Most apps are built to be used; very few are built to be understood. I studied psychology for exactly that reason, and I write the native code myself, in Swift, in Kotlin and for visionOS, so nothing gets lost between how people think and what ends up on their screen. Every screen measured, every animation with a reason, every millisecond accounted for. If your product deserves to feel obvious, let's make sure it does.\"",
   servicesIntro:

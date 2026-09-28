@@ -37,9 +37,9 @@ export const projects: Project[] = [
     coverImage: "/images/work/viaggiare-sicuri/cover.webp",
     portraitImage: "/images/work/viaggiare-sicuri/portrait.webp",
     description:
-      "A work project, since May 2026: the travel-safety app of the Farnesina — Italy's Ministry of Foreign Affairs and International Cooperation — public on iOS and Android.",
+      "A work project, since May 2026: the travel-safety app of the Farnesina, Italy's Ministry of Foreign Affairs and International Cooperation, public on iOS and Android.",
     additionalDescription:
-      "A work project: since May 2026 I have been working on it as a Mobile Developer inside a professional mobile team. My part, in a shared codebase, is feature implementation, interface work, integration, bug fixing and the maintenance a shipped app asks for — on an app people open before they leave the country.",
+      "A work project: since May 2026 I have been working on it as a Mobile Developer inside a professional mobile team. My part, in a shared codebase, is feature implementation, interface work, integration, bug fixing and the maintenance a shipped app asks for, on an app people open before they leave the country.",
     platforms: ["iOS", "Android"],
     roles: ["Development"],
     year: "2026",
