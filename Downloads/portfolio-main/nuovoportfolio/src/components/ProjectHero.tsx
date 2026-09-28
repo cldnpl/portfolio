@@ -25,7 +25,7 @@ const Detail = ({ label, value, isInView, delay }: { label: string; value: strin
 );
 
 export const ProjectHero = ({ project }: { project: Project }) => {
-  const { title, year, platforms, roles, status, additionalDescription, url } = project;
+  const { title, year, platforms, roles, status, additionalDescription, url, appStore } = project;
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const lettersDone = lettersDelay(title.length, 0.5, 0.03);
@@ -84,7 +84,23 @@ export const ProjectHero = ({ project }: { project: Project }) => {
                 fontWeight="normal"
                 sx={legible}
               />
-              {url && (
+              {appStore && (
+                <Link
+                  href={appStore}
+                  isExternal
+                  display="inline-block"
+                  mt="space-24"
+                  _after={{ display: "none" }}
+                  _hover={{ opacity: 0.8 }}
+                  transition="opacity 0.2s ease"
+                  aria-label={`Download ${title} on the App Store`}
+                >
+                  {/* Apple's official badge, black, from its marketing tools */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/badges/app-store.svg" alt="Download on the App Store" width={150} height={50} style={{ height: 50, width: "auto" }} />
+                </Link>
+              )}
+              {!appStore && url && (
                 <Link
                   href={url}
                   isExternal

@@ -76,7 +76,7 @@ export const aboutData = {
     caption: "Apple Developer Academy, Naples",
   },
   content: [
-    "I design and build native mobile apps with a focus on precision, motion and the people using them, creating interfaces where every detail is intentional.",
+    "I develop native mobile apps with a focus on precision, motion and the people using them, building interfaces where every detail is intentional.",
     "Based in Naples, I work at the intersection of software and psychology. Three years at the Apple Developer Academy in Naples: the Foundation programme in 2024, the one-year Academy from 2025 to 2026, and now ARTE, the advanced research programme on augmented reality and Apple Vision Pro development, from 2026 to 2027.",
     "In October 2025 I won a hackathon in Naples, building an app for Crédit Agricole Italia. From SwiftUI to Compose to visionOS, I take ideas from the first sketch to the store with meticulous attention to detail.",
   ],
@@ -138,7 +138,7 @@ export const servicesData: {
       title: "UX Psychology",
       label: "UX",
       image: "/images/services/ux.webp",
-      items: ["User research", "Perception & attention", "Accessibility", "Prototyping"],
+      items: ["User research", "Perception & attention", "Accessibility", "Usability testing"],
     },
   ],
 };
@@ -157,7 +157,7 @@ export const loaderFacts = [
 ];
 
 const description =
-  "Claudia Napolitano is a mobile developer based in Naples, designing and building native apps for iOS, Android and visionOS with a focus on precision, motion, and the people using them.";
+  "Claudia Napolitano is a mobile developer based in Naples, developing native apps for iOS, Android and visionOS with a focus on precision, motion, and the people using them.";
 
 export const homeSeo = {
   title: "Claudia Napolitano | Mobile Developer",

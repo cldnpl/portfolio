@@ -1,5 +1,6 @@
 export type GalleryItem = { src: string; ratio: string; alt?: string };
 export type GalleryRow = { items: GalleryItem[] };
+export type OverviewItem = { label: string; text: string };
 
 export type Project = {
   title: string;
@@ -17,6 +18,10 @@ export type Project = {
   status: string;
   href: string;
   url?: string;
+  /** App Store page: shown as the official badge instead of "See Project". */
+  appStore?: string;
+  /** The longer story on the project page: what it is for, the problem, what it does, my part. */
+  overview?: OverviewItem[];
   gallery: GalleryRow[];
 };
 
@@ -45,6 +50,24 @@ export const projects: Project[] = [
     year: "2026",
     status: "Work project · In production",
     href: "viaggiare-sicuri",
+    overview: [
+      {
+        label: "What it is for",
+        text: "Viaggiare Sicuri is the official app Italians use before and during a trip abroad. For every country in the world it gathers the safety information published by the Ministry of Foreign Affairs: security, health, local rules and the latest alerts, in one place and always up to date.",
+      },
+      {
+        label: "The problem",
+        text: "Travel advice is scattered and changes fast, and in an emergency the Crisis Unit needs to know which Italians are in a country. The app answers both: it tells travellers what they need to know about where they are going, and lets them register their trip, so the Ministry can reach them if something happens.",
+      },
+      {
+        label: "What it does",
+        text: "A country file with alerts, health and notices, and the date of the last update; a world map with the countries under advisory; a feed of the latest alerts; and the registration of a trip, or of a stay abroad, in a few steps.",
+      },
+      {
+        label: "My part",
+        text: "Since May 2026 I have been working on it as a Mobile Developer in the mobile team: new features, interface work on the screens, integration with the Ministry's services, bug fixing and the maintenance of an app in production on iOS and Android.",
+      },
+    ],
     gallery: [wide("viaggiare-sicuri", "stage"), wide("viaggiare-sicuri", "trio")],
   },
   {
@@ -60,6 +83,20 @@ export const projects: Project[] = [
     year: "2025",
     status: "In production",
     href: "banca-di-asti",
+    overview: [
+      {
+        label: "What it is for",
+        text: "The mobile banking app of Banca di Asti: the bank's customers use it to sign in and manage their accounts from their phone, on iOS and Android.",
+      },
+      {
+        label: "The problem",
+        text: "A banking app has to be simple and safe at the same time: people must get in quickly every day, and every access has to be protected. Signing in and setting up a personal PIN are the first things every customer meets, and they have to feel effortless.",
+      },
+      {
+        label: "My part",
+        text: "Five months at Venture Lab, from September 2025 to February 2026, on a fixed-term contract, as a Mobile Developer on both native apps: feature implementation, interface work and bug fixing, in UIKit on iOS and Kotlin on Android, inside the team that maintains the app.",
+      },
+    ],
     gallery: [frames("banca-di-asti", 1)],
   },
   {
@@ -71,11 +108,29 @@ export const projects: Project[] = [
     additionalDescription:
       "Leyla is a startup I started with my boyfriend, and as of September 2026 it counts 30 downloads. Written twice over a shared Go backend: SwiftUI with WidgetKit, HealthKit and MapKit on iOS, Jetpack Compose with Health Connect on Android, PostgreSQL underneath. Two native apps, one intent: making distance feel a little shorter.",
     platforms: ["iOS", "Android"],
-    roles: ["Design", "Development"],
+    roles: ["Development"],
     year: "2026",
     status: "Startup · 30 downloads",
     href: "leyla",
-    url: "https://github.com/cldnpl/Leyla-app",
+    overview: [
+      {
+        label: "What it is for",
+        text: "Leyla is a private app for two people, built first of all for couples who live far apart. It is a startup I started with my boyfriend, and as of September 2026 it counts 30 downloads.",
+      },
+      {
+        label: "The problem",
+        text: "Chat apps are made for talking, not for feeling close. When there are thousands of kilometres between two people, what is missing is the small, constant sense of the other being there.",
+      },
+      {
+        label: "What it does",
+        text: "One tap lets your partner know you are thinking of them, and a widget keeps them on your home screen. A map shows where both of you are and how far apart. A shared journal keeps your milestones and your days, with photos; games like the question of the day and quizzes help you know each other better; and Apple Health can share cycle tracking with your partner.",
+      },
+      {
+        label: "Built with",
+        text: "Two native apps over one shared backend: SwiftUI with WidgetKit, HealthKit and MapKit on iOS, Jetpack Compose with Health Connect on Android, and a Go backend on PostgreSQL.",
+      },
+    ],
+    appStore: "https://apps.apple.com/us/app/leyla/id6793453891",
     gallery: [wide("leyla", "stage"), wide("leyla", "trio")],
   },
   {
@@ -87,10 +142,28 @@ export const projects: Project[] = [
     additionalDescription:
       "Built at the Apple Developer Academy in Naples. Stockfish 17 runs on the device; the Lichess API brings Quick Pair, friends and bots for playing someone who is not in the room; the pieces come in different materials, previewed in 3D before the game. Built in Swift, SwiftUI and RealityKit for visionOS.",
     platforms: ["visionOS"],
-    roles: ["Design", "Development"],
+    roles: ["Development"],
     year: "2026",
     status: "Academy project",
     href: "livechess",
+    overview: [
+      {
+        label: "What it is for",
+        text: "LiveChess is a chess game in mixed reality for Apple Vision Pro, built at the Apple Developer Academy in Naples. The board appears in your room, at real size, on your own table.",
+      },
+      {
+        label: "The problem",
+        text: "Playing chess online means playing on a flat screen, and you lose the board in front of you. Playing over a real board means finding someone in the same room. LiveChess keeps the physical feeling of the board and the opponents of online chess.",
+      },
+      {
+        label: "What it does",
+        text: "You can play against Stockfish 17, running on the device, choosing its strength and thinking time; or sign in with Lichess and play through Quick Pair, against a friend or against a Lichess bot. The board can be moved around the room, the pieces come in different materials previewed in 3D, and a virtual hall can replace your room entirely.",
+      },
+      {
+        label: "Built with",
+        text: "Swift, SwiftUI and RealityKit for visionOS, with an immersive space for the virtual hall, the Stockfish engine on device and the Lichess API.",
+      },
+    ],
     gallery: [
       wide("livechess", "room"),
       {

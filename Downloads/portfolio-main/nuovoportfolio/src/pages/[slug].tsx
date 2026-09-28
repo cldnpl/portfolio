@@ -1,6 +1,7 @@
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { Gallery } from "@/components/Gallery";
 import { NextProject } from "@/components/NextProject";
+import { ProjectOverview } from "@/components/ProjectOverview";
 import { PageTransition } from "@/components/PageTransition";
 import { ProjectHero } from "@/components/ProjectHero";
 import { type Project, projects } from "@/data/projects";
@@ -11,6 +12,7 @@ export default function ProjectPage({ project }: { project?: Project }) {
   return (
     <PageTransition>
       <ProjectHero project={project} />
+      <ProjectOverview items={project.overview} />
       <Gallery rows={project.gallery} />
       {project.href && <NextProject currentHref={project.href} />}
     </PageTransition>
