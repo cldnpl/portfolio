@@ -1,12 +1,13 @@
 {
-  "framework": "vite",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
+  "framework": null,
+  "installCommand": "cd nuovoportfolio && npm ci",
+  "buildCommand": "cd nuovoportfolio && npm run build",
+  "outputDirectory": "nuovoportfolio/out",
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
     {
-      "source": "/(favicon.ico|favicon.svg|favicon.png|favicon-64.png|icon.png|opengraph-image.jpg|browserconfig.xml)",
+      "source": "/(favicon.ico|favicon.svg|favicon.png|favicon-64.png|icon.png)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -24,17 +25,9 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
   "redirects": [
-    {
-      "source": "/contact",
-      "destination": "/#contact",
-      "permanent": true
-    }
+    { "source": "/projects", "destination": "/#projects", "permanent": true },
+    { "source": "/about", "destination": "/#about", "permanent": true },
+    { "source": "/contact", "destination": "/#contact", "permanent": true }
   ]
 }

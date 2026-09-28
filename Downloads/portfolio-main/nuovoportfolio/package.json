@@ -1,0 +1,33 @@
+{
+  "name": "claudia-napolitano-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "2.8.2",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@gsap/react": "2.1.2",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.2.0",
+    "framer-motion": "11.2.10",
+    "gsap": "3.15.0",
+    "lenis": "1.1.5",
+    "next": "14.2.35",
+    "ogl": "^1.0.11",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.0"
+  }
+}

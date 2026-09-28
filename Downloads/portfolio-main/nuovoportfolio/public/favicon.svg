@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#07050d"/>
+  <rect x="40" y="40" width="432" height="432" rx="88" fill="none" stroke="#f6f5f2" stroke-width="20"/>
+  <text
+    x="256"
+    y="307"
+    fill="#f6f5f2"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="178"
+    font-weight="700"
+    letter-spacing="-18"
+    text-anchor="middle"
+  >CN</text>
+</svg>
