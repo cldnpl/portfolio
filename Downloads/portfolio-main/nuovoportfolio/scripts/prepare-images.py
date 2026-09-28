@@ -249,6 +249,7 @@ portrait.resize((1200, round(1200 * portrait.height / portrait.width)), Image.LA
 # Photos in About (the Academy) and next to the services text (the hackathon).
 LOCAL_ABOUT = LOCAL / "about"
 save(Image.open(LOCAL_ABOUT / "academy-group.jpg").convert("RGB"), "about/academy.webp", quality=86)
-save(Image.open(LOCAL_ABOUT / "hackathon-winner.png").convert("RGB"), "about/hackathon.webp", quality=88)
+# her crop: the banner in full, little room above the head
+save(Image.open(LOCAL_ABOUT / "hackathon-crop.png").convert("RGB"), "about/hackathon.webp", quality=88)
 
 # The service tiles are made by scripts/prepare-tiles.py, not here.

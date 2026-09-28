@@ -106,7 +106,7 @@ export const servicesData: {
   photo: {
     src: "/images/about/hackathon.webp",
     alt: "Claudia holding the winner's banner of The Big Hack for Crédit Agricole, Naples 2025",
-    ratio: "3/4",
+    ratio: "582/546",
     caption: "Winner, The Big Hack, Naples 2025",
   },
   content:

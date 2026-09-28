@@ -124,7 +124,7 @@ const ServicesList = ({ intro, photo, services }: { intro: string; photo: PhotoD
         gap={{ base: "space-40", md: "space-64" }}
         mt={{ base: "space-40", md: "space-64" }}
       >
-        <Photo photo={photo} sizes="(max-width: 832px) 80vw, 360px" width={{ base: "78%", md: "360px" }} flexShrink={0} />
+        <Photo photo={photo} sizes="(max-width: 832px) 70vw, 320px" width={{ base: "70%", md: "320px" }} flexShrink={0} />
         <Box position="relative" width={{ base: "100%", md: "480px" }}>
           <HoloText
             variant="paragraph"
