@@ -14,7 +14,7 @@ export const Hero = ({ data }: { data: typeof heroData }) => {
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
-      spacingBottom="extraLarge"
+      spacingBottom="medium"
       isFullScreen
     >
       <Box flex="1" display="flex" flexDirection="column" justifyContent="center">

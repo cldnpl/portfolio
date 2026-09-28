@@ -1,4 +1,4 @@
-import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Container, Flex, Heading } from "@chakra-ui/react";
 import { useInView } from "framer-motion";
 import { Ref, useRef } from "react";
 import { Section } from "@/components/Section";
@@ -24,9 +24,6 @@ export const About = ({ id, data, sectionRef }: AboutProps) => {
           borderColor="blackAlpha.200"
           pb="space-16"
         >
-          <Text variant="label" letterSpacing="0.2em">
-            (01)
-          </Text>
         </Flex>
       </Container>
       <Container mb={{ base: "space-40", md: "space-64" }}>

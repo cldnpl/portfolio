@@ -56,6 +56,16 @@ export const heroData = {
   portrait: "/images/portrait.webp",
 };
 
+/** The strip of platform logos gliding under the hero. */
+export const platformsData = {
+  caption: "Native apps for every platform I build on",
+  platforms: [
+    { name: "iOS", logo: "/images/logos/ios.png", width: 355, height: 120 },
+    { name: "Android", logo: "/images/logos/android.png", width: 751, height: 120 },
+    { name: "Apple Vision Pro", logo: "/images/logos/vision-pro.png", width: 765, height: 120 },
+  ],
+};
+
 export const aboutData = {
   heading: "About",
   content: [
@@ -84,7 +94,7 @@ export const servicesData: { content: string; servicesIntro: string; services: S
   content:
     "\"Most apps are built to be used; very few are built to be understood. I studied psychology for exactly that reason, and I write the native code myself, in Swift, in Kotlin and for visionOS, so nothing gets lost between how people think and what ends up on their screen. Every screen measured, every animation with a reason, every millisecond accounted for. If your product deserves to feel obvious, let's make sure it does.\"",
   servicesIntro:
-    "I'm not a founder, a CEO, or a strategist hiding behind a title. I'm a developer who taught herself Python and then Swift, graduated in Psychology with 110/110 cum laude because interfaces are made for minds, and spent three years at the Apple Developer Academy in Naples, the last one on augmented reality and Vision Pro. Hackathons in Naples, Trieste and Stockholm, the one in Naples won for Crédit Agricole. Six languages spoken, Arabic the favourite. I'm here to take an idea and bring it natively to iOS, Android and visionOS with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
+    "I'm not a founder, a CEO, or a strategist hiding behind a title. I'm a developer who taught herself Python and then Swift, graduated in Psychology with 110/110 cum laude because interfaces are made for minds, and spent three years at the Apple Developer Academy in Naples, the last one on augmented reality and Vision Pro. Hackathons in Naples, Trieste and Stockholm, the one in Naples won for Crédit Agricole. Six languages spoken. I'm here to take an idea and bring it natively to iOS, Android and visionOS with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
   // Each tile flies from its title into the dark panel. `video` (optional, a
   // short muted loop in public/videos) plays in place of the image.
   services: [
@@ -118,7 +128,7 @@ export const servicesData: { content: string; servicesIntro: string; services: S
 /** One of these shows on the loader, picked at random by weight. */
 export const loaderFacts = [
   { text: 'This loading screen actually serves no purpose it\'s for the "aesthetics"', weight: 10 },
-  { text: "I speak six languages, Arabic is the favourite", weight: 2 },
+  { text: "I speak six languages", weight: 2 },
   { text: "My mother taught me Spanish when I was three", weight: 1 },
   { text: "Python first, then Swift", weight: 2 },
   { text: "Forty-eight hours, one problem, no sleep", weight: 2 },

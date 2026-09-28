@@ -5,7 +5,7 @@ rounded squares, like the ones on butter.video. They sit inside the service
 titles and fly into the dark panel below them.
 
 The SF Symbols come from `swift scripts/render-symbols.swift art/symbols`;
-the Kotlin mark is drawn here (it is not an SF Symbol).
+the Kotlin logo from `scripts/prepare-logos.py`.
 
     python3 scripts/prepare-tiles.py
 """
@@ -95,16 +95,6 @@ def place_symbol(tile: Image.Image, symbol: Image.Image, scale: float, colour=(2
     return out
 
 
-def kotlin_mark(size: int) -> Image.Image:
-    """The Kotlin logo: a square with a triangle cut from the right side."""
-    grad = gradient((size, size), [(0, "#7F52FF"), (0.5, "#C811E1"), (1, "#E54857")], angle="diagonal")
-    mask = Image.new("L", (size, size), 0)
-    ImageDraw.Draw(mask).polygon([(0, 0), (size, 0), (size / 2, size / 2), (size, size), (0, size)], fill=255)
-    mark = grad.convert("RGBA")
-    mark.putalpha(mask)
-    return mark
-
-
 def save(img: Image.Image, name: str) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     img = img.resize((SIZE, SIZE), Image.LANCZOS)
@@ -118,11 +108,14 @@ sym = lambda n: Image.open(SYMBOLS / f"{n}.png").convert("RGBA")
 swift = inflate(gradient((S, S), [(0, "#FB9B3F"), (1, "#F2362A")]))
 save(place_symbol(swift, sym("swift"), 0.56, dy=0.01), "ios")
 
-kotlin = inflate(gradient((S, S), [(0, "#2a2733"), (1, "#0f0e14")]))
-mark = kotlin_mark(round(S * 0.44))
-k = kotlin.copy()
-k.alpha_composite(mark, ((S - mark.width) // 2, (S - mark.height) // 2))
-save(k, "android")
+# Kotlin: the logo she chose (art/logos/kotlin-2016-clean.png, made by
+# prepare-logos.py), on a white tile like the one it was designed for.
+kotlin = inflate(gradient((S, S), [(0, "#FFFFFF"), (1, "#DADCE3")]))
+logo = Image.open(ROOT / "art/logos/kotlin-2016-clean.png").convert("RGBA")
+side = round(S * 0.5)
+logo = logo.resize((side, round(side * logo.height / logo.width)), Image.LANCZOS)
+kotlin.alpha_composite(logo, ((S - logo.width) // 2, (S - logo.height) // 2))
+save(kotlin, "android")
 
 vision = inflate(gradient((S, S), [(0, "#F4F4F7"), (1, "#C9CAD2")]))
 save(place_symbol(vision, sym("visionpro"), 0.62, colour=(28, 28, 32)), "spatial")
