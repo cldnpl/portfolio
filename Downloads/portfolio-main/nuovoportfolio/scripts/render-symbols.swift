@@ -3,11 +3,11 @@
 import AppKit
 
 let out = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "."
-let symbols = ["swift", "visionpro", "brain.head.profile"]
-let canvas: CGFloat = 1024
+let symbols = ["swift", "visionpro", "visionpro.fill", "brain.head.profile"]
+let canvas: CGFloat = 2048
 
 for name in symbols {
-    let config = NSImage.SymbolConfiguration(pointSize: 560, weight: .semibold)
+    let config = NSImage.SymbolConfiguration(pointSize: 1120, weight: .semibold)
     guard let symbol = NSImage(systemSymbolName: name, accessibilityDescription: nil)?
         .withSymbolConfiguration(config) else {
         print("missing \(name)"); continue

@@ -226,8 +226,9 @@ for slug, images in PROJECTS.items():
 save(Image.open(MARBLE).convert("RGB"), "marble.webp", quality=82)
 
 # LiveChess runs on Apple Vision Pro: the captures are already landscape.
+# (the home-page cover, the capture inside a Vision Pro, is made by
+# scripts/prepare-visionpro.py, not here)
 LIVECHESS = {
-    "cover": "lc-room.jpg",
     "room": "lc-room.jpg",
     "lobby": "lc-lobby.jpg",
     "pieces": "lc-pieces.jpg",

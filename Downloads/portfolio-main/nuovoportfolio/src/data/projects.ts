@@ -81,6 +81,7 @@ export const projects: Project[] = [
   {
     title: "LiveChess",
     coverImage: "/images/work/livechess/cover.webp",
+    portraitImage: "/images/work/livechess/portrait.webp",
     description:
       "An Apple Developer Academy project: a chess game in mixed reality for Apple Vision Pro, on your own table or in a virtual hall.",
     additionalDescription:
