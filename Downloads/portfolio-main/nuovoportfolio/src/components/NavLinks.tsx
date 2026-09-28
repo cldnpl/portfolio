@@ -64,7 +64,7 @@ const NavLink = chakra(Link, {
     display: "flex",
     fontSize: { base: "4xl", md: " md" },
     fontWeight: "normal",
-    textTransform: "capitalize",
+    // the titles are written capitalised already; "capitalize" would turn "Chi sono" into "Chi Sono"
     marginBottom: { base: "space-16", md: 0 },
   },
 });

@@ -53,7 +53,7 @@ export const Marquee = ({ text, baseVelocity = 50, totalMarquees = 1 }: MarqueeP
     return () => {
       cancelled = true;
     };
-  }, [width]);
+  }, [width, text]);
 
   useAnimationFrame((_, delta) => {
     const v = scrollVelocity.get();

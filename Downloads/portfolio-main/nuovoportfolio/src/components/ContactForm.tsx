@@ -1,6 +1,7 @@
 import { Box, chakra, Flex, Link, SimpleGrid, Text } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import { Magnetic } from "@/components/Magnetic";
+import { useUi } from "@/data/ui";
 import { rem } from "@/theme/rem";
 
 /**
@@ -57,6 +58,7 @@ type ContactFormProps = { email: string; isInView: boolean };
 
 export const ContactForm = ({ email, isInView }: ContactFormProps) => {
   const [status, setStatus] = useState<Status>("idle");
+  const t = useUi().form;
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,12 +98,12 @@ export const ContactForm = ({ email, isInView }: ContactFormProps) => {
 
   const note =
     status === "sending"
-      ? "Sending…"
+      ? t.sendingNote
       : status === "sent"
-        ? "Sent. I will get back to you soon."
+        ? t.sent
         : status === "failed"
-          ? "It did not go through, write to me directly:"
-          : "Or write to me directly:";
+          ? t.failed
+          : t.direct;
 
   return (
     <Box as="form" onSubmit={onSubmit} width="100%">
@@ -109,20 +111,20 @@ export const ContactForm = ({ email, isInView }: ContactFormProps) => {
       <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
       <SimpleGrid columns={{ base: 1, md: 2 }} spacingX="space-48" spacingY={{ base: "space-32", md: "space-40" }}>
         <Box {...reveal(0.4)}>
-          <Label htmlFor="contact-name">Name</Label>
-          <Field id="contact-name" name="name" type="text" placeholder="Your name" autoComplete="name" required />
+          <Label htmlFor="contact-name">{t.name}</Label>
+          <Field id="contact-name" name="name" type="text" placeholder={t.namePlaceholder} autoComplete="name" required />
         </Box>
         <Box {...reveal(0.45)}>
-          <Label htmlFor="contact-email">Email</Label>
-          <Field id="contact-email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
+          <Label htmlFor="contact-email">{t.email}</Label>
+          <Field id="contact-email" name="email" type="email" placeholder={t.emailPlaceholder} autoComplete="email" required />
         </Box>
         <Box gridColumn={{ md: "1 / -1" }} {...reveal(0.5)}>
-          <Label htmlFor="contact-message">Message</Label>
+          <Label htmlFor="contact-message">{t.message}</Label>
           <Field
             as="textarea"
             id="contact-message"
             name="message"
-            placeholder="What are you building?"
+            placeholder={t.messagePlaceholder}
             rows={3}
             resize="none"
             required
@@ -170,7 +172,7 @@ export const ContactForm = ({ email, isInView }: ContactFormProps) => {
             _hover={{ bg: "white", color: "black" }}
             _disabled={{ opacity: 0.5, cursor: "wait" }}
           >
-            {status === "sending" ? "Sending" : "Send message"}
+            {status === "sending" ? t.sending : t.send}
             <Box as="span" aria-hidden>
               →
             </Box>

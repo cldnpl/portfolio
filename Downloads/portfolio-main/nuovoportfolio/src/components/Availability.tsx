@@ -1,10 +1,12 @@
 import { Box, Circle, Text } from "@chakra-ui/react";
+import { useUi } from "@/data/ui";
 import { useScramble } from "@/hooks/useScramble";
 import { useIntroStore } from "@/store/intro";
 
 export const Availability = ({ status }: { status: boolean }) => {
   const rgb = status ? "34, 197, 94" : "249, 115, 22";
-  const label = useScramble(status ? "Open to work" : "Unavailable", useIntroStore((s) => s.revealMeta));
+  const ui = useUi();
+  const label = useScramble(status ? ui.openToWork : ui.unavailable, useIntroStore((s) => s.revealMeta));
 
   return (
     <Box data-intro="meta-item" display="flex" alignItems="center">

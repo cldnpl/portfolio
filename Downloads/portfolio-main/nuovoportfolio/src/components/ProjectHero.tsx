@@ -4,6 +4,7 @@ import { useMemo, useRef } from "react";
 import { HoloText } from "@/components/HoloText";
 import { Letters, lettersDelay } from "@/components/Letters";
 import type { Project } from "@/data/projects";
+import { useUi } from "@/data/ui";
 import { rem } from "@/theme/rem";
 import { legible } from "@/theme/legible";
 
@@ -26,6 +27,7 @@ const Detail = ({ label, value, isInView, delay }: { label: string; value: strin
 
 export const ProjectHero = ({ project }: { project: Project }) => {
   const { title, year, platforms, roles, status, additionalDescription, url, appStore } = project;
+  const ui = useUi();
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const lettersDone = lettersDelay(title.length, 0.5, 0.03);
@@ -68,12 +70,12 @@ export const ProjectHero = ({ project }: { project: Project }) => {
             rowGap="space-24"
             flexShrink={0}
           >
-            {year && <Detail label="Year" value={year} isInView={isInView} delay={base + 0.15} />}
+            {year && <Detail label={ui.year} value={year} isInView={isInView} delay={base + 0.15} />}
             {platforms && (
-              <Detail label="Platform" value={platforms.join(" & ")} isInView={isInView} delay={base + 0.2} />
+              <Detail label={ui.platform} value={platforms.join(" & ")} isInView={isInView} delay={base + 0.2} />
             )}
-            {roles && <Detail label="Role" value={roles.join(" & ")} isInView={isInView} delay={base + 0.25} />}
-            {status && <Detail label="Status" value={status} isInView={isInView} delay={base + 0.3} />}
+            {roles && <Detail label={ui.role} value={roles.join(" & ")} isInView={isInView} delay={base + 0.25} />}
+            {status && <Detail label={ui.status} value={status} isInView={isInView} delay={base + 0.3} />}
           </Grid>
           {additionalDescription.length > 0 && (
             <Box
@@ -104,11 +106,11 @@ export const ProjectHero = ({ project }: { project: Project }) => {
                   _after={{ display: "none" }}
                   _hover={{ opacity: 0.8 }}
                   transition="opacity 0.2s ease"
-                  aria-label={`Download ${title} on the App Store`}
+                  aria-label={ui.appStoreLabel(title)}
                 >
                   {/* Apple's official badge, black, from its marketing tools */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/badges/app-store.svg" alt="Download on the App Store" width={150} height={50} style={{ height: 50, width: "auto" }} />
+                  <img src={ui.appStoreBadge} alt={ui.appStoreAlt} width={150} height={50} style={{ height: 50, width: "auto" }} />
                 </Link>
               )}
               {!appStore && url && (
@@ -126,7 +128,7 @@ export const ProjectHero = ({ project }: { project: Project }) => {
                   _hover={{ opacity: 0.6 }}
                   transition="opacity 0.2s ease"
                 >
-                  See Project
+                  {ui.seeProject}
                 </Link>
               )}
             </Box>

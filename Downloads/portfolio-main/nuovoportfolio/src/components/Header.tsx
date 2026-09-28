@@ -1,8 +1,10 @@
 import { Box, Button, chakra, Container, Flex, Heading, Link, useDisclosure } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { MobileMenu } from "@/components/MobileMenu";
 import { NavLinks } from "@/components/NavLinks";
 import type { NavLinkItem } from "@/data/site";
+import { useUi } from "@/data/ui";
 
 type HeaderProps = { data: { title: string; links: NavLinkItem[]; socials: NavLinkItem[] } };
 
@@ -10,6 +12,7 @@ export const Header = ({ data }: HeaderProps) => {
   const { title, links, socials } = data;
   const words = title.split(" ");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const ui = useUi();
 
   return (
     <>
@@ -32,10 +35,13 @@ export const Header = ({ data }: HeaderProps) => {
                 ))}
               </Flex>
             </Link>
-            <MenuButton onClick={onOpen}>menu</MenuButton>
-            <Box display={{ base: "none", md: "block" }}>
-              <NavLinks links={links} />
-            </Box>
+            <Flex alignItems="center" gap={{ base: "space-16", md: "space-32" }}>
+              <Box display={{ base: "none", md: "block" }}>
+                <NavLinks links={links} />
+              </Box>
+              <LanguageToggle />
+              <MenuButton onClick={onOpen}>{ui.menu}</MenuButton>
+            </Flex>
           </Flex>
         </Container>
       </Box>

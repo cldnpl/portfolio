@@ -1,5 +1,6 @@
 import type { PhotoData } from "@/components/Photo";
-import { projects } from "@/data/projects";
+import { localizedProjects, projects } from "@/data/projects";
+import { type Lang, useLanguage } from "@/lib/language";
 
 export const SITE_URL = "https://claudianapolitano.dev";
 
@@ -184,3 +185,138 @@ export const homeSeo = {
   canonical: SITE_URL,
   image: `${SITE_URL}/images/portrait-og.jpg`,
 };
+
+/* ------------------------------------------------------------------ */
+/* Italian. Same shapes as the English above; key concepts in **bold**. */
+
+const headerIt: typeof headerData = {
+  ...headerData,
+  links: [
+    { title: "Chi sono", href: "#about" },
+    { title: "Progetti", href: "#projects" },
+    { title: "Contatti", href: "#contact" },
+  ],
+};
+
+const footerIt: typeof footerData = {
+  ...footerData,
+  heading: "Contattami",
+  cta: "Per informazioni, collaborazioni o offerte di lavoro, non esitare a scrivermi!",
+  credit: "Sviluppato da Claudia Napolitano",
+};
+
+// The three job titles stay in English, as on the Italian pages of the
+// previous site: they are the titles used in Italy too.
+const heroIt: typeof heroData = { ...heroData, location: "vivo a napoli" };
+
+const platformsIt: typeof platformsData = {
+  ...platformsData,
+  caption: "App native per ogni piattaforma su cui sviluppo",
+};
+
+const aboutIt: typeof aboutData = {
+  heading: "Chi sono",
+  photo: {
+    ...aboutData.photo,
+    alt: "Claudia con la sua classe all'Apple Developer Academy di Napoli",
+    caption: "Apple Developer Academy, Napoli",
+  },
+  content: [
+    "Sviluppo **app mobile native** con un'attenzione particolare alla **precisione, al movimento e alle persone che le usano**, costruendo interfacce in cui **ogni dettaglio è intenzionale**.",
+    "Vivo a Napoli e lavoro all'incrocio tra **software e psicologia**. **Tre anni all'Apple Developer Academy** di Napoli: il programma **Foundation** nel 2024, l'**Academy di un anno** dal 2025 al 2026 e ora **ARTE**, il programma di ricerca avanzata sulla **realtà aumentata e lo sviluppo per Apple Vision Pro**, dal 2026 al 2027.",
+    "A ottobre 2025 ho **vinto un hackathon a Napoli** sviluppando un'app per **Crédit Agricole Italia**. Da **SwiftUI a Compose a visionOS**, porto le idee dal primo schizzo **fino allo store** con un'attenzione meticolosa ai dettagli.",
+  ],
+};
+
+const servicesIt: typeof servicesData = {
+  photos: [
+    {
+      ...servicesData.photos[0],
+      alt: "Claudia con lo striscione da vincitrice di The Big Hack per Crédit Agricole, Napoli 2025",
+      caption: "Vincitrice, Napoli, ott 2025",
+    },
+    {
+      ...servicesData.photos[1],
+      alt: "Claudia in piazza Unità d'Italia durante l'hackathon di Trieste",
+      caption: "Trieste, nov 2025",
+    },
+    {
+      ...servicesData.photos[2],
+      alt: "I team al lavoro ai loro tavoli durante l'hackathon di Stoccolma",
+      caption: "Stoccolma, feb 2026",
+    },
+  ],
+  content:
+    "\"La maggior parte delle app è fatta per essere usata; pochissime sono fatte per essere **capite**. Ho studiato **psicologia** proprio per questo, e il **codice nativo** lo scrivo io, in Swift, in Kotlin e per visionOS, così niente si perde tra **il modo in cui le persone pensano** e quello che finisce sul loro schermo. Ogni schermata misurata, ogni animazione con una ragione, ogni millisecondo messo in conto. Se il tuo prodotto merita di **sembrare ovvio**, facciamo in modo che lo sia.\"",
+  servicesIntro:
+    "Sono una sviluppatrice che ha **imparato da sola Python e poi Swift**, si è laureata in **Psicologia con 110/110 e lode** perché le interfacce sono fatte per le menti, e ha passato **tre anni all'Apple Developer Academy** di Napoli, l'ultimo sulla realtà aumentata e su Vision Pro. Hackathon a Napoli, Trieste e Stoccolma, **quello di Napoli vinto** per Crédit Agricole. **Sei lingue** parlate. Sono qui per prendere un'idea e portarla **in modo nativo su iOS, Android e visionOS** con la cura che merita. Software che rispetta le persone che lo usano, non solo le specifiche da cui è nato.",
+  services: [
+    { ...servicesData.services[0], title: "App iOS" },
+    { ...servicesData.services[1], title: "App Android" },
+    {
+      ...servicesData.services[2],
+      items: ["Spatial computing", "RealityKit", "ARKit", "Spazi immersivi"],
+    },
+    {
+      ...servicesData.services[3],
+      title: "Psicologia UX",
+      items: ["Ricerca sugli utenti", "Percezione e attenzione", "Accessibilità", "Test di usabilità"],
+    },
+  ],
+};
+
+const loaderFactsIt: typeof loaderFacts = [
+  { text: 'Questa schermata di caricamento non serve a niente, è solo per "l\'estetica"', weight: 10 },
+  { text: "Parlo sei lingue", weight: 2 },
+  { text: "Mia madre mi ha insegnato lo spagnolo a tre anni", weight: 1 },
+  { text: "Prima Python, poi Swift", weight: 2 },
+  { text: "Quarantotto ore, un problema, zero sonno", weight: 2 },
+  { text: "Hackathon vinto, Napoli 2025", weight: 2 },
+  { text: "110/110 e lode in Psicologia", weight: 1 },
+  { text: "Volevo smontare ogni dispositivo Apple con cui sono cresciuta", weight: 1 },
+  { text: "Questo portfolio è sempre in costruzione", weight: 2 },
+];
+
+const homeSeoIt: typeof homeSeo = {
+  ...homeSeo,
+  description:
+    "Claudia Napolitano è una mobile developer di Napoli: sviluppa app native per iOS, Android e visionOS con attenzione alla precisione, al movimento e alle persone che le usano.",
+  keywords:
+    "Claudia Napolitano, Portfolio, Sviluppo mobile, iOS, Android, visionOS, Swift, Kotlin, Mobile Developer",
+};
+
+const content = {
+  en: {
+    header: headerData,
+    footer: footerData,
+    hero: heroData,
+    platforms: platformsData,
+    about: aboutData,
+    featured: featuredData,
+    services: servicesData,
+    loaderFacts,
+    seo: homeSeo,
+  },
+  it: {
+    header: headerIt,
+    footer: footerIt,
+    hero: heroIt,
+    platforms: platformsIt,
+    about: aboutIt,
+    featured: {
+      projects: localizedProjects("it"),
+      heading: "Progetti in evidenza",
+      subHeading: "[Scorri per vederne altri]",
+    },
+    services: servicesIt,
+    loaderFacts: loaderFactsIt,
+    seo: homeSeoIt,
+  },
+};
+
+export type SiteContent = (typeof content)["en"];
+
+export const siteContent: Record<Lang, SiteContent> = content;
+
+/** The copy in the language the visitor picked. */
+export const useSite = () => siteContent[useLanguage().lang];

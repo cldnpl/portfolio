@@ -5,9 +5,11 @@ import { Meta } from "@/components/Meta";
 import { Portrait } from "@/components/Portrait";
 import { Section } from "@/components/Section";
 import type { heroData } from "@/data/site";
+import { useUi } from "@/data/ui";
 
 export const Hero = ({ data }: { data: typeof heroData }) => {
   const { marquee, availability, location, timeZone, portrait } = data;
+  const ui = useUi();
   return (
     <Section
       height={{ base: "calc(100vh - 112px)", md: "calc(100vh - 160px)" }}
@@ -32,7 +34,7 @@ export const Hero = ({ data }: { data: typeof heroData }) => {
           </Box>
         ))}
       </Box>
-      <Portrait src={portrait} alt="Portrait" />
+      <Portrait src={portrait} alt={ui.portraitAlt} />
       <Container display="flex" justifyContent="space-between" paddingBottom="space-16">
         <Meta location={location} timeZone={timeZone} />
         <Availability status={availability} />

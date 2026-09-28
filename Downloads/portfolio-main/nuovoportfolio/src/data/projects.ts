@@ -119,3 +119,58 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/* Italian: only the fields that change, by href. Key concepts in **bold**. */
+
+type ProjectCopy = Pick<Project, "description" | "additionalDescription" | "status" | "roles">;
+
+const projectsIt: Record<string, ProjectCopy> = {
+  "viaggiare-sicuri": {
+    description:
+      "Un **progetto di lavoro**, da **maggio 2026**: l'**app per viaggiare sicuri della Farnesina**, il Ministero degli Affari Esteri e della Cooperazione Internazionale, pubblica su **iOS e Android**.",
+    additionalDescription: [
+      "Un **progetto di lavoro**: da **maggio 2026** ci lavoro come **Mobile Developer** dentro un team mobile professionale. Viaggiare Sicuri è l'**app ufficiale che gli italiani usano prima e durante un viaggio all'estero**: per ogni paese del mondo raccoglie le informazioni pubblicate dal **Ministero degli Affari Esteri** su sicurezza, salute, norme locali e ultimi avvisi, in un unico posto e sempre aggiornate.",
+      "Risolve due problemi insieme. Le informazioni di viaggio sono **sparse e cambiano in fretta**, e in un'emergenza l'**Unità di Crisi** deve sapere quali italiani si trovano in un paese. L'app dice a chi viaggia quello che deve sapere sulla sua destinazione e gli permette di **registrare il viaggio**, così il Ministero può raggiungerlo se succede qualcosa. Dentro ci sono la **scheda paese** con allerta, sanità e avvisi, una **mappa del mondo** con i paesi da tenere d'occhio, un **feed degli ultimi avvisi** e la registrazione del viaggio in pochi passaggi.",
+      "La mia parte, in un codebase condiviso: **nuove funzionalità**, **lavoro sull'interfaccia** delle schermate, **integrazione** con i servizi del Ministero, **correzione di bug** e la manutenzione di un'app **in produzione su iOS e Android**.",
+    ],
+    status: "Progetto di lavoro · In produzione",
+    roles: ["Sviluppo"],
+  },
+  "banca-di-asti": {
+    description:
+      "**App di mobile banking** per la Banca di Asti, pubblica su **iOS e Android**, sviluppata in **Venture Lab** su entrambi i codebase nativi.",
+    additionalDescription: [
+      "L'**app di mobile banking della Banca di Asti**: i clienti della banca la usano per accedere e gestire i propri conti dal telefono, su **iOS e Android**. Un'app bancaria deve essere **semplice e sicura allo stesso tempo**: le persone ci entrano ogni giorno e ogni accesso va protetto, a partire dal login e dal **PIN personale** che ogni cliente crea per prima cosa.",
+      "**Cinque mesi in Venture Lab**, da settembre 2025 a febbraio 2026, con un contratto a tempo determinato, come **Mobile Developer su entrambe le app native**: implementazione di funzionalità, lavoro sull'interfaccia e correzione di bug, in **UIKit su iOS** e **Kotlin su Android**, dentro il team che mantiene l'app.",
+    ],
+    status: "In produzione",
+    roles: ["Sviluppo"],
+  },
+  leyla: {
+    description:
+      "Una **startup** che ho fondato con il mio ragazzo: un'**app privata per due**, pensata prima di tutto per la distanza. **30 download** a settembre 2026.",
+    additionalDescription: [
+      "Leyla è una **startup che ho avviato con il mio ragazzo** e a **settembre 2026** conta **30 download**. È un'**app privata per due persone**, pensata prima di tutto per le **coppie che vivono lontane**: le app di chat servono a parlare, non a sentirsi vicini, e quando ci sono migliaia di chilometri in mezzo quello che manca è la sensazione piccola e costante che l'altro ci sia.",
+      "Con **un tocco** fai sapere all'altro che lo stai pensando, e un **widget** lo tiene sulla schermata Home. Una **mappa** mostra dove siete tutti e due e quanto siete lontani; un **diario condiviso** conserva le vostre tappe e le vostre giornate, con le foto; **giochi** come la domanda del giorno e i quiz vi aiutano a conoscervi meglio; e **Apple Salute** può condividere con il partner il monitoraggio del ciclo.",
+      "Due **app native su un unico backend condiviso**: **SwiftUI** con WidgetKit, HealthKit e MapKit su iOS, **Jetpack Compose** con Health Connect su Android, e un backend in **Go** su PostgreSQL.",
+    ],
+    status: "Startup · 30 download",
+    roles: ["Sviluppo"],
+  },
+  livechess: {
+    description:
+      "Un progetto dell'**Apple Developer Academy**: un **gioco di scacchi in realtà mista** per Apple Vision Pro, sul tuo tavolo o in una sala virtuale.",
+    additionalDescription: [
+      "Sviluppato all'**Apple Developer Academy** di Napoli, LiveChess è un **gioco di scacchi in realtà mista** per **Apple Vision Pro**: la scacchiera appare nella tua stanza, a grandezza reale, **sul tuo tavolo**. Gli scacchi online ti tolgono la scacchiera davanti, e una scacchiera vera richiede qualcuno nella stessa stanza; LiveChess tiene insieme **la scacchiera fisica e gli avversari degli scacchi online**.",
+      "Puoi giocare contro **Stockfish 17, che gira sul dispositivo**, scegliendone forza e tempo di riflessione, oppure accedere con **Lichess** e giocare con Quick Pair, contro un amico o contro un bot di Lichess. La scacchiera si può **spostare nella stanza**, i pezzi sono disponibili in **materiali diversi con anteprima in 3D**, e una **sala virtuale** può sostituire del tutto la tua stanza. Sviluppato in **Swift, SwiftUI e RealityKit** per visionOS.",
+    ],
+    status: "Progetto dell'Academy",
+    roles: ["Sviluppo"],
+  },
+};
+
+export const localizeProject = (project: Project, lang: "en" | "it"): Project =>
+  lang === "it" && projectsIt[project.href] ? { ...project, ...projectsIt[project.href] } : project;
+
+export const localizedProjects = (lang: "en" | "it") => projects.map((p) => localizeProject(p, lang));

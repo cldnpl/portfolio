@@ -13,6 +13,12 @@ export const useScramble = (text: string, active: boolean, options: Options = {}
   const { speed = 30, tick = 0.6, delay = 0 } = options;
   const [output, setOutput] = useState(text);
 
+  // A new text while idle (the language changed): show it as it is.
+  useEffect(() => {
+    if (!active) setOutput(text);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
+
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
     if (!active) return;

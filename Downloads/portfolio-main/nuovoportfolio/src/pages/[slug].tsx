@@ -3,12 +3,15 @@ import { Gallery } from "@/components/Gallery";
 import { NextProject } from "@/components/NextProject";
 import { PageTransition } from "@/components/PageTransition";
 import { ProjectHero } from "@/components/ProjectHero";
-import { type Project, projects } from "@/data/projects";
+import { localizeProject, type Project, projects } from "@/data/projects";
 import { homeSeo, SITE_URL } from "@/data/site";
 import { plainText } from "@/lib/emphasis";
+import { useLanguage } from "@/lib/language";
 
-export default function ProjectPage({ project }: { project?: Project }) {
-  if (!project) return null;
+export default function ProjectPage({ project: base }: { project?: Project }) {
+  const { lang } = useLanguage();
+  if (!base) return null;
+  const project = localizeProject(base, lang);
   return (
     <PageTransition>
       <ProjectHero project={project} />
@@ -29,13 +32,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       project,
-      seo: {
-        title: `${project.title} | Claudia Napolitano`,
-        description: plainText(project.description),
-        canonical: `${SITE_URL}/${project.href}`,
-        image: homeSeo.image,
-        noindex: true,
-      },
+      seo: Object.fromEntries(
+        (["en", "it"] as const).map((lang) => [
+          lang,
+          {
+            title: `${project.title} | Claudia Napolitano`,
+            description: plainText(localizeProject(project, lang).description),
+            canonical: `${SITE_URL}/${project.href}`,
+            image: homeSeo.image,
+            noindex: true,
+          },
+        ]),
+      ),
     },
   };
 };

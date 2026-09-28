@@ -8,6 +8,7 @@ import { RevealLine } from "@/components/RevealLine";
 import type { Project } from "@/data/projects";
 import { CustomEase, gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { renderEmphasis } from "@/lib/emphasis";
+import { useUi } from "@/data/ui";
 import { useCursorStore } from "@/store/cursor";
 import { rem } from "@/theme/rem";
 import { legible } from "@/theme/legible";
@@ -61,7 +62,8 @@ export const ProjectItem = ({ project, index, onHoverChange }: ProjectItemProps)
       });
       return () => mm.revert();
     },
-    { scope: descriptionRef },
+    // re-split when the language changes (the Text below is re-keyed, so it is a new node)
+    { scope: descriptionRef, dependencies: [description], revertOnUpdate: true },
   );
 
   useGSAP(
@@ -76,6 +78,7 @@ export const ProjectItem = ({ project, index, onHoverChange }: ProjectItemProps)
 
   const { scrollYProgress } = useScroll({ target: imageRef, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+  const ui = useUi();
   const setCursor = useCursorStore((s) => s.setCursor);
   const resetCursor = useCursorStore((s) => s.resetCursor);
   const href = project.href ? `/${project.href}` : "#";
@@ -161,7 +164,7 @@ export const ProjectItem = ({ project, index, onHoverChange }: ProjectItemProps)
             onMouseEnter={() => {
               setHovered(true);
               onHoverChange(true);
-              setCursor("project", "View Project");
+              setCursor("project", ui.viewProject);
             }}
             onMouseLeave={() => {
               setHovered(false);
@@ -189,6 +192,7 @@ export const ProjectItem = ({ project, index, onHoverChange }: ProjectItemProps)
           <Flex flexDir="column" justifyContent="space-between" flex="1" minH={{ md: "200px" }}>
             <Box mb={{ base: "space-32", md: "space-48" }} maxW={{ md: "90%" }}>
               <Text
+                key={description}
                 ref={descriptionRef}
                 fontSize={`clamp(${rem(16)}, 2vw, ${rem(22)})`}
                 lineHeight="base"
@@ -214,7 +218,7 @@ export const ProjectItem = ({ project, index, onHoverChange }: ProjectItemProps)
                 _hover={{ textDecoration: "none", opacity: 0.6 }}
                 transition="opacity 0.3s ease"
               >
-                View Project
+                {ui.viewProject}
                 <Box as="span" display="inline-block" ml="space-4">
                   →
                 </Box>

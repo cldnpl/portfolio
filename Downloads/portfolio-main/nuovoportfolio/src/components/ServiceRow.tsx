@@ -1,4 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
+import { useUi } from "@/data/ui";
 import { useScramble } from "@/hooks/useScramble";
 import { legible } from "@/theme/legible";
 
@@ -32,6 +33,7 @@ export const ServiceRow = ({
   isActive,
   onToggle,
 }: ServiceRowProps) => {
+  const ui = useUi();
   const left = align === "left";
   const delay = 0.12 * index;
   const details = useScramble(items.join("  ·  "), isActive && !reduceMotion, { speed: 25, tick: 0.8 });
@@ -149,7 +151,7 @@ export const ServiceRow = ({
             transition="opacity 0.3s ease"
             _groupHover={{ opacity: 1 }}
           >
-            {isActive ? "(close)" : left ? "← click me" : "click me →"}
+            {isActive ? ui.closeDetails : left ? ui.clickMeLeft : ui.clickMeRight}
           </Text>
         </Box>
         <Box

@@ -1,7 +1,7 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Section } from "@/components/Section";
-import { loaderFacts } from "@/data/site";
+import { useSite } from "@/data/site";
 import { hasIntroPlayed, markIntroPlayed, useIntroStore } from "@/store/intro";
 import { rem } from "@/theme/rem";
 
@@ -20,6 +20,7 @@ export const Loader = () => {
   const [done, setDone] = useState(false);
   const [fact, setFact] = useState("");
   const setLoaderComplete = useIntroStore((s) => s.setLoaderComplete);
+  const { loaderFacts } = useSite();
 
   useEffect(() => {
     if (hasIntroPlayed()) return;

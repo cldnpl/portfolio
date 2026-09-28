@@ -8,6 +8,7 @@ import { Section } from "@/components/Section";
 import { ServiceRow } from "@/components/ServiceRow";
 import { TimelinePanel } from "@/components/TimelinePanel";
 import type { Service, servicesData } from "@/data/site";
+import { useUi } from "@/data/ui";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 /** Layout position in the page, ignoring transforms (entrance slides, the flight itself). */
@@ -27,6 +28,7 @@ const ServicesList = ({ intro, photos, services }: { intro: string; photos: Phot
   const isInView = useInView(ref, { once: true, margin: "0px 0px -20% 0px" });
   const reduceMotion = useReducedMotion() ?? false;
   const [active, setActive] = useState<number | null>(null);
+  const ui = useUi();
 
   // Opening a service's details pushes the panel down: re-measure the flights
   // once the drawer has finished moving.
@@ -80,7 +82,7 @@ const ServicesList = ({ intro, photos, services }: { intro: string; photos: Phot
   return (
     <Container ref={ref} mt={{ base: "space-120", md: "space-200" }}>
       <Text variant="label" letterSpacing="0.2em" mb={{ base: "space-32", md: "space-64" }}>
-        (Services)
+        {ui.services}
       </Text>
       {/* above the panel, so the tiles fly over it; clipped sideways only, so they can leave vertically */}
       <Box

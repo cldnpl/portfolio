@@ -5,7 +5,9 @@ import NextLink from "next/link";
 import { useMemo, useRef } from "react";
 import { Letters, lettersDelay } from "@/components/Letters";
 import { MotionBox } from "@/components/MotionBox";
-import { projects } from "@/data/projects";
+import { localizedProjects } from "@/data/projects";
+import { useUi } from "@/data/ui";
+import { useLanguage } from "@/lib/language";
 import { useCursorStore } from "@/store/cursor";
 import { rem } from "@/theme/rem";
 import { legible } from "@/theme/legible";
@@ -16,15 +18,17 @@ export const NextProject = ({ currentHref }: { currentHref: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const ui = useUi();
+  const { lang } = useLanguage();
   const setCursor = useCursorStore((s) => s.setCursor);
   const resetCursor = useCursorStore((s) => s.resetCursor);
 
   const next = useMemo(() => {
-    const linked = projects.filter((p) => p.href);
+    const linked = localizedProjects(lang).filter((p) => p.href);
     if (!linked.length) return null;
     const current = linked.findIndex((p) => p.href === currentHref);
     return linked[((current < 0 ? 0 : current) + 1) % linked.length];
-  }, [currentHref]);
+  }, [currentHref, lang]);
 
   const { scrollYProgress } = useScroll({ target: imageRef, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [-60, 60]);
@@ -42,7 +46,7 @@ export const NextProject = ({ currentHref }: { currentHref: string }) => {
           scroll={false}
           display="block"
           _hover={{ textDecoration: "none" }}
-          onMouseEnter={() => setCursor("project", "Next Project")}
+          onMouseEnter={() => setCursor("project", ui.nextProject)}
           onMouseLeave={() => resetCursor()}
           sx={{
             "&:hover .np-image": { transform: "scale(1.04)" },
@@ -59,7 +63,7 @@ export const NextProject = ({ currentHref }: { currentHref: string }) => {
               transform={`translateY(${isInView ? 0 : 12}px)`}
               transition={`all 0.7s ${EASE}`}
             >
-              (Next Project)
+              ({ui.nextProject})
             </Text>
             {year && (
               <Text
@@ -169,7 +173,7 @@ export const NextProject = ({ currentHref }: { currentHref: string }) => {
               letterSpacing="0.2em"
               mt="space-8"
             >
-              <Text as="span">Next Project</Text>
+              <Text as="span">{ui.nextProject}</Text>
               <Box
                 as="span"
                 className="np-arrow"

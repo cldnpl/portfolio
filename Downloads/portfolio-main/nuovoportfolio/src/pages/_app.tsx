@@ -9,11 +9,12 @@ import { Layout } from "@/components/Layout";
 import { Loader } from "@/components/Loader";
 import { Seo } from "@/components/Seo";
 import "@/styles/globals.css";
+import { LanguageProvider } from "@/lib/language";
 import { theme } from "@/theme";
 
 export default function App({ Component, pageProps, router }: AppProps) {
   return (
-    <>
+    <LanguageProvider>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -34,6 +35,6 @@ export default function App({ Component, pageProps, router }: AppProps) {
           </>
         )}
       </ChakraProvider>
-    </>
+    </LanguageProvider>
   );
 }

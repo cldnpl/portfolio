@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { NavLinks } from "@/components/NavLinks";
 import type { NavLinkItem } from "@/data/site";
+import { useUi } from "@/data/ui";
 
 type MobileMenuProps = {
   isOpen: boolean;
@@ -20,12 +21,14 @@ type MobileMenuProps = {
   socials: NavLinkItem[];
 };
 
-export const MobileMenu = ({ isOpen, onClose, links, socials }: MobileMenuProps) => (
+export const MobileMenu = ({ isOpen, onClose, links, socials }: MobileMenuProps) => {
+  const ui = useUi();
+  return (
   <Modal isOpen={isOpen} onClose={onClose} size="full" blockScrollOnMount={false}>
     <ModalOverlay />
     <ModalContent>
       <Container display="flex" justifyContent="flex-end" py="space-36">
-        <CloseButton onClick={onClose}>close</CloseButton>
+        <CloseButton onClick={onClose}>{ui.close}</CloseButton>
       </Container>
       <ModalBody>
         <NavLinks links={links} onNavigate={onClose} />
@@ -42,7 +45,8 @@ export const MobileMenu = ({ isOpen, onClose, links, socials }: MobileMenuProps)
       </ModalFooter>
     </ModalContent>
   </Modal>
-);
+  );
+};
 
 const CloseButton = chakra(Button, {
   baseStyle: {
