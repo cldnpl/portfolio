@@ -75,21 +75,26 @@ export const ProjectHero = ({ project }: { project: Project }) => {
             {roles && <Detail label="Role" value={roles.join(" & ")} isInView={isInView} delay={base + 0.25} />}
             {status && <Detail label="Status" value={status} isInView={isInView} delay={base + 0.3} />}
           </Grid>
-          {additionalDescription && (
+          {additionalDescription.length > 0 && (
             <Box
               maxW={{ base: "100%", md: "45%" }}
               opacity={isInView ? 1 : 0}
               transform={`translateY(${isInView ? 0 : 16}px)`}
               transition={`all 0.7s ${EASE} ${base + 0.35}s`}
             >
-              <HoloText
-                mode="play"
-                text={additionalDescription}
-                fontSize={`clamp(${rem(14)}, 1.2vw, ${rem(17)})`}
-                lineHeight="tall"
-                fontWeight="normal"
-                sx={legible}
-              />
+              <Flex flexDir="column" gap="space-16">
+                {additionalDescription.map((paragraph, i) => (
+                  <HoloText
+                    key={i}
+                    mode="play"
+                    text={paragraph}
+                    fontSize={`clamp(${rem(14)}, 1.2vw, ${rem(17)})`}
+                    lineHeight="tall"
+                    fontWeight="normal"
+                    sx={legible}
+                  />
+                ))}
+              </Flex>
               {appStore && (
                 <Link
                   href={appStore}

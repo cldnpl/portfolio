@@ -1,5 +1,6 @@
 import { Text, TextProps } from "@chakra-ui/react";
 import { Fragment, useRef } from "react";
+import { parseEmphasis, renderWord } from "@/lib/emphasis";
 import { gsap, useGSAP } from "@/lib/gsap";
 
 // The pastel the words pass through before settling on their ink:
@@ -28,11 +29,12 @@ type HoloTextProps = TextProps & {
 /**
  * Words start faint, blurred and tinted, then come into focus one after the
  * other and settle on the text colour. The font and colour are the ones of
- * the Text it renders; only the way it appears changes.
+ * the Text it renders; only the way it appears changes. Key concepts marked
+ * **like this** are set in bold and appear in the same left-to-right sweep.
  */
 export const HoloText = ({ text, mode = "scrub", ...rest }: HoloTextProps) => {
   const ref = useRef<HTMLParagraphElement>(null);
-  const words = text.split(/\s+/).filter(Boolean);
+  const words = parseEmphasis(text);
 
   useGSAP(
     () => {
@@ -86,7 +88,7 @@ export const HoloText = ({ text, mode = "scrub", ...rest }: HoloTextProps) => {
         <Fragment key={i}>
           {/* no will-change: one GPU layer per word is what made phones stutter */}
           <span data-holo-word="" style={{ display: "inline-block" }}>
-            {word}
+            {renderWord(word)}
           </span>
           {i < words.length - 1 && " "}
         </Fragment>

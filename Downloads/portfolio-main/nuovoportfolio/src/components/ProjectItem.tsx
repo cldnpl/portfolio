@@ -7,6 +7,7 @@ import { MotionBox } from "@/components/MotionBox";
 import { RevealLine } from "@/components/RevealLine";
 import type { Project } from "@/data/projects";
 import { CustomEase, gsap, SplitText, useGSAP } from "@/lib/gsap";
+import { renderEmphasis } from "@/lib/emphasis";
 import { useCursorStore } from "@/store/cursor";
 import { rem } from "@/theme/rem";
 import { legible } from "@/theme/legible";
@@ -195,7 +196,7 @@ export const ProjectItem = ({ project, index, onHoverChange }: ProjectItemProps)
                 color="blackAlpha.800"
                 sx={legible}
               >
-                {description}
+                {renderEmphasis(description)}
               </Text>
             </Box>
             <RevealLine isRevealed={hovered} delay={titleDuration + 0.18 + 0.08 * lineCount + 0.1}>
