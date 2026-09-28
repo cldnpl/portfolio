@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Grid, Heading, Link, Text } from "@chakra-ui/react";
 import { useInView } from "framer-motion";
 import { useMemo, useRef } from "react";
 import { HoloText } from "@/components/HoloText";
@@ -61,14 +61,20 @@ export const ProjectHero = ({ project }: { project: Project }) => {
           gap={{ base: "space-32", md: "space-48" }}
           alignItems={{ md: "flex-start" }}
         >
-          <Flex gap={{ base: "space-40", md: "space-64" }} flexShrink={0}>
+          {/* four columns on desktop; two by two on a phone, where four do not fit */}
+          <Grid
+            templateColumns={{ base: "repeat(2, minmax(0, 1fr))", md: "repeat(4, auto)" }}
+            columnGap={{ base: "space-24", md: "space-64" }}
+            rowGap="space-24"
+            flexShrink={0}
+          >
             {year && <Detail label="Year" value={year} isInView={isInView} delay={base + 0.15} />}
             {platforms && (
               <Detail label="Platform" value={platforms.join(" & ")} isInView={isInView} delay={base + 0.2} />
             )}
             {roles && <Detail label="Role" value={roles.join(" & ")} isInView={isInView} delay={base + 0.25} />}
             {status && <Detail label="Status" value={status} isInView={isInView} delay={base + 0.3} />}
-          </Flex>
+          </Grid>
           {additionalDescription && (
             <Box
               maxW={{ base: "100%", md: "45%" }}

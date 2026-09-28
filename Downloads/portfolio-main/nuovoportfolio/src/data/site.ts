@@ -64,6 +64,8 @@ export const platformsData = {
     { name: "iOS", logo: "/images/logos/ios.png", width: 355, height: 120 },
     { name: "Android", logo: "/images/logos/android.png", width: 751, height: 120 },
     { name: "Apple Vision Pro", logo: "/images/logos/vision-pro.png", width: 765, height: 120 },
+    { name: "macOS", logo: "/images/logos/macos.png", width: 500, height: 120 },
+    { name: "watchOS", logo: "/images/logos/watchos.png", width: 635, height: 120 },
   ],
 };
 

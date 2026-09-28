@@ -40,6 +40,24 @@ def lockup(text: str, weight: int) -> Image.Image:
     return trim(canvas)
 
 
+def wordmark(text: str, weight: int) -> Image.Image:
+    """A current Apple wordmark (macOS, watchOS): the name alone in SF Pro.
+    Cropped vertically to the same band as the Apple logo in lockup(), so at
+    the same CSS height the letters match the ones of " iOS"."""
+    size = 400
+    font = ImageFont.truetype(SF, size)
+    font.set_variation_by_axes([100, 96, 400, weight])
+    apple = ImageFont.truetype(SF, size)
+    apple.set_variation_by_axes([100, 96, 400, 500])
+    canvas = Image.new("RGBA", (size * 8, size * 2), (0, 0, 0, 0))
+    ImageDraw.Draw(canvas).text((size // 4, size // 3), APPLE, font=apple, fill=(0, 0, 0, 255))
+    top, bottom = canvas.split()[3].getbbox()[1], canvas.split()[3].getbbox()[3]
+    canvas = Image.new("RGBA", (size * 8, size * 2), (0, 0, 0, 0))
+    ImageDraw.Draw(canvas).text((size // 4, size // 3), text, font=font, fill=(0, 0, 0, 255))
+    left, _, right, _ = canvas.split()[3].getbbox()
+    return canvas.crop((left - 2, top - 2, right + 2, bottom + 2))
+
+
 def unblend(img: Image.Image, colours) -> Image.Image:
     """Recover alpha from a logo flattened onto a 16px grey/white checkerboard,
     assuming every pixel is one of `colours` over the checker."""
@@ -95,6 +113,10 @@ def save(img: Image.Image, name: str, height: int = HEIGHT) -> None:
 
 save(lockup("iOS", 500), "ios")
 save(lockup("Vision Pro", 400), "vision-pro")
+# The watchOS file she sent (art/logos/watchos-wikimedia.svg) is the 2015
+# wordmark in Myriad; Apple's current ones are SF Pro, like the macOS she sent.
+save(wordmark("macOS", 600), "macos")
+save(wordmark("watchOS", 600), "watchos")
 save(unblend(Image.open(SRC / "android-checker.png"), [(0, 0, 0), (61, 220, 132)]), "android")
 # the source is a screenshot with a thin grey rule along its top and bottom edges
 k = Image.open(SRC / "kotlin-2016.png")
