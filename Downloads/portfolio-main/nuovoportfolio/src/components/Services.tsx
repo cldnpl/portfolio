@@ -119,9 +119,9 @@ const ServicesList = ({ intro, photo, services }: { intro: string; photo: PhotoD
       <Box
         display="flex"
         flexDir={{ base: "column", md: "row" }}
-        justifyContent="space-between"
+        justifyContent={{ md: "flex-end" }}
         alignItems={{ md: "center" }}
-        gap={{ base: "space-40", md: "space-64" }}
+        gap={{ base: "space-40", md: "space-48" }}
         mt={{ base: "space-40", md: "space-64" }}
       >
         <Photo photo={photo} sizes="(max-width: 832px) 70vw, 320px" width={{ base: "70%", md: "320px" }} flexShrink={0} />
