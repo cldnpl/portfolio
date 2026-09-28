@@ -148,11 +148,20 @@ def cover_crop(img: Image.Image, size) -> Image.Image:
     return resized.crop((left, top, left + w, top + h))
 
 
+# Narrower copies for src/lib/imageLoader.ts, so a phone never decodes a
+# 2400px cover. Every width exists for every image (a copy when the original
+# is already narrower), so the loader never points at a missing file.
+VARIANTS = (640, 1200, 1800)
+
+
 def save(img: Image.Image, rel: str, quality=84) -> None:
     path = OUT / rel
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path, "WEBP", quality=quality, method=6)
     print(f"{rel:48s} {img.size[0]}x{img.size[1]}  {path.stat().st_size // 1024} KB")
+    for w in VARIANTS:
+        small = img if w >= img.width else img.resize((w, round(img.height * w / img.width)), Image.LANCZOS)
+        small.save(path.with_name(f"{path.stem}-{w}.webp"), "WEBP", quality=quality, method=6)
 
 
 COVER = (2400, 1350)

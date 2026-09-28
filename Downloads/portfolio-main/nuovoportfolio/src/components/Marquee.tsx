@@ -29,7 +29,7 @@ export const Marquee = ({ text, baseVelocity = 50, totalMarquees = 1 }: MarqueeP
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const speed = useSpring(baseVelocity, { damping: 40, stiffness: 90 });
-  const { width, height } = useWindowSize();
+  const { width } = useWindowSize();
 
   const velocity = baseVelocity * (width < CONFIG.MOBILE_BREAKPOINT ? CONFIG.MOBILE_SPEED_FACTOR : 1);
   const fontSize = `calc((100vh - ${CONFIG.VIEWPORT_OFFSET}px) / ${totalMarquees} * ${CONFIG.FONT_SIZE_MULTIPLIER})`;
@@ -53,7 +53,7 @@ export const Marquee = ({ text, baseVelocity = 50, totalMarquees = 1 }: MarqueeP
     return () => {
       cancelled = true;
     };
-  }, [width, height]);
+  }, [width]);
 
   useAnimationFrame((_, delta) => {
     const v = scrollVelocity.get();

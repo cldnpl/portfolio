@@ -4,23 +4,25 @@ import { RefObject } from "react";
 import { MotionBox } from "@/components/MotionBox";
 import { MARBLE_OPACITY } from "@/data/site";
 
-const Slab = ({ opacity }: { opacity?: MotionValue<number> | string }) => (
-  <MotionBox aria-hidden position="fixed" inset={0} zIndex={-1} pointerEvents="none" style={{ opacity }}>
+const Slab = ({ opacity, id }: { opacity?: MotionValue<number> | number; id?: string }) => (
+  <MotionBox id={id} aria-hidden position="fixed" inset={0} zIndex={-1} pointerEvents="none" style={{ opacity }}>
     <Box
       position="absolute"
       top={0}
       left={0}
       width="100%"
       height="100lvh"
-      bgImage="url(/images/marble.webp)"
+      bgImage={{ base: "url(/images/marble-1200.webp)", md: "url(/images/marble.webp)" }}
       bgSize="cover"
       bgPosition="center"
     />
   </MotionBox>
 );
 
-/** Whole site: fixed behind every page, faint, faded out by the footer (--marble-opacity). */
-export const MarbleBackground = () => <Slab opacity={`calc(var(--marble-opacity, 1) * ${MARBLE_OPACITY})`} />;
+export const MARBLE_ID = "site-marble";
+
+/** Whole site: fixed behind every page, faint; the footer fades it out (by id). */
+export const MarbleBackground = () => <Slab id={MARBLE_ID} opacity={MARBLE_OPACITY} />;
 
 /**
  * Hero only: fades to the white page as `fadeOn` (the About section) comes in,

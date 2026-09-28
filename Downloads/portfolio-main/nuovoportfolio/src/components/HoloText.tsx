@@ -42,21 +42,38 @@ export const HoloText = ({ text, mode = "scrub", ...rest }: HoloTextProps) => {
       const ink = getComputedStyle(el).color;
       const mm = gsap.matchMedia();
 
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.set(spans, { opacity: 0.12, filter: "blur(12px)", color: (i: number) => pastelFor(i) });
-        const step = mode === "scrub" ? 0.12 : 0.035;
-        const tl = gsap.timeline(
-          mode === "scrub"
-            ? { scrollTrigger: { trigger: el, start: "top 88%", end: "bottom 55%", scrub: 0.8 } }
-            : { scrollTrigger: { trigger: el, start: "top 85%", once: true } },
-        );
-        spans.forEach((span, i) => {
-          const at = i * step;
-          tl.to(span, { opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, at);
-          tl.to(span, { color: ink, duration: 0.6, ease: "power1.inOut" }, at + 0.45);
-        });
-        return () => gsap.set(spans, { clearProps: "opacity,filter,color" });
-      });
+      // Phones get a lighter blur: it is repainted on every scroll frame.
+      mm.add(
+        { motion: "(prefers-reduced-motion: no-preference)", touch: "(hover: none), (max-width: 831px)" },
+        (context) => {
+          if (!context.conditions?.motion) return;
+          const blur = context.conditions.touch ? 5 : 12;
+          gsap.set(spans, { opacity: 0.12, filter: `blur(${blur}px)`, color: (i: number) => pastelFor(i) });
+          const step = mode === "scrub" ? 0.12 : 0.035;
+          const tl = gsap.timeline(
+            mode === "scrub"
+              ? { scrollTrigger: { trigger: el, start: "top 88%", end: "bottom 55%", scrub: 0.8 } }
+              : { scrollTrigger: { trigger: el, start: "top 85%", once: true } },
+          );
+          spans.forEach((span, i) => {
+            const at = i * step;
+            tl.to(
+              span,
+              {
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 0.6,
+                ease: "power2.out",
+                // a settled word drops its filter entirely, so it paints like plain text
+                onComplete: () => gsap.set(span, { filter: "none" }),
+              },
+              at,
+            );
+            tl.to(span, { color: ink, duration: 0.6, ease: "power1.inOut" }, at + 0.45);
+          });
+          return () => gsap.set(spans, { clearProps: "opacity,filter,color" });
+        },
+      );
 
       return () => mm.revert();
     },
@@ -67,7 +84,8 @@ export const HoloText = ({ text, mode = "scrub", ...rest }: HoloTextProps) => {
     <Text ref={ref} {...rest}>
       {words.map((word, i) => (
         <Fragment key={i}>
-          <span data-holo-word="" style={{ display: "inline-block", willChange: "filter, opacity" }}>
+          {/* no will-change: one GPU layer per word is what made phones stutter */}
+          <span data-holo-word="" style={{ display: "inline-block" }}>
             {word}
           </span>
           {i < words.length - 1 && " "}

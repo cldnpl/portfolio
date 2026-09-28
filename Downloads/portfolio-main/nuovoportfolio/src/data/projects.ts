@@ -37,13 +37,13 @@ export const projects: Project[] = [
     coverImage: "/images/work/viaggiare-sicuri/cover.webp",
     portraitImage: "/images/work/viaggiare-sicuri/portrait.webp",
     description:
-      "The travel-safety app of the Farnesina — Italy's Ministry of Foreign Affairs and International Cooperation — public on iOS and Android.",
+      "A work project, since May 2026: the travel-safety app of the Farnesina — Italy's Ministry of Foreign Affairs and International Cooperation — public on iOS and Android.",
     additionalDescription:
-      "I work on it as a Mobile Developer inside a professional mobile team. My part, in a shared codebase, is feature implementation, interface work, integration, bug fixing and the maintenance a shipped app asks for — on an app people open before they leave the country.",
+      "A work project: since May 2026 I have been working on it as a Mobile Developer inside a professional mobile team. My part, in a shared codebase, is feature implementation, interface work, integration, bug fixing and the maintenance a shipped app asks for — on an app people open before they leave the country.",
     platforms: ["iOS", "Android"],
     roles: ["Development"],
     year: "2026",
-    status: "In production",
+    status: "Work project · In production",
     href: "viaggiare-sicuri",
     gallery: [wide("viaggiare-sicuri", "stage"), wide("viaggiare-sicuri", "trio")],
   },
@@ -67,13 +67,13 @@ export const projects: Project[] = [
     coverImage: "/images/work/leyla/cover.webp",
     portraitImage: "/images/work/leyla/portrait.webp",
     description:
-      "A private app for two, built long-distance first. Ambient presence — your partner one tap or one widget away.",
+      "A startup I founded with my boyfriend: a private app for two, built long-distance first. 30 downloads as of September 2026.",
     additionalDescription:
-      "Written twice over a shared Go backend: SwiftUI with WidgetKit, HealthKit and MapKit on iOS, Jetpack Compose with Health Connect on Android, PostgreSQL underneath. Two native apps, one intent: making distance feel a little shorter.",
+      "Leyla is a startup I started with my boyfriend, and as of September 2026 it counts 30 downloads. Written twice over a shared Go backend: SwiftUI with WidgetKit, HealthKit and MapKit on iOS, Jetpack Compose with Health Connect on Android, PostgreSQL underneath. Two native apps, one intent: making distance feel a little shorter.",
     platforms: ["iOS", "Android"],
     roles: ["Design", "Development"],
     year: "2026",
-    status: "Personal project",
+    status: "Startup · 30 downloads",
     href: "leyla",
     url: "https://github.com/cldnpl/Leyla-app",
     gallery: [wide("leyla", "stage"), wide("leyla", "trio")],
@@ -82,13 +82,13 @@ export const projects: Project[] = [
     title: "LiveChess",
     coverImage: "/images/work/livechess/cover.webp",
     description:
-      "A chess game in mixed reality for Apple Vision Pro: the board sits on your own table, or in a virtual hall.",
+      "An Apple Developer Academy project: a chess game in mixed reality for Apple Vision Pro, on your own table or in a virtual hall.",
     additionalDescription:
-      "Stockfish 17 runs on the device; the Lichess API brings Quick Pair, friends and bots for playing someone who is not in the room; the pieces come in different materials, previewed in 3D before the game. Built in Swift, SwiftUI and RealityKit for visionOS.",
+      "Built at the Apple Developer Academy in Naples. Stockfish 17 runs on the device; the Lichess API brings Quick Pair, friends and bots for playing someone who is not in the room; the pieces come in different materials, previewed in 3D before the game. Built in Swift, SwiftUI and RealityKit for visionOS.",
     platforms: ["visionOS"],
     roles: ["Design", "Development"],
     year: "2026",
-    status: "Personal project",
+    status: "Academy project",
     href: "livechess",
     gallery: [
       wide("livechess", "room"),

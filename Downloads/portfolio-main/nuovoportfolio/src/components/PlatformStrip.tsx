@@ -77,13 +77,7 @@ export const PlatformStrip = ({ caption, platforms }: PlatformStripProps) => {
       >
         {caption}
       </Text>
-      <Box
-        overflow="hidden"
-        sx={{
-          maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-          WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-        }}
-      >
+      <Box overflow="hidden">
         <Flex ref={trackRef} width="max-content" style={{ willChange: "transform" }}>
           {Array.from({ length: copies }, (_, i) => set(i, i === 0 ? setRef : undefined))}
         </Flex>

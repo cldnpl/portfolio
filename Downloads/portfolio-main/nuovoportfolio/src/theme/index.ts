@@ -62,7 +62,6 @@ const Text = {
       fontSize: `clamp(${rem(14)}, 7vw, ${rem(40)})`,
       lineHeight: "base",
       letterSpacing: "normal",
-      ...legible,
     },
     label: {
       fontWeight: "normal",

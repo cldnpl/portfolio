@@ -2,6 +2,8 @@ import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import { useInView, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { ContactForm } from "@/components/ContactForm";
+import { MARBLE_ID } from "@/components/MarbleBackground";
+import { MARBLE_OPACITY } from "@/data/site";
 import type { footerData } from "@/data/site";
 import { rem } from "@/theme/rem";
 
@@ -18,19 +20,21 @@ export const Footer = ({ data }: { data: typeof footerData }) => {
   const marble = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
-    const root = document.documentElement;
     const offBackground = background.on("change", (value) => {
       document.body.style.backgroundColor = value;
     });
     // the marble fades out on the same curve, so the page still ends near-black
+    // straight on the element: a CSS variable on <html> would restyle the whole page every frame
     const offMarble = marble.on("change", (value) => {
-      root.style.setProperty("--marble-opacity", String(value));
+      const slab = document.getElementById(MARBLE_ID);
+      if (slab) slab.style.opacity = String(value * MARBLE_OPACITY);
     });
     return () => {
       offBackground();
       offMarble();
       document.body.style.backgroundColor = "#ffffff";
-      root.style.setProperty("--marble-opacity", "1");
+      const slab = document.getElementById(MARBLE_ID);
+      if (slab) slab.style.opacity = String(MARBLE_OPACITY);
     };
   }, [background, marble]);
 
