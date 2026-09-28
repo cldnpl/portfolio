@@ -21,7 +21,7 @@ const layoutBox = (el: HTMLElement) => {
   return { x, y, w: el.offsetWidth, h: el.offsetHeight };
 };
 
-const ServicesList = ({ intro, photo, services }: { intro: string; photo: PhotoData; services: Service[] }) => {
+const ServicesList = ({ intro, photos, services }: { intro: string; photos: PhotoData[]; services: Service[] }) => {
   const ref = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -20% 0px" });
@@ -115,16 +115,35 @@ const ServicesList = ({ intro, photo, services }: { intro: string; photo: PhotoD
       <Box mt={{ base: "space-64", md: "space-120" }}>
         <TimelinePanel ref={panelRef} services={services} showTiles={reduceMotion} />
       </Box>
-      {/* the hackathon it mentions, next to the text */}
+      {/* the three hackathons it mentions, same size, in a row beside the text;
+          where the row and the text do not fit side by side the text drops below */}
       <Box
         display="flex"
         flexDir={{ base: "column", md: "row" }}
+        flexWrap={{ md: "wrap" }}
         justifyContent={{ md: "flex-end" }}
         alignItems={{ md: "center" }}
         gap={{ base: "space-40", md: "space-48" }}
         mt={{ base: "space-40", md: "space-64" }}
       >
-        <Photo photo={photo} sizes="(max-width: 832px) 70vw, 320px" width={{ base: "70%", md: "320px" }} flexShrink={0} />
+        <Box
+          display="flex"
+          gap={{ base: "space-12", md: "space-24" }}
+          alignItems="flex-start"
+          flexShrink={0}
+          width={{ base: "100%", md: "auto" }}
+        >
+          {photos.map((photo) => (
+            <Photo
+              key={photo.src}
+              photo={photo}
+              compact
+              sizes="(max-width: 832px) 33vw, 300px"
+              width={{ base: "calc((100% - 24px) / 3)", md: "clamp(180px, 17vw, 300px)" }}
+              flexShrink={0}
+            />
+          ))}
+        </Box>
         <Box position="relative" width={{ base: "100%", md: "480px" }}>
           <HoloText
             variant="paragraph"
@@ -141,13 +160,13 @@ const ServicesList = ({ intro, photo, services }: { intro: string; photo: PhotoD
 };
 
 export const Services = ({ data }: { data: typeof servicesData }) => {
-  const { content, servicesIntro, photo, services } = data;
+  const { content, servicesIntro, photos, services } = data;
   return (
     <Section isFullScreen spacingBottom="extraLarge">
       <Container>
         <ScrollQuote text={content} />
       </Container>
-      <ServicesList intro={servicesIntro} photo={photo} services={services} />
+      <ServicesList intro={servicesIntro} photos={photos} services={services} />
     </Section>
   );
 };

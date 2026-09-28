@@ -252,5 +252,9 @@ LOCAL_ABOUT = LOCAL / "about"
 save(Image.open(LOCAL_ABOUT / "academy-group.jpg").convert("RGB"), "about/academy.webp", quality=86)
 # her crop: the banner in full, little room above the head
 save(Image.open(LOCAL_ABOUT / "hackathon-crop.png").convert("RGB"), "about/hackathon.webp", quality=88)
+# the other two hackathons, from her iPhone photos (HEIC, rotated and cut to
+# the same ratio as the Naples one by hand: art/about/trieste.jpg, stockholm.jpg)
+save(Image.open(LOCAL_ABOUT / "trieste.jpg").convert("RGB"), "about/trieste.webp", quality=86)
+save(Image.open(LOCAL_ABOUT / "stockholm.jpg").convert("RGB"), "about/stockholm.webp", quality=86)
 
 # The service tiles are made by scripts/prepare-tiles.py, not here.

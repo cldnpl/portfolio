@@ -102,15 +102,30 @@ export type Service = {
 export const servicesData: {
   content: string;
   servicesIntro: string;
-  photo: PhotoData;
+  /** The three hackathons, in order, all cut to the same ratio. */
+  photos: PhotoData[];
   services: Service[];
 } = {
-  photo: {
-    src: "/images/about/hackathon.webp",
-    alt: "Claudia holding the winner's banner of The Big Hack for Crédit Agricole, Naples 2025",
-    ratio: "582/546",
-    caption: "Winner, The Big Hack, Naples 2025",
-  },
+  photos: [
+    {
+      src: "/images/about/hackathon.webp",
+      alt: "Claudia holding the winner's banner of The Big Hack for Crédit Agricole, Naples 2025",
+      ratio: "582/546",
+      caption: "Winner, Naples, Oct 2025",
+    },
+    {
+      src: "/images/about/trieste.webp",
+      alt: "Claudia in Piazza Unità d'Italia during the hackathon in Trieste",
+      ratio: "582/546",
+      caption: "Trieste, Nov 2025",
+    },
+    {
+      src: "/images/about/stockholm.webp",
+      alt: "Teams at work at their tables during the hackathon in Stockholm",
+      ratio: "582/546",
+      caption: "Stockholm, Feb 2026",
+    },
+  ],
   content:
     "\"Most apps are built to be used; very few are built to be **understood**. I studied **psychology** for exactly that reason, and I write the **native code** myself, in Swift, in Kotlin and for visionOS, so nothing gets lost between **how people think** and what ends up on their screen. Every screen measured, every animation with a reason, every millisecond accounted for. If your product deserves to **feel obvious**, let's make sure it does.\"",
   servicesIntro:

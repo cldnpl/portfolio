@@ -26,7 +26,8 @@ export const parseEmphasis = (text: string): Word[] => {
 /** The text without markers, for meta tags and alt text. */
 export const plainText = (text: string) => text.replace(/\*\*/g, "");
 
-const BOLD_STYLE = { fontWeight: 600 };
+// 700: the heaviest weight PP Neue Montreal has
+const BOLD_STYLE = { fontWeight: 700 };
 
 /** One word's segments, with the bold parts in <strong>. */
 export const renderWord = (word: Word) =>

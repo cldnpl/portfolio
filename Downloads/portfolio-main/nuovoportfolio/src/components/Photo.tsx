@@ -8,13 +8,13 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 export type PhotoData = { src: string; alt: string; ratio: string; caption: string };
 
-type PhotoProps = BoxProps & { photo: PhotoData; sizes: string };
+type PhotoProps = BoxProps & { photo: PhotoData; sizes: string; compact?: boolean };
 
 /**
  * A photo that wipes up into view (like the next-project cover), drifts a
  * little against the scroll, and carries a small caption.
  */
-export const Photo = ({ photo, sizes, ...rest }: PhotoProps) => {
+export const Photo = ({ photo, sizes, compact, ...rest }: PhotoProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.25 });
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -37,9 +37,9 @@ export const Photo = ({ photo, sizes, ...rest }: PhotoProps) => {
       <Text
         as="figcaption"
         variant="label"
-        fontSize="xs"
-        letterSpacing="0.2em"
-        mt="space-12"
+        fontSize={compact ? { base: "9px", md: "xs" } : "xs"}
+        letterSpacing={compact ? { base: "0.08em", md: "0.2em" } : "0.2em"}
+        mt={compact ? { base: "space-8", md: "space-12" } : "space-12"}
         opacity={isInView ? 1 : 0}
         transform={`translateY(${isInView ? 0 : 8}px)`}
         transition={`all 0.7s ${EASE} 0.4s`}
