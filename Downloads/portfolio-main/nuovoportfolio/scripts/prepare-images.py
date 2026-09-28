@@ -158,37 +158,34 @@ def save(img: Image.Image, rel: str, quality=84) -> None:
 COVER = (2400, 1350)
 FRAME = (1600, 2000)
 
-# Each project lists the images to build: "frame-*" and "portrait" are 4:5
-# with one phone, everything else 16:9 with two or three.
+# Each project lists the images to build. On a project page every capture
+# appears once: "stage" (two phones) and "trio" (three) or the "frame-*" pair
+# (4:5, one phone each). "cover" is the home-page preview, phones as large as
+# the 16:9 box allows; "portrait" is the one-phone image of "next project".
 PROJECTS = {
     "viaggiare-sicuri": {
         "cover": ["vs-home.png", "vs-country.png"],
-        "trio": ["vs-countries.png", "vs-home.png", "vs-map.png"],
+        "stage": ["vs-home.png", "vs-country.png"],
+        "trio": ["vs-countries.png", "vs-map.png", "vs-alerts.png"],
         "portrait": ["vs-home.png"],
-        "frame-1": ["vs-map.png"],
-        "frame-2": ["vs-alerts.png"],
-        "frame-3": ["vs-countries.png"],
-        "frame-4": ["vs-country.png"],
     },
     "banca-di-asti": {
         "cover": ["asti-login.jpg", "asti-pin.jpg"],
-        "portrait": ["asti-login.jpg"],
         "frame-1": ["asti-login.jpg"],
         "frame-2": ["asti-pin.jpg"],
+        "portrait": ["asti-login.jpg"],
     },
     "leyla": {
         "cover": ["leyla-ios.jpg", "leyla-home.png"],
-        "trio": ["leyla-games.png", "leyla-home.png", "leyla-quiz.png"],
+        "stage": ["leyla-ios.jpg", "leyla-home.png"],
+        "trio": ["leyla-games.png", "leyla-journal.png", "leyla-quiz.png"],
         "portrait": ["leyla-home.png"],
-        "frame-1": ["leyla-journal.png"],
-        "frame-2": ["leyla-games.png"],
-        "frame-3": ["leyla-quiz.png"],
-        "frame-4": ["leyla-ios.jpg"],
     },
 }
 
 # Full-resolution iPhone captures kept with the project.
 LOCAL = Path(__file__).resolve().parent.parent / "art"
+MARBLE = LOCAL / "marble-gold.jpg"
 STATUS_BAR = {"asti-login.jpg": "10:25", "asti-pin.jpg": "10:26"}
 
 
@@ -205,11 +202,16 @@ for slug, images in PROJECTS.items():
     for out, names in images.items():
         screens = [capture(n) for n in names]
         if out == "portrait":
-            save(compose(screens, FRAME, fill=0.86), f"work/{slug}/{out}.webp", quality=90)
+            img = compose(screens, FRAME, fill=0.86)
         elif out.startswith("frame"):
-            save(compose(screens, FRAME, fill=0.72), f"work/{slug}/{out}.webp", quality=90)
+            img = compose(screens, FRAME, fill=0.72)
+        elif out == "cover":
+            # home preview: no parallax crop inside the box, so it can be fuller
+            img = compose(screens, COVER, fill=0.95)
         else:
-            save(compose(screens, COVER), f"work/{slug}/{out}.webp", quality=90)
+            # gallery rows: the parallax crops up to ~8% top and bottom
+            img = compose(screens, COVER, fill=0.74)
+        save(img, f"work/{slug}/{out}.webp", quality=90)
 
 # The whole site sits on white marble with gold veins.
 save(Image.open(MARBLE).convert("RGB"), "marble.webp", quality=82)

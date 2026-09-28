@@ -31,8 +31,6 @@ export const footerData = {
   heading: "Get in touch",
   cta: "For enquiries, collaboration requests or job opportunities, don’t hesitate to reach out!",
   email: "napolitano.claudia@icloud.com",
-  /** Second line next to the email (the reference shows a phone number here). */
-  secondary: { title: "github.com/cldnpl", href: "https://github.com/cldnpl" },
   copyright: "Claudia Napolitano",
   credit: "Developed by Claudia Napolitano",
   socials,
@@ -62,7 +60,8 @@ export const aboutData = {
   heading: "About",
   content: [
     "I design and build native mobile apps with a focus on precision, motion and the people using them — creating interfaces where every detail is intentional.",
-    "Based in Naples, I work at the intersection of software and psychology. From SwiftUI to Compose to visionOS, I take ideas from the first sketch to the store with meticulous attention to detail.",
+    "Based in Naples, I work at the intersection of software and psychology. Three years at the Apple Developer Academy in Naples: the Foundation programme in 2024, the one-year Academy in 2025–2026, and now ARTE, the 2026–2027 advanced research programme on augmented reality and Apple Vision Pro development.",
+    "In October 2025 I won a hackathon in Naples, building an app for Crédit Agricole Italia. From SwiftUI to Compose to visionOS, I take ideas from the first sketch to the store with meticulous attention to detail.",
   ],
 };
 
@@ -76,7 +75,7 @@ export const servicesData = {
   content:
     "\"Most apps are built to be used; very few are built to be understood. I studied psychology for exactly that reason, and I write the native code myself, in Swift, in Kotlin and for visionOS, so nothing gets lost between how people think and what ends up on their screen. Every screen measured, every animation with a reason, every millisecond accounted for. If your product deserves to feel obvious, let's make sure it does.\"",
   servicesIntro:
-    "I'm not a founder, a CEO, or a strategist hiding behind a title. I'm a developer who taught herself Python and then Swift, graduated in Psychology with 110/110 cum laude because interfaces are made for minds, and has been building at the Apple Developer Academy since 2024. Hackathons in Naples, Trieste and Stockholm, one of them won. Six languages spoken, Arabic the favourite. I'm here to take an idea and bring it natively to iOS, Android and visionOS with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
+    "I'm not a founder, a CEO, or a strategist hiding behind a title. I'm a developer who taught herself Python and then Swift, graduated in Psychology with 110/110 cum laude because interfaces are made for minds, and spent three years at the Apple Developer Academy in Naples, the last one on augmented reality and Vision Pro. Hackathons in Naples, Trieste and Stockholm, the one in Naples won for Crédit Agricole. Six languages spoken, Arabic the favourite. I'm here to take an idea and bring it natively to iOS, Android and visionOS with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
   services: [
     {
       title: "iOS Apps",

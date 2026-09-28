@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import { useInView, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { Magnetic } from "@/components/Magnetic";
+import { ContactForm } from "@/components/ContactForm";
 import type { footerData } from "@/data/site";
 import { rem } from "@/theme/rem";
 
@@ -9,7 +9,7 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 /** Contact footer; while it scrolls in, the whole page fades from white to near-black. */
 export const Footer = ({ data }: { data: typeof footerData }) => {
-  const { heading, cta, email, secondary, copyright, credit, socials } = data;
+  const { heading, cta, email, copyright, credit, socials } = data;
   const ref = useRef<HTMLDivElement>(null);
   const year = new Date().getFullYear();
   const inView = useInView(ref, { once: true, amount: 0.2 });
@@ -75,45 +75,7 @@ export const Footer = ({ data }: { data: typeof footerData }) => {
           transformOrigin="left"
           transition={`transform 1s ${EASE} 0.3s`}
         />
-        <Flex
-          flexDir={{ base: "column", md: "row" }}
-          justifyContent="space-between"
-          alignItems={{ md: "center" }}
-          gap={{ base: "space-16", md: "space-24" }}
-        >
-          <Box opacity={inView ? 1 : 0} transform={`translateY(${inView ? 0 : 20}px)`} transition={`all 0.6s ${EASE} 0.4s`}>
-            <Magnetic>
-              <Link
-                href={`mailto:${email}`}
-                fontSize={`clamp(${rem(20)}, 3vw, ${rem(40)})`}
-                fontWeight="light"
-                color="white"
-                _hover={{ opacity: 0.7, textDecoration: "none" }}
-                _after={{ bg: "white" }}
-                transition="opacity 0.3s ease"
-              >
-                {email}
-              </Link>
-            </Magnetic>
-          </Box>
-          <Box opacity={inView ? 1 : 0} transform={`translateY(${inView ? 0 : 20}px)`} transition={`all 0.6s ${EASE} 0.5s`}>
-            <Magnetic>
-              <Link
-                href={secondary.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                fontSize={`clamp(${rem(20)}, 3vw, ${rem(40)})`}
-                fontWeight="light"
-                color="whiteAlpha.600"
-                _hover={{ color: "white", textDecoration: "none" }}
-                _after={{ bg: "white" }}
-                transition="color 0.3s ease"
-              >
-                {secondary.title}
-              </Link>
-            </Magnetic>
-          </Box>
-        </Flex>
+        <ContactForm email={email} isInView={inView} />
       </Container>
       <Container pb="space-24">
         <Flex

@@ -25,8 +25,8 @@ const frames = (slug: string, from = 1): GalleryRow => ({
   items: [from, from + 1].map((n) => ({ src: `/images/work/${slug}/frame-${n}.webp`, ratio: "4/5" })),
 });
 
-/** One 16:9 image: the cover (two phones) or the trio (three). */
-const wide = (slug: string, name = "cover"): GalleryRow => ({
+/** One 16:9 image: the stage (two phones) or the trio (three). */
+const wide = (slug: string, name: string): GalleryRow => ({
   items: [{ src: `/images/work/${slug}/${name}.webp`, ratio: "16/9" }],
 });
 
@@ -45,12 +45,7 @@ export const projects: Project[] = [
     year: "2026",
     status: "In production",
     href: "viaggiare-sicuri",
-    gallery: [
-      wide("viaggiare-sicuri"),
-      frames("viaggiare-sicuri", 1),
-      wide("viaggiare-sicuri", "trio"),
-      frames("viaggiare-sicuri", 3),
-    ],
+    gallery: [wide("viaggiare-sicuri", "stage"), wide("viaggiare-sicuri", "trio")],
   },
   {
     title: "Banca di Asti",
@@ -65,7 +60,7 @@ export const projects: Project[] = [
     year: "2025",
     status: "In production",
     href: "banca-di-asti",
-    gallery: [wide("banca-di-asti"), frames("banca-di-asti", 1)],
+    gallery: [frames("banca-di-asti", 1)],
   },
   {
     title: "Leyla",
@@ -81,7 +76,7 @@ export const projects: Project[] = [
     status: "Personal project",
     href: "leyla",
     url: "https://github.com/cldnpl/Leyla-app",
-    gallery: [wide("leyla"), frames("leyla", 1), wide("leyla", "trio"), frames("leyla", 3)],
+    gallery: [wide("leyla", "stage"), wide("leyla", "trio")],
   },
   {
     title: "LiveChess",

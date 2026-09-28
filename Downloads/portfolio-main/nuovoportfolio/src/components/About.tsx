@@ -36,7 +36,7 @@ export const About = ({ id, data, sectionRef }: AboutProps) => {
       </Container>
       <Container display="flex" flexDir="column" gap={{ base: "space-40", md: "space-64" }} position="relative">
         {content.map((paragraph, i) => (
-          <SplitParagraph key={i} text={paragraph} alignSelf={i === 1 ? { md: "flex-end" } : undefined} />
+          <SplitParagraph key={i} text={paragraph} alignSelf={i % 2 === 1 ? { md: "flex-end" } : undefined} />
         ))}
       </Container>
     </Section>
