@@ -243,9 +243,8 @@ crop_w = round(portrait.height * 2 / 3)
 left = (portrait.width - crop_w) // 2
 portrait = portrait.crop((left, 0, left + crop_w, portrait.height))
 save(portrait, "portrait.webp", quality=88)
-portrait.resize((1200, round(1200 * portrait.height / portrait.width)), Image.LANCZOS).save(
-    OUT / "portrait-og.jpg", "JPEG", quality=86
-)
+# (the link preview is public/images/og-hero.jpg, a capture of the hero; the old
+# portrait-og.jpg holds the same picture for apps that cached its address)
 
 # Photos in About (the Academy) and next to the services text (the hackathon).
 LOCAL_ABOUT = LOCAL / "about"
