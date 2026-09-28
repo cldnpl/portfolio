@@ -1,6 +1,7 @@
 import { Box, Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { useInView } from "framer-motion";
 import { useMemo, useRef } from "react";
+import { HoloText } from "@/components/HoloText";
 import { Letters, lettersDelay } from "@/components/Letters";
 import type { Project } from "@/data/projects";
 import { rem } from "@/theme/rem";
@@ -75,9 +76,14 @@ export const ProjectHero = ({ project }: { project: Project }) => {
               transform={`translateY(${isInView ? 0 : 16}px)`}
               transition={`all 0.7s ${EASE} ${base + 0.35}s`}
             >
-              <Text fontSize={`clamp(${rem(14)}, 1.2vw, ${rem(17)})`} lineHeight="tall" fontWeight="normal" sx={legible}>
-                {additionalDescription}
-              </Text>
+              <HoloText
+                mode="play"
+                text={additionalDescription}
+                fontSize={`clamp(${rem(14)}, 1.2vw, ${rem(17)})`}
+                lineHeight="tall"
+                fontWeight="normal"
+                sx={legible}
+              />
               {url && (
                 <Link
                   href={url}

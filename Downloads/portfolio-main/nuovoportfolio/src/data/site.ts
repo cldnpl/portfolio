@@ -71,29 +71,44 @@ export const featuredData = {
   subHeading: "[Scroll to explore more]",
 };
 
-export const servicesData = {
+export type Service = {
+  title: string;
+  /** Under the tile in the dark panel. */
+  label: string;
+  image: string;
+  video?: string;
+  items: string[];
+};
+
+export const servicesData: { content: string; servicesIntro: string; services: Service[] } = {
   content:
     "\"Most apps are built to be used; very few are built to be understood. I studied psychology for exactly that reason, and I write the native code myself, in Swift, in Kotlin and for visionOS, so nothing gets lost between how people think and what ends up on their screen. Every screen measured, every animation with a reason, every millisecond accounted for. If your product deserves to feel obvious, let's make sure it does.\"",
   servicesIntro:
     "I'm not a founder, a CEO, or a strategist hiding behind a title. I'm a developer who taught herself Python and then Swift, graduated in Psychology with 110/110 cum laude because interfaces are made for minds, and spent three years at the Apple Developer Academy in Naples, the last one on augmented reality and Vision Pro. Hackathons in Naples, Trieste and Stockholm, the one in Naples won for Crédit Agricole. Six languages spoken, Arabic the favourite. I'm here to take an idea and bring it natively to iOS, Android and visionOS with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
+  // Each tile flies from its title into the dark panel. `video` (optional, a
+  // short muted loop in public/videos) plays in place of the image.
   services: [
     {
       title: "iOS Apps",
+      label: "Swift",
       image: "/images/services/ios.webp",
       items: ["Swift & SwiftUI", "UIKit", "WidgetKit", "HealthKit & MapKit"],
     },
     {
       title: "Android Apps",
+      label: "Kotlin",
       image: "/images/services/android.webp",
       items: ["Kotlin", "Jetpack Compose", "Health Connect", "ARCore"],
     },
     {
       title: "visionOS",
+      label: "visionOS",
       image: "/images/services/spatial.webp",
       items: ["Spatial computing", "RealityKit", "ARKit", "Immersive spaces"],
     },
     {
       title: "UX Psychology",
+      label: "UX",
       image: "/images/services/ux.webp",
       items: ["User research", "Perception & attention", "Accessibility", "Prototyping"],
     },

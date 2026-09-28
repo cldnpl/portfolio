@@ -13,6 +13,7 @@ type ServiceRowProps = {
   isInView: boolean;
   reduceMotion: boolean;
   image?: string;
+  video?: string;
   isActive: boolean;
   onToggle: () => void;
 };
@@ -27,6 +28,7 @@ export const ServiceRow = ({
   isInView,
   reduceMotion,
   image,
+  video,
   isActive,
   onToggle,
 }: ServiceRowProps) => {
@@ -80,22 +82,53 @@ export const ServiceRow = ({
             {title}{" "}
             <Box as="span" whiteSpace="nowrap" fontWeight="normal">
               (
+              {/* the outer span is what flies into the panel (GSAP, in Services);
+                  the inner one keeps its own entrance transition */}
               <Box
                 as="span"
+                data-service-tile={index}
                 display="inline-block"
                 verticalAlign="middle"
+                position="relative"
+                zIndex={3}
                 mx="0.06em"
-                width="0.62em"
-                height="0.5em"
-                borderRadius="0.08em"
-                bg="black"
-                backgroundImage={image ? `url(${image})` : undefined}
-                backgroundSize="cover"
-                backgroundPosition="center"
-                transform={`scale(${isInView || reduceMotion ? 1 : 0.4})`}
-                opacity={isInView ? 1 : 0}
-                transition={`transform 0.6s ${EASE} ${delay + 0.1}s, opacity 0.6s ease ${delay + 0.1}s`}
-              />
+                width="0.56em"
+                height="0.56em"
+                transformOrigin="50% 50%"
+              >
+                <Box
+                  as="span"
+                  display="block"
+                  width="100%"
+                  height="100%"
+                  borderRadius="22%"
+                  overflow="hidden"
+                  boxShadow="0 0.06em 0.12em rgba(0, 0, 0, 0.18)"
+                  transform={`scale(${isInView || reduceMotion ? 1 : 0.4})`}
+                  opacity={isInView ? 1 : 0}
+                  transition={`transform 0.6s ${EASE} ${delay + 0.1}s, opacity 0.6s ease ${delay + 0.1}s`}
+                >
+                  {video ? (
+                    <video
+                      src={video}
+                      poster={image}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
+                  ) : (
+                    image && (
+                      <img
+                        src={image}
+                        alt=""
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                    )
+                  )}
+                </Box>
+              </Box>
               )
             </Box>
           </Text>

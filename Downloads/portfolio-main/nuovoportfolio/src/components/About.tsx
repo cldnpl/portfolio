@@ -2,7 +2,7 @@ import { Container, Flex, Heading, Text } from "@chakra-ui/react";
 import { useInView } from "framer-motion";
 import { Ref, useRef } from "react";
 import { Section } from "@/components/Section";
-import { SplitParagraph } from "@/components/SplitParagraph";
+import { HoloText } from "@/components/HoloText";
 import type { aboutData } from "@/data/site";
 import { useScramble } from "@/hooks/useScramble";
 
@@ -36,7 +36,7 @@ export const About = ({ id, data, sectionRef }: AboutProps) => {
       </Container>
       <Container display="flex" flexDir="column" gap={{ base: "space-40", md: "space-64" }} position="relative">
         {content.map((paragraph, i) => (
-          <SplitParagraph key={i} text={paragraph} alignSelf={i % 2 === 1 ? { md: "flex-end" } : undefined} />
+          <HoloText key={i} variant="paragraph" text={paragraph} alignSelf={i % 2 === 1 ? { md: "flex-end" } : undefined} />
         ))}
       </Container>
     </Section>
