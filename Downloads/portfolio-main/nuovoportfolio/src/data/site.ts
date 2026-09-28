@@ -183,7 +183,8 @@ export const homeSeo = {
   keywords:
     "Claudia Napolitano, Portfolio, Mobile Development, iOS, Android, visionOS, Swift, Kotlin, Mobile Developer",
   canonical: SITE_URL,
-  image: `${SITE_URL}/images/portrait-og.jpg`,
+  // link preview: a capture of the hero (marquee + portrait), 1200x630
+  image: `${SITE_URL}/images/og-hero.jpg`,
 };
 
 /* ------------------------------------------------------------------ */
