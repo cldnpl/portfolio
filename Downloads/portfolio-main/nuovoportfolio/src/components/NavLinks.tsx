@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { MouseEvent } from "react";
 import { Magnetic } from "@/components/Magnetic";
 import type { NavLinkItem } from "@/data/site";
+import { scrollToAnchor } from "@/lib/anchor";
 
 const index = (i: number) => String(i + 1).padStart(2, "0");
 
@@ -20,8 +21,7 @@ export const NavLinks = ({ links, onNavigate }: NavLinksProps) => {
     const target = typeof document !== "undefined" ? document.getElementById(href.slice(1)) : null;
     if (target) {
       onNavigate?.();
-      if (lenis) lenis.scrollTo(target, { duration: 1.4 });
-      else target.scrollIntoView({ behavior: "smooth" });
+      scrollToAnchor(target, lenis);
       return;
     }
     onNavigate?.();

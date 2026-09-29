@@ -114,7 +114,8 @@ const ServicesList = ({ intro, photos, services }: { intro: string; photos: Phot
           );
         })}
       </Box>
-      <Box mt={{ base: "space-64", md: "space-120" }}>
+      {/* "About" in the menu lands here: the panel, the hackathons and the paragraph about her */}
+      <Box id="about" data-anchor="clear-header" mt={{ base: "space-64", md: "space-120" }}>
         <TimelinePanel ref={panelRef} services={services} showTiles={reduceMotion} />
       </Box>
       {/* the three hackathons it mentions, same size, in a row beside the text;
