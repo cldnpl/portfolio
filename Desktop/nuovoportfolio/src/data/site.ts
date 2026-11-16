@@ -81,7 +81,7 @@ export const aboutData = {
   content: [
     "I develop **native mobile apps** with a focus on **precision, motion and the people using them**, building interfaces where **every detail is intentional**.",
     "Based in Naples, I work at the intersection of **software and psychology**. **Three years at the Apple Developer Academy** in Naples: the **Foundation** programme in 2024, the **one-year Academy** from 2025 to 2026, and now **ARTE**, the advanced research programme on **augmented reality and Apple Vision Pro** development, from 2026 to 2027.",
-    "In October 2025 I **won a hackathon in Naples**, building an app for **Crédit Agricole Italia**. From **SwiftUI to Compose to visionOS**, I take ideas from the first sketch **to the store** with meticulous attention to detail.",
+    "In October 2025 I **won a hackathon in Naples**, building an app for **Crédit Agricole Italia**, and in November 2026 I **won The Big Hack again**, with an app that uses **Gaussian splatting** to help **people with low vision** find their way around the city, born from the augmented reality work on **Apple Vision Pro** I do in ARTE. From **SwiftUI to Compose to visionOS**, I take ideas from the first sketch **to the store** with meticulous attention to detail.",
   ],
 };
 
@@ -126,11 +126,17 @@ export const servicesData: {
       ratio: "582/546",
       caption: "Stockholm, Feb 2026",
     },
+    {
+      src: "/images/about/bighack.webp",
+      alt: "Claudia and her team holding the winner's banner of The Big Hack 2026 in Naples, the FieldVision challenge",
+      ratio: "582/546",
+      caption: "Winner, Naples, Nov 2026",
+    },
   ],
   content:
     "\"Most apps are built to be used; very few are built to be **understood**. I studied **psychology** for exactly that reason, and I write the **native code** myself, in Swift, in Kotlin and for visionOS, so nothing gets lost between **how people think** and what ends up on their screen. Every screen measured, every animation with a reason, every millisecond accounted for. If your product deserves to **feel obvious**, let's make sure it does.\"",
   servicesIntro:
-    "I'm a developer who **taught herself Python and then Swift**, graduated in **Psychology with 110/110 cum laude** because interfaces are made for minds, and spent **three years at the Apple Developer Academy** in Naples, the last one on augmented reality and Vision Pro. Hackathons in Naples, Trieste and Stockholm, **the one in Naples won** for Crédit Agricole. **Six languages** spoken. I'm here to take an idea and bring it **natively to iOS, Android and visionOS** with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
+    "I'm a developer who **taught herself Python and then Swift**, graduated in **Psychology with 110/110 cum laude** because interfaces are made for minds, and spent **three years at the Apple Developer Academy** in Naples, the last one on augmented reality and Vision Pro. Hackathons in Naples, Trieste and Stockholm, **the two in Naples won**, one for Crédit Agricole and one with a **Gaussian splatting** app for people with low vision. **Six languages** spoken. I'm here to take an idea and bring it **natively to iOS, Android and visionOS** with the care it deserves. Software that respects the people using it, not just the specs it was written from.",
   // Each tile flies from its title into the dark panel. `video` (optional, a
   // short muted loop in public/videos) plays in place of the image.
   services: [
@@ -168,7 +174,7 @@ export const loaderFacts = [
   { text: "My mother taught me Spanish when I was three", weight: 1 },
   { text: "Python first, then Swift", weight: 2 },
   { text: "Forty-eight hours, one problem, no sleep", weight: 2 },
-  { text: "Hackathon winner, Naples 2025", weight: 2 },
+  { text: "Two hackathons won, both in Naples", weight: 2 },
   { text: "110/110 cum laude in Psychology", weight: 1 },
   { text: "I wanted to take apart every Apple device I grew up with", weight: 1 },
   { text: "This portfolio is in a constant state of development", weight: 2 },
@@ -225,7 +231,7 @@ const aboutIt: typeof aboutData = {
   content: [
     "Sviluppo **app mobile native** con un'attenzione particolare alla **precisione, al movimento e alle persone che le usano**, costruendo interfacce in cui **ogni dettaglio è intenzionale**.",
     "Vivo a Napoli e lavoro all'incrocio tra **software e psicologia**. **Tre anni all'Apple Developer Academy** di Napoli: il programma **Foundation** nel 2024, l'**Academy di un anno** dal 2025 al 2026 e ora **ARTE**, il programma di ricerca avanzata sulla **realtà aumentata e lo sviluppo per Apple Vision Pro**, dal 2026 al 2027.",
-    "A ottobre 2025 ho **vinto un hackathon a Napoli** sviluppando un'app per **Crédit Agricole Italia**. Da **SwiftUI a Compose a visionOS**, porto le idee dal primo schizzo **fino allo store** con un'attenzione meticolosa ai dettagli.",
+    "A ottobre 2025 ho **vinto un hackathon a Napoli** sviluppando un'app per **Crédit Agricole Italia**, e a novembre 2026 ho **vinto di nuovo The Big Hack**, con un'app che usa il **Gaussian splatting** per aiutare le **persone ipovedenti** a orientarsi in città, nata dal lavoro sulla realtà aumentata con **Apple Vision Pro** che faccio in ARTE. Da **SwiftUI a Compose a visionOS**, porto le idee dal primo schizzo **fino allo store** con un'attenzione meticolosa ai dettagli.",
   ],
 };
 
@@ -246,11 +252,16 @@ const servicesIt: typeof servicesData = {
       alt: "I team al lavoro ai loro tavoli durante l'hackathon di Stoccolma",
       caption: "Stoccolma, feb 2026",
     },
+    {
+      ...servicesData.photos[3],
+      alt: "Claudia e il suo team con lo striscione da vincitori di The Big Hack 2026 a Napoli, la challenge FieldVision",
+      caption: "Vincitrice, Napoli, nov 2026",
+    },
   ],
   content:
     "\"La maggior parte delle app è fatta per essere usata; pochissime sono fatte per essere **capite**. Ho studiato **psicologia** proprio per questo, e il **codice nativo** lo scrivo io, in Swift, in Kotlin e per visionOS, così niente si perde tra **il modo in cui le persone pensano** e quello che finisce sul loro schermo. Ogni schermata misurata, ogni animazione con una ragione, ogni millisecondo messo in conto. Se il tuo prodotto merita di **sembrare ovvio**, facciamo in modo che lo sia.\"",
   servicesIntro:
-    "Sono una sviluppatrice che ha **imparato da sola Python e poi Swift**, si è laureata in **Psicologia con 110/110 e lode** perché le interfacce sono fatte per le menti, e ha passato **tre anni all'Apple Developer Academy** di Napoli, l'ultimo sulla realtà aumentata e su Vision Pro. Hackathon a Napoli, Trieste e Stoccolma, **quello di Napoli vinto** per Crédit Agricole. **Sei lingue** parlate. Sono qui per prendere un'idea e portarla **in modo nativo su iOS, Android e visionOS** con la cura che merita. Software che rispetta le persone che lo usano, non solo le specifiche da cui è nato.",
+    "Sono una sviluppatrice che ha **imparato da sola Python e poi Swift**, si è laureata in **Psicologia con 110/110 e lode** perché le interfacce sono fatte per le menti, e ha passato **tre anni all'Apple Developer Academy** di Napoli, l'ultimo sulla realtà aumentata e su Vision Pro. Hackathon a Napoli, Trieste e Stoccolma, **i due di Napoli vinti**, uno per Crédit Agricole e uno con un'app in **Gaussian splatting** per chi è ipovedente. **Sei lingue** parlate. Sono qui per prendere un'idea e portarla **in modo nativo su iOS, Android e visionOS** con la cura che merita. Software che rispetta le persone che lo usano, non solo le specifiche da cui è nato.",
   services: [
     { ...servicesData.services[0], title: "App iOS" },
     { ...servicesData.services[1], title: "App Android" },
@@ -272,7 +283,7 @@ const loaderFactsIt: typeof loaderFacts = [
   { text: "Mia madre mi ha insegnato lo spagnolo a tre anni", weight: 1 },
   { text: "Prima Python, poi Swift", weight: 2 },
   { text: "Quarantotto ore, un problema, zero sonno", weight: 2 },
-  { text: "Hackathon vinto, Napoli 2025", weight: 2 },
+  { text: "Due hackathon vinti, tutti e due a Napoli", weight: 2 },
   { text: "110/110 e lode in Psicologia", weight: 1 },
   { text: "Volevo smontare ogni dispositivo Apple con cui sono cresciuta", weight: 1 },
   { text: "Questo portfolio è sempre in costruzione", weight: 2 },

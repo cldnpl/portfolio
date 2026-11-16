@@ -7,9 +7,12 @@ while the apps are phone screens, so each cover is composed here: one or two
 captures inside an iPhone, on a transparent background. The site background,
 white marble with gold veins, comes from art/marble-gold.jpg.
 
-Sources (outside this folder, override with the env vars):
-  WORK_SRC   ~/Downloads/portfolio-main/public/work    720px captures
-  ART_SRC    ~/Desktop/dametterenelport/art            larger originals
+Sources (outside this folder, override with the env vars). The old site was
+deleted on 2026-11-16, so its captures are read from the mirror under
+~/Desktop/progettiMiei/CODING/portfolio:
+  WORK_SRC   .../Downloads/portfolio-main/public/work  720px captures
+  ART_SRC    .../Desktop/dametterenelport/art          larger originals (gone
+             from this Mac: only the images already built are left)
 
     python3 scripts/prepare-images.py
 """
@@ -19,9 +22,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HOME = Path.home()
-WORK = Path(os.environ.get("WORK_SRC", HOME / "Downloads/portfolio-main/public/work"))
-ART = Path(os.environ.get("ART_SRC", HOME / "Desktop/dametterenelport/art"))
-ABOUT = HOME / "Downloads/portfolio-main/public/about"
+MIRROR = HOME / "Desktop/progettiMiei/CODING/portfolio"
+WORK = Path(os.environ.get("WORK_SRC", MIRROR / "Downloads/portfolio-main/public/work"))
+ART = Path(os.environ.get("ART_SRC", MIRROR / "Desktop/dametterenelport/art"))
+ABOUT = MIRROR / "Downloads/portfolio-main/public/about"
 OUT = Path(__file__).resolve().parent.parent / "public/images"
 
 # Prefer the larger original when there is one.
@@ -255,5 +259,10 @@ save(Image.open(LOCAL_ABOUT / "hackathon-crop.png").convert("RGB"), "about/hacka
 # the same ratio as the Naples one by hand: art/about/trieste.jpg, stockholm.jpg)
 save(Image.open(LOCAL_ABOUT / "trieste.jpg").convert("RGB"), "about/trieste.webp", quality=86)
 save(Image.open(LOCAL_ABOUT / "stockholm.jpg").convert("RGB"), "about/stockholm.webp", quality=86)
+# The Big Hack 2026, won with the team: cut to the same ratio as the others,
+# the four of them from above their heads down to under the banner, without the
+# people watching at the edge of the frame.
+big = Image.open(LOCAL_ABOUT / "bighack-2026.jpg").convert("RGB")
+save(big.crop((330, 165, 1305, 1080)), "about/bighack.webp", quality=86)
 
 # The service tiles are made by scripts/prepare-tiles.py, not here.

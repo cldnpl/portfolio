@@ -118,8 +118,9 @@ const ServicesList = ({ intro, photos, services }: { intro: string; photos: Phot
       <Box id="about" data-anchor="clear-header" mt={{ base: "space-64", md: "space-120" }}>
         <TimelinePanel ref={panelRef} services={services} showTiles={reduceMotion} />
       </Box>
-      {/* the three hackathons it mentions, same size, in a row beside the text;
-          where the row and the text do not fit side by side the text drops below */}
+      {/* the hackathons it mentions, same size, in a row beside the text; on a
+          phone they wrap two by two, and where the row and the text do not fit
+          side by side the text drops below */}
       <Box
         display="flex"
         flexDir={{ base: "column", md: "row" }}
@@ -131,6 +132,7 @@ const ServicesList = ({ intro, photos, services }: { intro: string; photos: Phot
       >
         <Box
           display="flex"
+          flexWrap={{ base: "wrap", md: "nowrap" }}
           gap={{ base: "space-12", md: "space-24" }}
           alignItems="flex-start"
           flexShrink={0}
@@ -141,8 +143,8 @@ const ServicesList = ({ intro, photos, services }: { intro: string; photos: Phot
               key={photo.src}
               photo={photo}
               compact
-              sizes="(max-width: 832px) 33vw, 300px"
-              width={{ base: "calc((100% - 24px) / 3)", md: "clamp(180px, 17vw, 300px)" }}
+              sizes="(max-width: 832px) 50vw, 250px"
+              width={{ base: "calc((100% - 12px) / 2)", md: "clamp(150px, 13vw, 250px)" }}
               flexShrink={0}
             />
           ))}
